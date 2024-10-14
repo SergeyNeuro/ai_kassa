@@ -1,0 +1,46 @@
+version: '3.8'
+services:
+    ai_kassa_db:
+        image: postgres:latest
+        container_name: ai_kassa_db
+        volumes:
+          - /var/lib/postgresql/data2:/var/lib/postgresql/data
+        env_file:
+          - .env
+        ports:
+          - '${POSTGRES_PORT}:5432'
+
+    ai_kassa_redis:
+        image: redis:7-alpine
+        container_name: ai_kassa_redis
+        restart: unless-stopped
+        ports:
+          - "${REDIS_PORT}:6379"
+        command: redis-server --requirepass "1234"
+        env_file:
+          - .env
+
+    ai_kassa_web_app:
+        build:
+            context: web_server/.
+        container_name: ai_kassa_web_app
+        command: ["sh", "-c", "alembic upgrade head && gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:${WEB_APP_PORT}"]
+        ports:
+          - "${WEB_APP_PORT}:${WEB_APP_PORT}"
+        env_file:
+          - .env
+        depends_on:
+          - ai_kassa_db
+          - ai_kassa_redis
+
+    ai_kassa_admin:
+        container_name: ai_kassa_admin
+        build:
+          context: admin_app/.
+        ports:
+          - "${ADMIN_APP_PORT}:${ADMIN_APP_PORT}"
+        env_file:
+          - .env
+        command: ["sh", "-c", "sleep 3 && gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:${ADMIN_APP_PORT}"]
+        depends_on:
+          - ai_kassa_web_app
