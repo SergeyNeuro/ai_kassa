@@ -15,7 +15,7 @@ database_url = URL.create(
     username=DB_USER,
     password=DB_PASS,
     host=DB_HOST,
-    port=5432,
+    port=DB_PORT,
     database=DB_NAME,
 )
 

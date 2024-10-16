@@ -20,6 +20,11 @@ from storage.database.db.postgres_alchemy.alchemy_core import Base
 
 # Импортируем все модели, чтобы Alembic их видел и мог сделать миграцию
 from storage.database.db.postgres_alchemy.customers import CustomersTable
+from storage.database.db.postgres_alchemy.auth import AuthTokenTable
+from storage.database.db.postgres_alchemy.menu import MenuTable
+from storage.database.db.postgres_alchemy.changing_dish import ChangingDishTable
+from storage.database.db.postgres_alchemy.dish import DishTable
+from storage.database.db.postgres_alchemy.food_point import FoodPointTable
 
 # импортируем глобальные переменные
 from config import DB_HOST, DB_NAME, DB_PORT, DB_PASS, DB_USER

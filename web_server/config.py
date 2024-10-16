@@ -7,6 +7,7 @@ load_dotenv()
 
 STORAGE_TYPE = "cache_db"
 DB_TYPE = "postgres_alchemy"
+CACHE_NAME = "redis"
 
 # глобальные переменные для работы с postgres БД
 DB_HOST = os.getenv("DB_HOST")

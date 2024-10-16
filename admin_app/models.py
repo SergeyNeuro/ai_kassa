@@ -2,9 +2,10 @@
 Данные по аутентификации
 """
 import logging
+from datetime import datetime
 
-from sqlalchemy import String
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import String, ForeignKey, text
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 import logging
 
 from db_core import Base
@@ -28,3 +29,103 @@ class CustomersTable(Base):
     name: Mapped[str] = mapped_column(String(40))
     phone: Mapped[str] = mapped_column(String(12), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
+
+
+class AuthTokenTable(Base):
+    """Таблица в которой содержатся данные о токенах доступа для API
+    id - идентификатор
+    token - значение токена доступа (именно это значение будет прилетать в запросе)
+    name - название токена (для удобства опозначания)
+    role - уровень доступа который дан данному токену (чем ниже, тем больше доступно)
+    details - опциональное описание токена
+    created_at - дата создания
+    update_at - дата обновления
+    """
+
+    __tablename__ = "auth_token_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    token: Mapped[str] = mapped_column(nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    role: Mapped[int] = mapped_column(nullable=False)
+    details: Mapped[str] = mapped_column(nullable=True)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=True)
+    customer = relationship("CustomersTable")
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+
+
+class MenuTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название меню
+        details: описание меню
+        customer_id: идентификатор заказчика к которому меню относится
+    """
+
+    __tablename__ = "menu_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    ai_model_name: Mapped[str] = mapped_column(nullable=False)
+    details: Mapped[str] = mapped_column(nullable=True)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
+    customer = relationship("CustomersTable")
+
+
+class ChangingDishTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название позиции
+        menu_id: идентификатор меню, к которому относится запись
+    """
+
+    __tablename__ = "changing_dish_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
+    name: Mapped[str] = mapped_column(nullable=False)
+    menu = relationship("MenuTable")
+
+
+class DishTable(Base):
+    """Таблица с данными о блюдах
+    """
+
+    __tablename__ = "dish_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
+    code_name: Mapped[str] = mapped_column(nullable=False)
+    type: Mapped[int] = mapped_column(nullable=False)
+    count_type: Mapped[int] = mapped_column(default=1)
+    count: Mapped[int] = mapped_column(nullable=False)
+    price: Mapped[int] = mapped_column(nullable=False)
+    changing_dish_id: Mapped[int] = mapped_column(ForeignKey("changing_dish_table.id", ondelete="SET NULL"), nullable=True)
+    menu = relationship("MenuTable")
+    changing_dish = relationship("ChangingDishTable")
+
+
+class FoodPointTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название меню
+        details: описание меню
+        ai_model_name: наименование модели нейросети
+        customer_id: идентификатор заказчика к которому меню относится
+    """
+
+    __tablename__ = "food_point_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    country: Mapped[str] = mapped_column(nullable=False)
+    district: Mapped[str] = mapped_column(nullable=False)
+    city: Mapped[str] = mapped_column(nullable=False)
+    address: Mapped[str] = mapped_column(nullable=False)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
+    customer = relationship("CustomersTable")

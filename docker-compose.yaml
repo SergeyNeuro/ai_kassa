@@ -15,7 +15,7 @@ services:
         container_name: ai_kassa_redis
         restart: unless-stopped
         ports:
-          - "${REDIS_PORT}:6379"
+          - "${REDIS_OUT_PORT}:6379"
         command: redis-server --requirepass "1234"
         env_file:
           - .env

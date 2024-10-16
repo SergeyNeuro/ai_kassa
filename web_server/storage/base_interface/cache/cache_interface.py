@@ -10,7 +10,7 @@ class BaseCache(ABC):
     """Интерфейс класс предписывающий взаимодействие с КЭШем"""
 
     @abstractmethod
-    async def get_data_from_cache(self, key: str, data_class: Type[BaseModel]) -> Union[Type[BaseModel], None]:
+    def get_data_from_cache(self, key: str, data_class: Type[BaseModel]) -> Union[Type[BaseModel], None]:
         """Интерфейс метод для извлечения данных из КЭШа по ключу
         Args:
             key: ключ по которому данные извлекаются из КЭШа
@@ -22,7 +22,7 @@ class BaseCache(ABC):
         pass
 
     @abstractmethod
-    async def set_data_in_cache(self, key: str, value: BaseModel, live_time: int) -> bool:
+    def set_data_in_cache(self, key: str, value: BaseModel, live_time: int) -> bool:
         """Интерфейс метод который сохраняет pydantic объект в КЭШ
         Args:
             key: ключ по которому заносятся в КЭШ
