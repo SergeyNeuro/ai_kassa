@@ -19,3 +19,5 @@ DB_NAME = os.getenv("DB_NAME")
 REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_EX = os.getenv("REDIS_EX")
+
+PHOTO_DATASET_PATH = os.getenv("PHOTO_DATASET_PATH")

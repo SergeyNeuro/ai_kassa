@@ -1,9 +1,11 @@
 import logging
+from sys import prefix
 
 from fastapi import FastAPI
 
 # импорируем роутеры
 from routers.predict_router import router as predict_router
+from routers.dataset_router import router as dataset_router
 
 
 # выставляем логирование
@@ -18,3 +20,4 @@ app = FastAPI(title='AI Kassa')
 
 
 app.include_router(predict_router, prefix=API_PREFIX)
+app.include_router(dataset_router, prefix=API_PREFIX)
