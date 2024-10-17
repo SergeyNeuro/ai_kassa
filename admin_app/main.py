@@ -13,7 +13,7 @@ Base.metadata.create_all(engine)
 # Создаем приложение Starlette
 app = Starlette()
 
-admin = Admin(engine, title="AI Kassa")
+admin = Admin(engine, title="AI Kassa", base_url="/")
 
 admin.add_view(model_view.CustomerModelView(models.CustomersTable, icon="fa fa-address-card", label="Заказчики"))
 admin.add_view(model_view.AuthTokenModelView(models.AuthTokenTable, icon="fa fa-key", label="Токены доступа"))
