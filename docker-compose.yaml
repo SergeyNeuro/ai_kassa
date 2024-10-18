@@ -33,7 +33,7 @@ services:
           - ai_kassa_db
           - ai_kassa_redis
         volumes:
-          - /var/ai_kassa:/var/ai_kassa
+          - "${STATIC_FILES_PATH}:${STATIC_FILES_PATH}"
 
     ai_kassa_admin:
         container_name: ai_kassa_admin

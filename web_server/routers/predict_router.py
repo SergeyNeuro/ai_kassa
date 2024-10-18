@@ -6,7 +6,6 @@ from fastapi.responses import JSONResponse
 
 from servises.yolo_predicter import AiKassaService
 from servises.auth_service import get_token_by_headers, AuthObj
-from schemas import logic_schemas
 
 
 

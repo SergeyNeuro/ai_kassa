@@ -1,11 +1,13 @@
 from typing import Any
 import logging
+import os
 
 from ultralytics import YOLO
 import cv2
 import numpy as np
 
 from storage.storage_core import StorageCommon
+from config import STATIC_FILES_PATH
 
 logger = logging.getLogger(f"app.{__name__}")
 
@@ -29,8 +31,12 @@ class AiKassaService(StorageCommon):
         logger.info(f"Пришел запрос на распознавание фотографии относящейся к customer_id: {customer_id}, menu_id: {menu_id}")
         menu_data = await self.menu_obj.get_data_by_id(node_id=menu_id)
 
+        models_dir_path = f"{STATIC_FILES_PATH}/models"
+
+        os.makedirs(models_dir_path, exist_ok=True)
+
         # создаем модель для распознавания
-        model = YOLO(menu_data.ai_model_name)
+        model = YOLO(f"{models_dir_path}/{menu_data.ai_model_name}")
 
         np_array = np.frombuffer(file_data, np.uint8)
         image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
@@ -42,10 +48,6 @@ class AiKassaService(StorageCommon):
         for result in results:
             if result.boxes:
                 for index, value in enumerate(result.boxes.xyxy):
-                    # print("Here")
-                    # print("value: ", value)
-                    # print("integer_code: ", result.boxes.cls[index])
-                    # print("code_name: ", result.names[int(result.boxes.cls[index])])
                     one_dish = await self.create_one_dish_obj(
                         menu_id=menu_id,
                         code_name=result.names[int(result.boxes.cls[index])],
