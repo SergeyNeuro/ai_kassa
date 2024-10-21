@@ -205,7 +205,10 @@ class MainWindow(QMainWindow):
                 url=f"{url}/api/dataset/upload",
                 files={"file": img_byte_arr},
                 params={"menu_id": menu_id},
-                headers={"auth_token": TOKEN}
+                headers={
+                    "auth_token": TOKEN,
+
+                }
             )
             print(f"Пришел ответ от сервера: {response.json()}")
         except Exception as _ex:

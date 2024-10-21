@@ -23,9 +23,9 @@ router = APIRouter(prefix="/dataset", tags=['dataset'])
 @router.post('/upload')
 async def save_dataset_image(
         menu_id: int,
-        file: UploadFile = File(...),
         token: Union[str, None] = Depends(get_token_by_headers),
         auth_obj=Depends(AuthObj),
+        file: UploadFile = File(...),
 ):
     """Данный роутер получает изображение.
     Обращается в сервис для расшифровки изображения
