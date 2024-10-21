@@ -206,7 +206,7 @@ class MainWindow(QMainWindow):
                 files={"file": img_byte_arr},
                 params={"menu_id": menu_id},
                 headers={
-                    "auth_token": TOKEN,
+                    "AuthToken": TOKEN,
 
                 }
             )

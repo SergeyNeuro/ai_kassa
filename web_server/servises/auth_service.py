@@ -13,7 +13,7 @@ from schemas import db_schemas
 logger = logging.getLogger(f"app.{__name__}")
 
 
-async def get_token_by_headers(token: str = Header(alias="auth_token", default=None)) -> Union[str, None]:
+async def get_token_by_headers(token: str = Header(alias="AuthToken", default=None)) -> Union[str, None]:
     """Данный метод извлекает токен из заголовка приходящего запроса
     Args:
         token: токен, который пришел в заголовке запроса
