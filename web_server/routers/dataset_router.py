@@ -21,12 +21,22 @@ router = APIRouter(prefix="/dataset", tags=['dataset'])
 
 
 @router.post('/upload')
-async def save_dataset_image(customer_id: int, file: UploadFile = File(...)):
+async def save_dataset_image(
+        menu_id: int,
+        file: UploadFile = File(...),
+        token: Union[str, None] = Depends(get_token_by_headers),
+        auth_obj=Depends(AuthObj),
+):
     """Данный роутер получает изображение.
     Обращается в сервис для расшифровки изображения
     для предсказания того, что изображено на фото
     """
-    path = f"{STATIC_FILES_PATH}/customer_{customer_id}"
+    auth_data = await auth_obj.check_authenticate(token=token, api="add_dish")
+    if not auth_data:
+        return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
+
+    date_folder = str(datetime.now().strftime("%d.%m.%Y").replace("20", ""))
+    path = f"{STATIC_FILES_PATH}/customer_{auth_data.customer_id}/menu_{menu_id}/{date_folder}"
 
     # Проверим, существует ли папка, если нет - создадим
     os.makedirs(path, exist_ok=True)
