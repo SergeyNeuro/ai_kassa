@@ -18,6 +18,7 @@ async def get_token_by_headers(token: str = Header(alias="auth_token", default=N
     Args:
         token: токен, который пришел в заголовке запроса
     """
+    logger.info(f"Получен токен: {token}")
     return token
 
 
