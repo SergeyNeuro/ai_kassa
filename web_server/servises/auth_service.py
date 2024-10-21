@@ -36,7 +36,7 @@ class AuthObj(StorageCommon):
         try:
             if token:
                 # если токен не None
-                logger.debug(f"Проверяю токен: {token}")
+                logger.info(f"Проверяю токен: {token}")
                 auth_data = await self.auth_obj.get_data_by_token(token=token)
                 return auth_data if auth_data else None
         except Exception as _ex:

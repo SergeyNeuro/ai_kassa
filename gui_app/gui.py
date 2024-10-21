@@ -199,6 +199,8 @@ class MainWindow(QMainWindow):
 
             print(f"Отправляю файл на по адресу: {url}")
 
+            print(TOKEN)
+
             response = requests.post(
                 url=f"{url}/api/dataset/upload",
                 files={"file": img_byte_arr},
