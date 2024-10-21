@@ -31,6 +31,7 @@ async def save_dataset_image(
     Обращается в сервис для расшифровки изображения
     для предсказания того, что изображено на фото
     """
+    logger.info(f"Пришел запрос на сохранения фото в датасет")
     auth_data = await auth_obj.check_authenticate(token=token, api="add_dish")
     if not auth_data:
         return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
@@ -66,6 +67,7 @@ async def add_new_dish(
 ):
     """Добавляем новую блюдо в БД"""
     try:
+        logger.info(f"Пришел запрос на добавление нового блюда")
         auth_data =  await auth_obj.check_authenticate(token=token, api="add_dish")
         if not auth_data:
             return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
