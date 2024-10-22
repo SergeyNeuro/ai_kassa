@@ -77,3 +77,10 @@ class BaseDish(ABC):
             code_name: кодовое имя блюда
         """
         pass
+
+    async def get_data_by_changing_id(self, changing_id: int) -> Union[db_schemas.dish.DishListSchem, None]:
+        """Извлечение списка блюд по внешнему ключу ссылающемуся сомневающиеся блюда
+        Args:
+            changing_id: (FK) идентификатор таблицы сомневающихся блюд
+        """
+        pass

@@ -87,6 +87,7 @@ class ChangingDishTable(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
+    strategy: Mapped[str] = mapped_column(default="all_dish")
     menu = relationship("MenuTable")
 
 
@@ -129,3 +130,23 @@ class FoodPointTable(Base):
     address: Mapped[str] = mapped_column(nullable=False)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
     customer = relationship("CustomersTable")
+
+
+class WeekDayDishTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        week_day: день недели в integer представлении
+        dish_id: идентификатор блюда
+        changing_dish_id: идентификатор сомневающегося блюда
+    """
+
+    __tablename__ = "week_day_dish_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    week_day: Mapped[int] = mapped_column(nullable=False)
+    dish_id: Mapped[int] = mapped_column(ForeignKey("dish_table.id", ondelete="CASCADE"), nullable=False)
+    changing_dish_id: Mapped[int] = mapped_column(ForeignKey("changing_dish_table.id", ondelete="CASCADE"),
+                                                  nullable=False)
+    dish = relationship("DishTable")
+    changing_dish = relationship("ChangingDishTable")

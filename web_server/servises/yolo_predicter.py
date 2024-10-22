@@ -1,6 +1,7 @@
 from typing import Any
 import logging
 import os
+import datetime as dt
 
 from ultralytics import YOLO
 import cv2
@@ -8,6 +9,7 @@ import numpy as np
 
 from storage.storage_core import StorageCommon
 from config import STATIC_FILES_PATH
+from schemas import logic_schemas, db_schemas
 
 logger = logging.getLogger(f"app.{__name__}")
 
@@ -83,7 +85,11 @@ class AiKassaService(StorageCommon):
                 menu_id=menu_id, code_name=code_name
             )
             if dish_data:
-               return {
+                # проверяем является ли данная позиция сомневающейся
+                if dish_data.changing_dish_id:
+                    dish_data = await self.choice_changing_dish(dish_data=dish_data)
+
+                return {
                    "dish_data": dish_data.model_dump(),
                    "x1": x1,
                    "y1": y1,
@@ -92,3 +98,47 @@ class AiKassaService(StorageCommon):
                }
         except Exception as _ex:
             logger.error(f"Ошибка при поиске блюда. menu_id: {menu_id}, code_name: {code_name}")
+
+    async def choice_changing_dish(self, dish_data: db_schemas.dish.DishSchem):
+        """Находим все похожие блюда чтобы клиент мог их них выбрать
+        Args:
+            dish_data: данные одного блюда
+        """
+        logger.info(f"Блюдо: {dish_data} сомневающееся, извлекаем список позиций")
+        # используем паттерн стратегия
+        changing_data = await self.changing_dish_obj.get_data_by_id(node_id=dish_data.changing_dish_id)
+
+        method_dict = {
+            "all_dish": self.get_all_dish_by_changing,
+            "week_day_dish": self.get_week_day_dish
+        }
+        return await method_dict[changing_data.strategy](dish_data.changing_dish_id)
+
+    async def get_all_dish_by_changing(self, changing_id: int) -> db_schemas.dish.DishListSchem:
+        """Извлечение всех блюд по внешнему ключу - ссылке на
+        таблицу с сомневающимися продуктами
+        Args:
+            changing_id: (FK) ссылка на сомневающиеся продукты
+        """
+        return await self.dish_obj.get_data_by_changing_id(changing_id=changing_id)
+
+    async def get_week_day_dish(self, changing_id: int) -> db_schemas.dish.DishListSchem:
+        """Извлечение всех блюд по внешнему ключу - ссылке на
+        таблицу с сомневающимися продуктами и сегодняшнему дню недели
+        Args:
+            changing_id: (FK) ссылка на сомневающиеся продукты
+        """
+        return await self.week_day_dish.get_dish_list_by_week_day_and_changing_id(
+            changing_id=changing_id, week_day=dt.datetime.today().weekday()
+        )
+
+if __name__ == '__main__':
+    import asyncio
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s")
+
+    obj = AiKassaService()
+    async def main():
+        data = await obj.get_week_day_dish(changing_id=3)
+        print(data)
+
+    asyncio.run(main())

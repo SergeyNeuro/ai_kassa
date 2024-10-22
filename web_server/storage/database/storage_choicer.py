@@ -52,3 +52,13 @@ class StorageTypeChoicer:
             "cache_db": cache_db.DishDbCache
         }
         return data_dict[self.storage_type]()
+
+    def week_day_dish_obj(self) -> database.BaseWeekDayDish:
+        """
+        Метод выбирает объект для взаимодействия
+        с данными блюд зависимых от дня недели
+        """
+        data_dict = {
+            "cache_db": cache_db.WeekDayDishDbCache
+        }
+        return data_dict[self.storage_type]()

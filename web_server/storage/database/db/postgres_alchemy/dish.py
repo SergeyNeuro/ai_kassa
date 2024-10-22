@@ -155,3 +155,25 @@ class DishDAL(database.BaseDish):
         except Exception as _ex:
             logger.error(f'Ошибка при извлечении одного блюда. Меню: {menu_id}. {code_name} -> {_ex}')
 
+    async def get_data_by_changing_id(self, changing_id: int) -> Union[db_schemas.dish.DishListSchem, None]:
+        """Извлечение списка блюд по внешнему ключу ссылки на сомневающееся блюдо
+        Args:
+            changing_id: (FK) идентификатор сомнительного блюда
+        """
+        try:
+            async with async_session_maker() as session:
+                async with session.begin():
+                    query = select(DishTable).where(DishTable.changing_dish_id == changing_id)
+                    res = await session.execute(query)
+                    data = res.all()
+                    if data is not None:
+                        list_of_dish = [
+                            db_schemas.dish.DishSchem.model_validate(
+                                from_attributes=True,
+                                obj=data_queue_data[0]
+                            ) for data_queue_data in data
+                        ]
+                        if list_of_dish:
+                            return db_schemas.dish.DishListSchem(dish_list=list_of_dish)
+        except Exception as _ex:
+            logger.error(f"Ошибка при извлечении сомневающихся блюд: {changing_id} -> {_ex}")

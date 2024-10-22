@@ -53,3 +53,14 @@ class DbChoicer:
             "postgres_alchemy": postgres_alchemy.DishDAL
         }
         return data_dict[self.db_name]()
+
+    def choice_week_day_dish_obj(self) -> database.BaseWeekDayDish:
+        """
+        Метод выбирает объект для взаимодействия с данными по блюдам
+        зависящих от дней недели
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.WeekDayDishDAL
+        }
+        return data_dict[self.db_name]()

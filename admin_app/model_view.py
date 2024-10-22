@@ -2,6 +2,7 @@ from starlette_admin.contrib.sqla import ModelView
 
 from models import CustomersTable, AuthTokenTable, MenuTable
 from models import ChangingDishTable, DishTable, FoodPointTable
+from models import WeekDayDishTable
 
 
 class CustomerModelView(ModelView):
@@ -43,7 +44,8 @@ class ChangingDishModelView(ModelView):
     fields = [
         ChangingDishTable.id,
         ChangingDishTable.name,
-        ChangingDishTable.menu
+        ChangingDishTable.menu,
+        ChangingDishTable.strategy
     ]
 
 
@@ -70,4 +72,13 @@ class FoodPointModelView(ModelView):
         FoodPointTable.city,
         FoodPointTable.address,
         FoodPointTable.customer
+    ]
+
+
+class WeekDayDishModelView(ModelView):
+    fields = [
+        WeekDayDishTable.id,
+        WeekDayDishTable.week_day,
+        WeekDayDishTable.dish,
+        WeekDayDishTable.changing_dish
     ]

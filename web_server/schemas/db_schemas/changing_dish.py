@@ -10,3 +10,4 @@ class ChangingDishSchem(BaseModel):
     id: int
     menu_id: int
     name: str
+    strategy: str

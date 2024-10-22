@@ -109,3 +109,17 @@ class DishDbCache(database.BaseDish, CommonCacheDb):
         )
         logger.debug(f"Извлек данные меню -> {data}")
         return data
+
+    async def get_data_by_changing_id(self, changing_id: int) -> Union[db_schemas.dish.DishListSchem, None]:
+        """Извлечение списка блюд по внешнему ключу ссылки на сомневающееся блюдо
+        Args:
+            changing_id: (FK) идентификатор сомнительного блюда
+        """
+        data = await self.search_in_cache_or_db_and_save(
+            key=f"dish_changing_id:{changing_id}",
+            db_func=self.db.get_data_by_changing_id,
+            schema=db_schemas.dish.DishListSchem,
+            live_time=60,
+            args=(changing_id,)
+        )
+        return data

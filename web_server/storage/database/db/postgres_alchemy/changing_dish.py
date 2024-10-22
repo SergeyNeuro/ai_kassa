@@ -28,6 +28,7 @@ class ChangingDishTable(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
     name: Mapped[str] = mapped_column(nullable=False)
+    strategy: Mapped[str] = mapped_column(default="all_dish")
 
 
 class ChangingDishDAL(database.BaseChangingDish):

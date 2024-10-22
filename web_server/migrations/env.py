@@ -25,6 +25,7 @@ from storage.database.db.postgres_alchemy.menu import MenuTable
 from storage.database.db.postgres_alchemy.changing_dish import ChangingDishTable
 from storage.database.db.postgres_alchemy.dish import DishTable
 from storage.database.db.postgres_alchemy.food_point import FoodPointTable
+from storage.database.db.postgres_alchemy.week_day_dish import WeekDayDishTable
 
 # импортируем глобальные переменные
 from config import DB_HOST, DB_NAME, DB_PORT, DB_PASS, DB_USER
