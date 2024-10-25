@@ -53,10 +53,10 @@ class AiKassaService(StorageCommon):
                     one_dish = await self.create_one_dish_obj(
                         menu_id=menu_id,
                         code_name=result.names[int(result.boxes.cls[index])],
-                        x1=float(value[0]),
-                        y1=float(value[1]),
-                        x2=float(value[2]),
-                        y2=float(value[3]),
+                        x1=int(value[0]),
+                        y1=int(value[1]),
+                        x2=int(value[2]),
+                        y2=int(value[3]),
                     )
                     if one_dish:
                         total_list.append(one_dish)
@@ -87,10 +87,13 @@ class AiKassaService(StorageCommon):
             if dish_data:
                 # проверяем является ли данная позиция сомневающейся
                 if dish_data.changing_dish_id:
-                    dish_data = await self.choice_changing_dish(dish_data=dish_data)
+                    changing_dishes = await self.choice_changing_dish(dish_data=dish_data)
+                    dish_data = changing_dishes.model_dump()["dish_list"]
+                else:
+                    dish_data = dish_data.model_dump()
 
                 return {
-                   "dish_data": dish_data.model_dump(),
+                   "dish_data": dish_data,
                    "x1": x1,
                    "y1": y1,
                    "x2": x2,
