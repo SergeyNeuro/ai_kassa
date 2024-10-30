@@ -11,19 +11,18 @@ from PyQt6.QtWidgets import (
     QMessageBox,
     QLineEdit
 )
+from PyQt6.QtWidgets import QFrame
 from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QFont
 import numpy
 import cv2
 
-from web_core import WebCore, TestWebCore
-from config import DISTH_TYPE, COUNT_TYPE, COLORS
+from config import DISTH_TYPE, COUNT_TYPE, COLORS, HEIGHT, WIDTH
 from painter import Painter
 
-logger = logging.getLogger(f"app.{__name__}")
 
-web_core = TestWebCore()
-web_core = WebCore()
+logger = logging.getLogger(f"app.{__name__}")
 
 
 class CartWindow(QWidget):
@@ -42,8 +41,17 @@ class CartWindow(QWidget):
 
             # настраиваем главное окно
             self.setWindowTitle("Корзина")
-            self.setGeometry(100, 100, 800, 400)  # Размеры окна
+            self.setGeometry(100, 100, int(WIDTH * 0.8), int(HEIGHT * 0.6))  # Размеры окна
             self.main_layout = QHBoxLayout()
+
+            # Изменяем фон окна и цвет текста
+            self.setStyleSheet("background-color: #1b193c; color: #ffffff;")
+
+            # Изменяем цвет текста для всех виджетов текста
+            self.setStyleSheet("QLabel, QPushButton { color: #ffffff; border-bottom: 1px solid #ffffff; }")
+
+            # Добавляем разделительную полосу между левым и правым блоком
+            self.main_layout.setSpacing(10)
 
             # Левый виджет для изображения
             self.create_left_widget()
@@ -53,6 +61,26 @@ class CartWindow(QWidget):
 
             #инициализируем главный слой
             self.setLayout(self.main_layout)
+
+            base_layout = QGridLayout()
+            right_widget = QWidget()
+            right_widget.setLayout(base_layout)
+
+    #...
+            self.main_layout.addWidget(right_widget)
+
+            # Добавляем разделительную полосу между левым и правым блоком
+            line = QFrame()
+            line.setFrameShape(QFrame.Shape.VLine)
+            line.setFrameShadow(QFrame.Shadow.Sunken)
+            self.main_layout.addWidget(line)
+
+            # Добавляем разделительные полосы между строками
+            for i in range(len(self.dishes_data)):
+                line = QFrame()
+                line.setFrameShape(QFrame.Shape.HLine)
+                line.setFrameShadow(QFrame.Shadow.Sunken)
+                base_layout.addWidget(line, i+1, 0, 1, 5)
 
     def pay_cart(self):
         """Проводим логику оплаты заказа"""
@@ -77,6 +105,7 @@ class CartWindow(QWidget):
         self.image_label = QLabel()
         self.set_image(self.image)
         self.main_layout.addWidget(self.image_label)
+        self.setStyleSheet("background-color: #1b193c;")
 
     def set_image(self, image: numpy.ndarray):
         """Обрабатываем изображение и наносим на него боксы и названия блюд
@@ -105,12 +134,24 @@ class CartWindow(QWidget):
         q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
         self.image_label.setPixmap(QPixmap.fromImage(q_image).scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio))
 
-    def fill_tail_dishes_layout(self, layout: QGridLayout):
-        layout.addWidget(QLabel("№"), 0, 0)
-        layout.addWidget(QLabel("Название"), 0, 1)
-        layout.addWidget(QLabel("Тип блюда"), 0, 2)
-        layout.addWidget(QLabel("Кол-во"), 0, 3)
-        layout.addWidget(QLabel("Цена, руб"), 0, 4)
+    @staticmethod
+    def fill_tail_dishes_layout(layout: QGridLayout):
+        font = QFont("Arial", 16)  # Установить размер шрифта
+        layout.addWidget(QLabel("№", font=font), 0, 0)
+        layout.addWidget(QLabel("Название", font=font), 0, 1)
+        layout.addWidget(QLabel("Тип блюда", font=font), 0, 2)
+        layout.addWidget(QLabel("Кол-во", font=font), 0, 3)
+        layout.addWidget(QLabel("Цена, руб", font=font), 0, 4)
+
+        # Добавляем stretch в остальные столбцы, чтобы они расширялись равномерно
+        layout.setColumnStretch(0, 1)
+        layout.setColumnStretch(1, 3)
+        layout.setColumnStretch(2, 2)
+        layout.setColumnStretch(3, 2)
+        layout.setColumnStretch(4, 2)
+
+        # Установить минимальную ширину для первого столбца
+        layout.setColumnMinimumWidth(0, 50)
 
     def create_right_widget(self, base_layout: QGridLayout = None):
         """Настройка правого виджета корзины, на котором будут находится
@@ -126,6 +167,24 @@ class CartWindow(QWidget):
             base_layout = QGridLayout()
             right_widget = QWidget()
             right_widget.setLayout(base_layout)
+            right_widget.setStyleSheet("background-color: #1b193c;")
+
+
+
+            # Добавляем разделительную линию вертикально
+            line = QFrame()
+            line.setFrameShape(QFrame.Shape.VLine)
+            line.setFrameShadow(QFrame.Shadow.Sunken)
+            base_layout.addWidget(line, 0, 0, -1, 1)
+
+
+            # Добавляем виджет с фиксированной шириной в качестве отступа
+            spacer = QWidget()
+            spacer.setFixedWidth(10)
+            base_layout.addWidget(spacer, 0, 1, -1, 1)
+            # Добавляем текст
+            self.fill_tail_dishes_layout(layout=base_layout)
+
             self.main_layout.addWidget(right_widget)
         else:
             logger.info(f"Правый слой создан. Очищаю его")
@@ -143,11 +202,47 @@ class CartWindow(QWidget):
 
         # Добавляем кнопку Назад
         back_btn = QPushButton("Назад", self)
+        back_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         back_btn.clicked.connect(self.close)
         base_layout.addWidget(back_btn, index + 3, 0)
 
         # добавляю кнопку Оплатить
         pay_btn = QPushButton("Оплатить", self)
+        pay_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         pay_btn.clicked.connect(lambda: self.pay_cart())
         base_layout.addWidget(pay_btn, index + 3, 5)
 
@@ -162,6 +257,22 @@ class CartWindow(QWidget):
         """
         layout.addWidget(QLabel(str(index)), index, 0)
         if type(data) == dict:
+            font = QFont("Arial", 16)  # Установить размер шрифта
+            label = QLabel(str(index))
+            label.setFont(font)
+            layout.addWidget(label, index, 0)
+            label = QLabel(data["name"])
+            label.setFont(font)
+            layout.addWidget(label, index, 1)
+            label = QLabel(DISTH_TYPE[data["type"]])
+            label.setFont(font)
+            layout.addWidget(label, index, 2)
+            label = QLabel(self.add_dish_count_by_type(count_type=data["count_type"], count=data["count"]))
+            label.setFont(font)
+            layout.addWidget(label, index, 3)
+            label = QLabel(str(data["price"]))
+            label.setFont(font)
+            layout.addWidget(label, index, 4)
             logger.info(f"Добавляю информацию о блюде: {data}")
             layout.addWidget(QLabel(data["name"]), index, 1)    # наименование блюда
             layout.addWidget(QLabel(DISTH_TYPE[data["type"]]), index, 2)    # тип блюда
@@ -170,6 +281,24 @@ class CartWindow(QWidget):
             # добавляем кнопку в случае если у блюду необходимо изменить кол-во
             if data["count_type"] > 10:
                 btn = QPushButton("Изменить кол-во", self)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
                 btn.clicked.connect(lambda: self.create_price_dish_widget(index=index, layout=layout))
                 layout.addWidget(btn, index, 5)
             return data["price"]
@@ -179,6 +308,26 @@ class CartWindow(QWidget):
                 layout.addWidget(QLabel("Спорная позиция"), index, 1)
                 layout.addWidget(QLabel(DISTH_TYPE[data[0]["type"]]), index, 2)
                 btn = QPushButton("Выбрать блюдо", self)
+                btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
+                btn.clicked.connect(lambda: self.create_changing_dish_widget(index=index, layout=layout))
+                layout.addWidget(btn, index, 5)
                 btn.clicked.connect(lambda: self.create_changing_dish_widget(index=index, layout=layout))
                 layout.addWidget(btn, index, 5)
             else:
@@ -228,6 +377,24 @@ class CartWindow(QWidget):
 
         # добавляем кнопку Назад
         back_btn = QPushButton("Назад", self)
+        back_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         back_btn.clicked.connect(lambda: self.back(layout=layout))
         layout.addWidget(back_btn, count + 2, 0)
 
@@ -247,6 +414,24 @@ class CartWindow(QWidget):
 
 
         btn = QPushButton("Выбрать блюдо", self)
+        btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         btn.clicked.connect(lambda: self.choice_changing_dish(index=index, count=count - 1, layout=layout))
         layout.addWidget(btn, count, 5)
 
@@ -299,11 +484,47 @@ class CartWindow(QWidget):
 
         # добавляем кнопку для изменения кол-ва блюда
         change_btn = QPushButton("Изменить", self)
+        change_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         change_btn.clicked.connect(lambda: self.change_dish_count(index=index, layout=layout))
         layout.addWidget(change_btn, index + 2, 5)
 
         # добавляем кнопку Назад
         back_btn = QPushButton("Назад", self)
+        back_btn.setStyleSheet("""
+                    QPushButton {
+                        background-color: #e4eafe;
+                        color: #000;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 16px;
+                        cursor: pointer;
+                        border-radius: 5px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                    }
+                    QPushButton:hover {
+                        background-color: #1a237e;
+                    }
+                    QPushButton:pressed {
+                        background-color: #0d47a1;
+                    }
+                """)
         back_btn.clicked.connect(lambda: self.back(layout=layout))
         layout.addWidget(back_btn, index + 2, 0)
 
@@ -413,8 +634,3 @@ class DishCountVisual:
         """
         logger.info(f"Блюдо измеряется по объему")
         return f"{count} мл"
-
-
-if __name__ == '__main__':
-    object = DishCountVisual(1, 2)
-    print(object)
