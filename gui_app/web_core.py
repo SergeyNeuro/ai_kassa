@@ -1,5 +1,6 @@
 from copy import deepcopy
 from typing import Union
+import logging
 
 import requests
 from PIL import Image
@@ -7,8 +8,14 @@ import numpy as np
 from io import BytesIO
 import datetime as dt
 
+# глобальные настройки
+from config import WEB_SERVER_URL, TOKEN, MENU_ID
+
 # имитация
 from imit import imit_data
+
+
+logger = logging.getLogger(f"app.{__name__}")
 
 
 class TestWebCore:
@@ -25,11 +32,11 @@ class TestWebCore:
 class WebCore:
     """Класс для взаимодействия с веб сервером"""
 
+    @staticmethod
     def send_image_to_predict(
-            self,
             image: np.ndarray,
-            menu_id: int = 2,
-            url: str = "http://0.0.0.0:7770/"
+            menu_id: int = MENU_ID,
+            url: str = WEB_SERVER_URL
     ) -> Union[list, None]:
         """Метод для отправки фотографии на удаленный сервер
         Args:
@@ -46,21 +53,59 @@ class WebCore:
             pil_image.save(img_byte_arr, format='JPEG')
             img_byte_arr.seek(0)  # Перемещаем указатель в начало потока
 
-            print(f"Отправляю файл на по адресу: {url}")
+            logger.info(f"Отправляю файл на по адресу: {url}/api/predict")
 
             response = requests.post(
-                url=f"{url}/api/predict",
+                url=f"{url}/api/predict/",
                 files={"file": img_byte_arr},
                 params={"menu_id": menu_id, "timestamp": int(dt.datetime.now().timestamp())},
-                headers={"AuthToken": "test"},
+                headers={"AuthToken": TOKEN},
             )
-            print(f"Пришел ответ от сервера: {response.json()}")
+            logger.info(f"Пришел ответ от сервера: {response.json()}")
             if response.json().get("success"):
                 message = "Фотография успешно сохранена на сервере"
                 return response.json()["data"]
             else:
                 message = "Не удалось сохранить фотографию на сервере"
         except Exception as _ex:
-            print(f"Ошибка при отправке фотографии на сервер -> {_ex}")
+            logger.error(f"Ошибка при отправке фотографии на сервер -> {_ex}")
 
+    @staticmethod
+    def send_dataset_photo(
+            image: np.ndarray,
+            menu_id: int = int(MENU_ID),
+            url: str = WEB_SERVER_URL
+    ) -> bool:
+        """Метод для отправки фотографии на удаленный сервер
+        Args:
+            photo_path: путь до фотографии
+            menu_id: идентификатор меню, к которому относится отправляемое блюдо
+            url: адрес куда нужно отправлять фотографию
+        """
+        try:
+            pil_image = Image.fromarray(image)
+
+            # Сохраняем изображение в байтовый поток
+            img_byte_arr = BytesIO()
+            pil_image.save(img_byte_arr, format='JPEG')
+            img_byte_arr.seek(0)  # Перемещаем указатель в начало потока
+
+            logger.info(f"Отправляю файл на по адресу: {url}/api/dataset/upload/")
+
+            response = requests.post(
+                url=f"{url}/api/dataset/upload",
+                files={"file": img_byte_arr},
+                params={"menu_id": menu_id},
+                headers={
+                    "AuthToken": TOKEN,
+                }
+            )
+            logger.info(f"Пришел ответ от сервера: {response.json()}")
+            if response.json()["success"]:
+                return True
+            else:
+                return False
+        except Exception as _ex:
+            logger.info(f"Ошибка при отправке фотографии на сервер -> {_ex}")
+            return True
 

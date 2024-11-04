@@ -1,21 +1,20 @@
-import logging
-import sys
-
 from PyQt6.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QMessageBox, QVBoxLayout, QHBoxLayout, QWidget
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QImage, QPixmap
 import cv2
 import numpy as np
+from config import HEIGHT, WIDTH, SAVE_PHOTO
+import logging
+import sys
 
 from cart import CartWindow
 from web_core import TestWebCore
-
-from config import HEIGHT, WIDTH
+from web_core import WebCore
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s")
 logger = logging.getLogger("app")
 
-web_core = TestWebCore()
+web_core = WebCore()
 
 class MainWindow(QMainWindow):
     """Главное окно приложения"""
@@ -39,8 +38,9 @@ class MainWindow(QMainWindow):
             self.video_layout = QHBoxLayout()
             self.video_layout.addStretch()
             self.video_label = QLabel()
-            self.video_label.setStyleSheet("background-color: #3498db; border-radius: 10px; padding: 10px")
-            self.video_label.setFixedSize(int(WIDTH * 0.7), int(HEIGHT * 0.7))
+            self.video_label.setStyleSheet("background-color: #73C5FC; border-radius: 10px; padding: 10px")
+            self.video_label.setFixedSize(WIDTH, HEIGHT)
+            self.video_label.setScaledContents(True)
             self.video_layout.addWidget(self.video_label)
             self.video_layout.addStretch()
             self.main_layout.addLayout(self.video_layout)
@@ -55,26 +55,34 @@ class MainWindow(QMainWindow):
 
             # Создаем кнопку для сканирования фото
             self.scan_button = QPushButton("Отсканировать фото")
-            self.scan_button.setStyleSheet("background-color: #e4eafe; color: #000; border-radius: 10px; padding: 10px 20px")
+            self.scan_button.setStyleSheet("background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
             self.scan_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
             self.scan_button.clicked.connect(self.open_cart_window)
             self.button_layout.addWidget(self.scan_button)
 
+            # Сохранить фото
+            if SAVE_PHOTO == "1":
+                self.scan_button = QPushButton("Сохранить фото")
+                self.scan_button.setStyleSheet(
+                    "background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
+                self.scan_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
+                self.scan_button.clicked.connect(self.save_dataset_proto_data)
+                self.button_layout.addWidget(self.scan_button)
+
             # Создаем кнопку для выхода
             self.exit_button = QPushButton("Выход")
-            self.exit_button.setStyleSheet("background-color: #e4eafe; color: #000; border-radius: 10px; padding: 10px 20px")
+            self.exit_button.setStyleSheet("background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
             self.exit_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
             self.exit_button.clicked.connect(QApplication.quit)
             self.button_layout.addWidget(self.exit_button)
 
             # Добавляем горизонтальный макет в основной макет
             self.main_layout.addLayout(self.button_layout)
-
             # Устанавливаем основной макет
             self.central_widget = QWidget()
             self.central_widget.setLayout(self.main_layout)
             self.setCentralWidget(self.central_widget)
-            self.setStyleSheet("background-color: #1b193c;")
+            self.setStyleSheet("background-color: #FFFFFF;")
 
             # Создаем объект cv2.VideoCapture один раз
             self.capture = cv2.VideoCapture(0)
@@ -105,15 +113,26 @@ class MainWindow(QMainWindow):
     def open_cart_window(self, checked):
         """Открываем новое окно корзины"""
         logger.info("Открываю корзину")
-        # ret, frame = self.capture.read()
-        frame = cv2.imread("dron.jpg")
-        # resized_frame = cv2.resize(frame, (int(WIDTH * 0.7), int(HEIGHT * 0.7)))
+        ret, frame = self.capture.read()
+        # frame = cv2.imread("dron.jpg")
         resized_frame = cv2.resize(frame, (640, 640))
 
         # отправляем изображение на сервер чтобы найти на нем блюда
         dishes_data = self.get_predict_data(image=resized_frame)
         if not dishes_data:
-            QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда. Повторите попытку")
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Не удалось распознать блюда. Повторите попытку")
+
+            # Устанавливаем стиль для изменения цвета текста и фона
+            msg_box.setStyleSheet("QMessageBox { background-color: white; }"
+                                  "QLabel { color: black; }"
+                                  "QPushButton { color: white; background-color: gray; }")  # Цвет текста и фона кнопок
+
+            # Добавляем кнопки
+            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
+
+            msg_box.exec()  # Отображаем сообщение
         else:
             self.w = CartWindow(image=resized_frame, dishes_data=dishes_data)
             self.w.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -132,6 +151,21 @@ class MainWindow(QMainWindow):
             image: изображение в формате массива numpy
         """
         return web_core.send_image_to_predict(image=image)
+
+    def save_dataset_proto_data(self) -> None:
+        """Данный метод сохраняет фото на удаленном севере
+        Args:
+            image: изображение в формате массива numpy
+        """
+        ret, frame = self.capture.read()
+        # frame = cv2.imread("dron.jpg")
+        resized_frame = cv2.resize(frame, (640, 640))
+
+        result = web_core.send_dataset_photo(image=resized_frame)
+        if result:
+            QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
+        else:
+            QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить фото")
 
 
 if __name__ == '__main__':

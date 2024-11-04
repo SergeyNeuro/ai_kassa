@@ -1,3 +1,13 @@
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+WEB_SERVER_URL = os.getenv("WEB_SERVER_URL")
+MENU_ID = os.getenv("MENU_ID")
+TOKEN = os.getenv("TOKEN")
+SAVE_PHOTO = os.getenv("SAVE_PHOTO")
+
 DISTH_TYPE = {
     1: "салат",
     2: "суп",
@@ -51,3 +61,5 @@ COLORS = {
 # Глобальные переменные для размеров окон и элементов
 HEIGHT = 640
 WIDTH = 1280
+
+

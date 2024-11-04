@@ -9,24 +9,24 @@ from PyQt6.QtWidgets import (
     QWidget,
     QGridLayout,
     QMessageBox,
-    QLineEdit
+    QLineEdit, QSizePolicy
 )
-from PyQt6.QtWidgets import QFrame
 from PyQt6.QtGui import QPixmap, QImage
 from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 import numpy
 import cv2
 
-from config import DISTH_TYPE, COUNT_TYPE, COLORS, HEIGHT, WIDTH
+from config import DISTH_TYPE, COUNT_TYPE, COLORS
 from painter import Painter
-
+from config import HEIGHT, WIDTH
 
 logger = logging.getLogger(f"app.{__name__}")
 
 
 class CartWindow(QWidget):
     """Окно корзины с изображением и кнопками"""
+
     def __init__(self, image: numpy.ndarray, dishes_data: list):
         super().__init__()
 
@@ -41,14 +41,8 @@ class CartWindow(QWidget):
 
             # настраиваем главное окно
             self.setWindowTitle("Корзина")
-            self.setGeometry(100, 100, int(WIDTH * 0.8), int(HEIGHT * 0.6))  # Размеры окна
+            self.setGeometry(100, 100, WIDTH, HEIGHT)  # Размеры окна
             self.main_layout = QHBoxLayout()
-
-            # Изменяем фон окна и цвет текста
-            self.setStyleSheet("background-color: #1b193c; color: #ffffff;")
-
-            # Изменяем цвет текста для всех виджетов текста
-            self.setStyleSheet("QLabel, QPushButton { color: #ffffff; border-bottom: 1px solid #ffffff; }")
 
             # Добавляем разделительную полосу между левым и правым блоком
             self.main_layout.setSpacing(10)
@@ -59,28 +53,8 @@ class CartWindow(QWidget):
             # правый виджет для информации о блюдах в котором будет происходить все взаимодействие
             self.create_right_widget()
 
-            #инициализируем главный слой
+            # инициализируем главный слой
             self.setLayout(self.main_layout)
-
-            base_layout = QGridLayout()
-            right_widget = QWidget()
-            right_widget.setLayout(base_layout)
-
-    #...
-            self.main_layout.addWidget(right_widget)
-
-            # Добавляем разделительную полосу между левым и правым блоком
-            line = QFrame()
-            line.setFrameShape(QFrame.Shape.VLine)
-            line.setFrameShadow(QFrame.Shadow.Sunken)
-            self.main_layout.addWidget(line)
-
-            # Добавляем разделительные полосы между строками
-            for i in range(len(self.dishes_data)):
-                line = QFrame()
-                line.setFrameShape(QFrame.Shape.HLine)
-                line.setFrameShadow(QFrame.Shadow.Sunken)
-                base_layout.addWidget(line, i+1, 0, 1, 5)
 
     def pay_cart(self):
         """Проводим логику оплаты заказа"""
@@ -105,7 +79,8 @@ class CartWindow(QWidget):
         self.image_label = QLabel()
         self.set_image(self.image)
         self.main_layout.addWidget(self.image_label)
-        self.setStyleSheet("background-color: #1b193c;")
+        self.setStyleSheet("background-color: #fffff;")
+
 
     def set_image(self, image: numpy.ndarray):
         """Обрабатываем изображение и наносим на него боксы и названия блюд
@@ -132,26 +107,53 @@ class CartWindow(QWidget):
         height, width, channel = image.shape
         bytes_per_line = 3 * width
         q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
-        self.image_label.setPixmap(QPixmap.fromImage(q_image).scaled(400, 400, Qt.AspectRatioMode.KeepAspectRatio))
+        self.image_label.setPixmap(QPixmap.fromImage(q_image).scaled(WIDTH // 2, HEIGHT, Qt.AspectRatioMode.KeepAspectRatio))
 
-    @staticmethod
-    def fill_tail_dishes_layout(layout: QGridLayout):
+    def fill_tail_dishes_layout(self, layout: QGridLayout, count_func: bool = False):
+        """Создаем верхнюю шапку таблицы
+        Args:
+            layout: слой на который необходим нанести виджеты
+            count_func: случай когда создается шапка для виджета изменения кол-ва блюда
+        """
         font = QFont("Arial", 16)  # Установить размер шрифта
-        layout.addWidget(QLabel("№", font=font), 0, 0)
-        layout.addWidget(QLabel("Название", font=font), 0, 1)
-        layout.addWidget(QLabel("Тип блюда", font=font), 0, 2)
-        layout.addWidget(QLabel("Кол-во", font=font), 0, 3)
-        layout.addWidget(QLabel("Цена, руб", font=font), 0, 4)
+        self.add_label(layout=layout, text="№", font=font, row=0, column=0, text_color="black", center=True)
+        self.add_label(layout=layout, text="Название", font=font, row=0, column=1, text_color="black")
+        self.add_label(layout=layout, text="Тип блюда", font=font, row=0, column=2, text_color="black")
+        self.add_label(layout=layout, text="Кол-во", font=font, row=0, column=3, text_color="black")
+        if count_func:
+            self.add_label(layout=layout, text="Ед. изм.", font=font, row=0, column=4, text_color="black")
+            self.add_label(layout=layout, text="Цена, руб", font=font, row=0, column=5, text_color="black")
+        else:
+            self.add_label(layout=layout, text="Цена, руб", font=font, row=0, column=4, text_color="black")
 
-        # Добавляем stretch в остальные столбцы, чтобы они расширялись равномерно
-        layout.setColumnStretch(0, 1)
-        layout.setColumnStretch(1, 3)
-        layout.setColumnStretch(2, 2)
-        layout.setColumnStretch(3, 2)
-        layout.setColumnStretch(4, 2)
+        layout.setColumnMinimumWidth(0, 10)  # Установить минимальную ширину 1-го столбца на 100 пикселей
 
-        # Установить минимальную ширину для первого столбца
-        layout.setColumnMinimumWidth(0, 50)
+    def add_label(
+        self,
+        layout: QGridLayout,
+        text: str,
+        row: int,
+        column: int,
+        text_color: str,
+        font: QFont = QFont("Arial", 16),
+        center: bool = False
+    ):
+        """Добавляет QLabel с заданными параметрами в layout
+        Args:
+            layout: слой на который необходимо вставить Label
+            text: текст который должен быть написан
+            font: шрифт которым должен быть написан текст
+            row: номер ряда
+            column: номер колонки
+            text_color: цвет текста
+            center: флаг который говорит нужно ли ставить виджет по центру
+        """
+        label = QLabel(text)
+        label.setFont(font)
+        label.setStyleSheet(f"color: {text_color}; border: 1px solid gray; padding: 5px;")  # Применяем одинаковые настройки
+        if center:
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)    # центрируем текст
+        layout.addWidget(label, row, column)
 
     def create_right_widget(self, base_layout: QGridLayout = None):
         """Настройка правого виджета корзины, на котором будут находится
@@ -165,29 +167,32 @@ class CartWindow(QWidget):
         if not base_layout:
             logger.info(f"Правый слой не создан. Создаю его")
             base_layout = QGridLayout()
+
+            # Устанавливаем расстояние между виджетами
+            base_layout.setHorizontalSpacing(0)  # Устанавливаем горизонтальное расстояние на 0
+            base_layout.setVerticalSpacing(0)  # Устанавливаем вертикальное расстояние на 0
+
+            # Устанавливаем отступы для содержимого
+            base_layout.setContentsMargins(0, 0, 0, 0)  # Устанавливаем отступы (левый, верхний, правый, нижний) на 0
+
             right_widget = QWidget()
             right_widget.setLayout(base_layout)
-            right_widget.setStyleSheet("background-color: #1b193c;")
+            right_widget.setStyleSheet("background-color: #ffffff;")
 
-
-
-            # Добавляем разделительную линию вертикально
-            line = QFrame()
-            line.setFrameShape(QFrame.Shape.VLine)
-            line.setFrameShadow(QFrame.Shadow.Sunken)
-            base_layout.addWidget(line, 0, 0, -1, 1)
-
-
-            # Добавляем виджет с фиксированной шириной в качестве отступа
-            spacer = QWidget()
-            spacer.setFixedWidth(10)
-            base_layout.addWidget(spacer, 0, 1, -1, 1)
             # Добавляем текст
             self.fill_tail_dishes_layout(layout=base_layout)
 
             self.main_layout.addWidget(right_widget)
+
         else:
             logger.info(f"Правый слой создан. Очищаю его")
+            # Устанавливаем расстояние между виджетами
+            base_layout.setHorizontalSpacing(0)  # Устанавливаем горизонтальное расстояние на 0
+            base_layout.setVerticalSpacing(0)  # Устанавливаем вертикальное расстояние на 0
+
+            # Устанавливаем отступы для содержимого
+            base_layout.setContentsMargins(0, 0, 0, 0)  # Устанавливаем отступы (левый, верхний, правый, нижний) на 0
+
             self.clear_layout(layout=base_layout)
         self.fill_tail_dishes_layout(layout=base_layout)
 
@@ -198,7 +203,12 @@ class CartWindow(QWidget):
 
         # показываем итоговую стоимость всего что есть на подносе
         if total_price > 0:
-            base_layout.addWidget(QLabel(str(total_price)), index + 2, 4)
+            self.add_label(
+                layout=base_layout, text="Итого:", row=index + 2, column=3, text_color="black", center=True
+            )
+            self.add_label(
+                layout=base_layout, text=str(total_price), row=index + 2, column=4, text_color="black"
+            )
 
         # Добавляем кнопку Назад
         back_btn = QPushButton("Назад", self)
@@ -206,7 +216,7 @@ class CartWindow(QWidget):
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -229,7 +239,7 @@ class CartWindow(QWidget):
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -245,6 +255,11 @@ class CartWindow(QWidget):
                 """)
         pay_btn.clicked.connect(lambda: self.pay_cart())
         base_layout.addWidget(pay_btn, index + 3, 5)
+        for i in range(base_layout.rowCount()):
+            base_layout.itemAt(i).widget().setSizePolicy(QSizePolicy.Policy.Expanding,
+                                                    QSizePolicy.Policy.Fixed)  # Устанавливаем фиксированную высоту
+            # Устанавливаем выравнивание для всего layout
+        base_layout.setAlignment(Qt.AlignmentFlag.AlignTop)  # Выравнивание всех элементов по верху
 
     def add_one_dish_data(self, layout: QGridLayout, data: Union[dict, list], index: int) -> Union[int, None]:
         """Добаление на слой данных по одному блюду + реализуется логика спорных позиций
@@ -255,37 +270,35 @@ class CartWindow(QWidget):
         : return
             Стоимость блюда, если она выбрана
         """
-        layout.addWidget(QLabel(str(index)), index, 0)
+        font = QFont("Arial", 16)  # Установить размер шрифта
+
+        # номер позиции
+        self.add_label(layout=layout, text=str(index), font=font, row=index, column=0, text_color="black", center=True)
         if type(data) == dict:
-            font = QFont("Arial", 16)  # Установить размер шрифта
-            label = QLabel(str(index))
-            label.setFont(font)
-            layout.addWidget(label, index, 0)
-            label = QLabel(data["name"])
-            label.setFont(font)
-            layout.addWidget(label, index, 1)
-            label = QLabel(DISTH_TYPE[data["type"]])
-            label.setFont(font)
-            layout.addWidget(label, index, 2)
-            label = QLabel(self.add_dish_count_by_type(count_type=data["count_type"], count=data["count"]))
-            label.setFont(font)
-            layout.addWidget(label, index, 3)
-            label = QLabel(str(data["price"]))
-            label.setFont(font)
-            layout.addWidget(label, index, 4)
             logger.info(f"Добавляю информацию о блюде: {data}")
-            layout.addWidget(QLabel(data["name"]), index, 1)    # наименование блюда
-            layout.addWidget(QLabel(DISTH_TYPE[data["type"]]), index, 2)    # тип блюда
-            layout.addWidget(QLabel(self.add_dish_count_by_type(count_type=data["count_type"], count=data["count"])), index, 3) # кол-во блюда
-            layout.addWidget(QLabel(str(data["price"])), index, 4)  # цена блюда
-            # добавляем кнопку в случае если у блюду необходимо изменить кол-во
+            # наименование позиции
+            self.add_label(layout=layout, text=data["name"], font=font, row=index, column=1, text_color="black")
+            # тип позиции
+            self.add_label(layout=layout, text=DISTH_TYPE[data["type"]], font=font, row=index, column=2, text_color="black")
+            # количественный тип позиции
+            self.add_label(
+                layout=layout,
+                text=self.add_dish_count_by_type(count_type=data["count_type"], count=data["count"]),
+                font=font,
+                row=index,
+                column=3,
+                text_color="black",
+            )
+            # цена позиции
+            self.add_label(layout=layout, text=str(data["price"]), font=font, row=index, column=4, text_color="black")
+
             if data["count_type"] > 10:
                 btn = QPushButton("Изменить кол-во", self)
                 btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -305,14 +318,18 @@ class CartWindow(QWidget):
         else:
             if len(data) > 1:
                 logger.info(f"Спорное блюдо: {data}")
-                layout.addWidget(QLabel("Спорная позиция"), index, 1)
-                layout.addWidget(QLabel(DISTH_TYPE[data[0]["type"]]), index, 2)
+                self.add_label(
+                    layout=layout, text="Спорная позиция", font=font, row=index, column=1, text_color="black"
+                )
+                self.add_label(
+                    layout=layout, text=DISTH_TYPE[data[0]["type"]], font=font, row=index, column=2, text_color="black"
+                )
                 btn = QPushButton("Выбрать блюдо", self)
                 btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -326,8 +343,6 @@ class CartWindow(QWidget):
                         background-color: #0d47a1;
                     }
                 """)
-                btn.clicked.connect(lambda: self.create_changing_dish_widget(index=index, layout=layout))
-                layout.addWidget(btn, index, 5)
                 btn.clicked.connect(lambda: self.create_changing_dish_widget(index=index, layout=layout))
                 layout.addWidget(btn, index, 5)
             else:
@@ -381,7 +396,7 @@ class CartWindow(QWidget):
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -406,19 +421,26 @@ class CartWindow(QWidget):
             index: индекс элемента в основном массиве данных, который приходит при сканировании фото
             layout: слой на который добавляет блюдо
         """
-        layout.addWidget(QLabel(str(count)), count, 0)
-        layout.addWidget(QLabel(data["name"]), count, 1)
-        layout.addWidget(QLabel(DISTH_TYPE[data["type"]]), count, 2)
-        layout.addWidget(QLabel(self.add_dish_count_by_type(count_type=data["count_type"], count=data["count"])), count, 3)
-        layout.addWidget(QLabel(str(data["price"])), count, 4)
-
+        font = QFont("Arial", 16)  # Установить размер шрифта
+        self.add_label(layout=layout, text=str(count), font=font, row=count, column=0, text_color="black", center=True)
+        self.add_label(layout=layout, text=data["name"], font=font, row=count, column=1, text_color="black")
+        self.add_label(layout=layout, text=DISTH_TYPE[data["type"]], font=font, row=count, column=2, text_color="black")
+        self.add_label(
+            layout=layout,
+            text=self.add_dish_count_by_type(count_type=data["count_type"], count=count),
+            font=font,
+            row=count,
+            column=3,
+            text_color="black"
+        )
+        self.add_label(layout=layout, text=str(data["price"]), font=font, row=count, column=4, text_color="black")
 
         btn = QPushButton("Выбрать блюдо", self)
         btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -442,7 +464,6 @@ class CartWindow(QWidget):
             count: индекс конкретного блюда из списка, который выбрал пользователь
         """
         logger.info(f"Выбираю блюдо под индексом: {count} из списка {self.dishes_data[index]['dish_data']}")
-        print(self.dishes_data[index]["dish_data"][count], count)
         self.dishes_data[index]["dish_data"] = self.dishes_data[index]["dish_data"][count]
         self.create_right_widget(base_layout=layout)
 
@@ -462,21 +483,33 @@ class CartWindow(QWidget):
         logger.info(f"Добавляю информацию для ввода кол-ва блюда. index: {index}")
 
         data = self.dishes_data[index]["dish_data"]
-        self.fill_tail_dishes_layout(layout=layout)
+        self.fill_tail_dishes_layout(layout=layout, count_func=True)
 
         # добавляем виджеты с данными о продукте
-        layout.addWidget(QLabel(str(index + 1)), index + 1, 0)  # счетчик
-        layout.addWidget(QLabel(data["name"]), index + 1, 1)  # наименование блюда
-        layout.addWidget(QLabel(DISTH_TYPE[data["type"]]), index + 1, 2)  # тип блюда
+        font = QFont("Arial", 16)  # Установить размер шрифта
+        self.add_label(
+            layout=layout, text=str(index + 1), font=font, row=index + 1, column=0, text_color="black", center=True
+        ) # счетчик
+
+        self.add_label(layout=layout, text=data["name"], font=font, row=index + 1, column=1, text_color="black")  # наименование блюда
+        self.add_label(
+            layout=layout, text=DISTH_TYPE[data["type"]], font=font, row=index + 1, column=2, text_color="black"
+        )  # тип блюда
 
         # вставляем поле, в котором нужно вводить кол-во блюда
         self.dish_count_edit = QLineEdit(parent=self)
+        self.dish_count_edit.setFont(font)
+        self.dish_count_edit.setStyleSheet("color: black; background-color: lightyellow;")
         self.dish_count_edit.setPlaceholderText("Введите количество")
         self.dish_count_edit.setText(str(data["count"]))
         layout.addWidget(self.dish_count_edit, index + 1, 3)
 
-        layout.addWidget(QLabel(COUNT_TYPE[data["count_type"]]), index + 1, 4)  # единица измерения блюда
-        layout.addWidget(QLabel(str(data["price"])), index + 1, 5)  # цена блюда
+        self.add_label(
+            layout=layout, text=COUNT_TYPE[data["count_type"]], font=font, row=index + 1, column=4, text_color="black"
+        )  # единица измерения блюда
+        self.add_label(
+            layout=layout, text=str(data["price"]), font=font, row=index + 1, column=5, text_color="black"
+        )  # цена блюда
 
         # добавляем новую переменную, которая указываем минимальное значение кол-ва блюда
         if "min_count" not in data:
@@ -488,7 +521,7 @@ class CartWindow(QWidget):
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -511,7 +544,7 @@ class CartWindow(QWidget):
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
-                        border: none;
+                        border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 16px;
                         cursor: pointer;
@@ -634,3 +667,10 @@ class DishCountVisual:
         """
         logger.info(f"Блюдо измеряется по объему")
         return f"{count} мл"
+
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    object = CartWindow(numpy.random.rand(400, 400, 3), [{"dish_data": {"name": "Пицца", "type": 1, "count": 2, "price": 500}}, {"dish_data": {"name": "Салат", "type": 2, "count": 1, "price": 200}}])
+    object.show()
+    sys.exit(app.exec())
