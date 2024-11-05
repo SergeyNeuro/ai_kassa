@@ -1,0 +1,18 @@
+services:
+    ai_kassa_gui_app:
+        build:
+            context: .
+        container_name: ai_kassa_gui_app
+        command: ["python", "main.py"]
+        env_file:
+            - .env
+        environment:
+            - DISPLAY=${DISPLAY}
+            - QT_QPA_PLATFORM=xcb
+            - XDG_RUNTIME_DIR=/tmp
+            - XDG_SESSION_TYPE=x11
+        volumes:
+            - /tmp/.X11-unix:/tmp/.X11-unix
+        network_mode: host
+        privileged: true  # Добавьте эту строку для дополнительных прав
+        restart: always
