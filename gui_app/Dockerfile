@@ -1,5 +1,6 @@
 FROM python:3.11
 
+# Установка зависимостей для Qt и Xvfb
 RUN apt-get update && apt-get install -y \
     libgl1-mesa-glx \
     libegl1-mesa \
@@ -13,20 +14,22 @@ RUN apt-get update && apt-get install -y \
     libxcb1 \
     libxcb-keysyms1 \
     libxcb-cursor0 \
+    libxcb-xinerama0 \
+    xvfb \
     && rm -rf /var/lib/apt/lists/*
 
+# Установка переменных окружения для Qt и отладки
+ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms
+ENV QT_DEBUG_PLUGINS=1
 
-# create workdir
+# Создаем рабочую директорию и устанавливаем ее по умолчанию
 RUN mkdir /gui_app
-
-# set workdir
 WORKDIR /gui_app
 
+# Копируем и устанавливаем зависимости для Python
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-# RUN pip install --no-cache-dir  -r requirements.txt
-RUN pip install -r requirements.txt
-
-# copy all files
+# Копируем файлы приложения
 COPY . .
 
