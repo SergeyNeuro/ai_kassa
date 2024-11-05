@@ -59,7 +59,7 @@ COLORS = {
 }
 
 # Глобальные переменные для размеров окон и элементов
-HEIGHT = 640
-WIDTH = 1280
+HEIGHT = os.getenv("HEIGHT")
+WIDTH = os.getenv("WIDTH")
 
 
