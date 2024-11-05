@@ -11,10 +11,6 @@ import datetime as dt
 # глобальные настройки
 from config import WEB_SERVER_URL, TOKEN, MENU_ID
 
-# имитация
-from imit import imit_data
-
-
 logger = logging.getLogger(f"app.{__name__}")
 
 
