@@ -6,6 +6,7 @@ RUN apt-get update && apt-get install -y \
     libegl1-mesa \
     libglu1-mesa \
     libxkbcommon-dev \
+    libxkbcommon-x11-0 \
     libglib2.0-0 \
     libxrender1 \
     libxext6 \
