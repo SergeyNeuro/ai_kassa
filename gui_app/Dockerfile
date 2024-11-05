@@ -1,12 +1,17 @@
 FROM python:3.11
 
 RUN apt-get update && apt-get install -y \
-    libxcb1 \
-    libxkbcommon-x11-0 \
-    libx11-xcb1 \
     libgl1-mesa-glx \
     libegl1-mesa \
+    libglu1-mesa \
+    libxkbcommon-dev \
+    libglib2.0-0 \
+    libxrender1 \
+    libxext6 \
     libxi6 \
+    libdbus-1-3 \
+    libxcb1 \
+    libxcb-keysyms1 \
     libxcb-cursor0 \
     && rm -rf /var/lib/apt/lists/*
 
