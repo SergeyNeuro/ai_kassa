@@ -11,6 +11,7 @@ services:
             - QT_QPA_PLATFORM=xcb
             - XDG_RUNTIME_DIR=/tmp
             - XDG_SESSION_TYPE=x11
+            - QT_DEBUG_PLUGINS=1
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix
         network_mode: host

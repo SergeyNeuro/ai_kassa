@@ -28,7 +28,7 @@ WORKDIR /gui_app
 
 # Копируем и устанавливаем зависимости для Python
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install -r requirements.txt
 
 # Копируем файлы приложения
 COPY . .
