@@ -15,10 +15,15 @@ RUN apt-get update && apt-get install -y \
     libxcb-keysyms1 \
     libxcb-cursor0 \
     libxcb-xinerama0 \
+    libxcb-icccm4 \
+    libxcb-image0 \
+    libxcb-shm0 \
+    libxcb-util1 \
+    libxcb-xfixes0 \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка переменных окружения для Qt и отладки
+# Установка переменных окружения для Qt
 ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt5/plugins/platforms
 ENV QT_DEBUG_PLUGINS=1
 
