@@ -222,7 +222,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -245,7 +245,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -304,7 +304,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -335,7 +335,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -402,7 +402,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -446,7 +446,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -527,7 +527,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -550,7 +550,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 16px;
+                        font-size: 10px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
