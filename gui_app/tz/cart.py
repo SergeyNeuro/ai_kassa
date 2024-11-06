@@ -158,8 +158,8 @@ class CartWindow(QWidget):
         if center:
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)    # центрируем текст
         label.setWordWrap(True)
+        label.setFixedHeight(30)
         layout.addWidget(label, row, column)
-        label.adjustSize()
 
     def create_right_widget(self, base_layout: QGridLayout = None):
         """Настройка правого виджета корзины, на котором будут находится
