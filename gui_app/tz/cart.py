@@ -157,6 +157,7 @@ class CartWindow(QWidget):
         label.setStyleSheet(f"color: {text_color}; border: 1px solid gray; padding: 5px;")  # Применяем одинаковые настройки
         if center:
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)    # центрируем текст
+        label.setWordWrap(True)
         layout.addWidget(label, row, column)
 
     def create_right_widget(self, base_layout: QGridLayout = None):
