@@ -12,6 +12,7 @@ services:
             - XDG_RUNTIME_DIR=/tmp
             - XDG_SESSION_TYPE=x11
             - QT_DEBUG_PLUGINS=1
+            - QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt6/plugins/platforms
         volumes:
             - /tmp/.X11-unix:/tmp/.X11-unix
         network_mode: host

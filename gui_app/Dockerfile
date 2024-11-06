@@ -25,11 +25,6 @@ RUN apt-get update && apt-get install -y \
     xvfb \
     && rm -rf /var/lib/apt/lists/*
 
-# Установка переменных окружения для Qt
-ENV QT_QPA_PLATFORM_PLUGIN_PATH=/usr/lib/x86_64-linux-gnu/qt6/plugins/platforms
-ENV QT_DEBUG_PLUGINS=1
-ENV QT_QPA_PLATFORM=xcb
-
 # Создаем рабочую директорию и устанавливаем ее по умолчанию
 RUN mkdir /gui_app
 WORKDIR /gui_app

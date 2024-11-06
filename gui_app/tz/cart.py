@@ -84,7 +84,7 @@ class CartWindow(QWidget):
         self.set_image(self.image)
         self.main_layout.addWidget(self.image_label)
         self.setStyleSheet("background-color: #fffff;")
-
+        
 
     def set_image(self, image: numpy.ndarray):
         """Обрабатываем изображение и наносим на него боксы и названия блюд
