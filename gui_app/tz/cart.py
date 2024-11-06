@@ -111,7 +111,7 @@ class CartWindow(QWidget):
         height, width, channel = image.shape
         bytes_per_line = 3 * width
         q_image = QImage(image.data, width, height, bytes_per_line, QImage.Format.Format_RGB888)
-        self.image_label.setPixmap(QPixmap.fromImage(q_image).scaled(WIDTH // 2, HEIGHT, Qt.AspectRatioMode.KeepAspectRatio))
+        self.image_label.setPixmap(QPixmap.fromImage(q_image).scaled(int(WIDTH * 0.4), HEIGHT, Qt.AspectRatioMode.KeepAspectRatio))
 
     def fill_tail_dishes_layout(self, layout: QGridLayout, count_func: bool = False):
         """Создаем верхнюю шапку таблицы
