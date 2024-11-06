@@ -19,7 +19,7 @@ import cv2
 
 from config import DISTH_TYPE, COUNT_TYPE, COLORS
 from painter import Painter
-from config import HEIGHT, WIDTH
+from config import HEIGHT, WIDTH, FONT
 
 logger = logging.getLogger(f"app.{__name__}")
 
@@ -119,7 +119,7 @@ class CartWindow(QWidget):
             layout: слой на который необходим нанести виджеты
             count_func: случай когда создается шапка для виджета изменения кол-ва блюда
         """
-        font = QFont("Arial", 16)  # Установить размер шрифта
+        font = QFont("Arial", FONT)  # Установить размер шрифта
         self.add_label(layout=layout, text="№", font=font, row=0, column=0, text_color="black", center=True)
         self.add_label(layout=layout, text="Название", font=font, row=0, column=1, text_color="black")
         self.add_label(layout=layout, text="Тип блюда", font=font, row=0, column=2, text_color="black")
@@ -139,7 +139,7 @@ class CartWindow(QWidget):
         row: int,
         column: int,
         text_color: str,
-        font: QFont = QFont("Arial", 16),
+        font: QFont = QFont("Arial", FONT),
         center: bool = False
     ):
         """Добавляет QLabel с заданными параметрами в layout
@@ -274,7 +274,7 @@ class CartWindow(QWidget):
         : return
             Стоимость блюда, если она выбрана
         """
-        font = QFont("Arial", 16)  # Установить размер шрифта
+        font = QFont("Arial", FONT)  # Установить размер шрифта
 
         # номер позиции
         self.add_label(layout=layout, text=str(index), font=font, row=index, column=0, text_color="black", center=True)
@@ -425,7 +425,7 @@ class CartWindow(QWidget):
             index: индекс элемента в основном массиве данных, который приходит при сканировании фото
             layout: слой на который добавляет блюдо
         """
-        font = QFont("Arial", 16)  # Установить размер шрифта
+        font = QFont("Arial",FONT)  # Установить размер шрифта
         self.add_label(layout=layout, text=str(count), font=font, row=count, column=0, text_color="black", center=True)
         self.add_label(layout=layout, text=data["name"], font=font, row=count, column=1, text_color="black")
         self.add_label(layout=layout, text=DISTH_TYPE[data["type"]], font=font, row=count, column=2, text_color="black")
@@ -490,7 +490,7 @@ class CartWindow(QWidget):
         self.fill_tail_dishes_layout(layout=layout, count_func=True)
 
         # добавляем виджеты с данными о продукте
-        font = QFont("Arial", 16)  # Установить размер шрифта
+        font = QFont("Arial", FONT)  # Установить размер шрифта
         self.add_label(
             layout=layout, text=str(index + 1), font=font, row=index + 1, column=0, text_color="black", center=True
         ) # счетчик

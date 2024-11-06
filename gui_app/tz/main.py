@@ -3,7 +3,7 @@ from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QImage, QPixmap
 import cv2
 import numpy as np
-from config import HEIGHT, WIDTH
+from config import HEIGHT, WIDTH, FONT
 import logging
 import sys
 
