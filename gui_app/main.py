@@ -165,6 +165,6 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWindow()
-    # w.enter_full_screen()
+    w.showMaximized()
     w.show()
     app.exec()
