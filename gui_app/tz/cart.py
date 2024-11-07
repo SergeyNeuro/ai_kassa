@@ -224,7 +224,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14x;
+                        font-size: 12x;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -240,14 +240,14 @@ class CartWindow(QWidget):
         base_layout.addWidget(back_btn, index + 3, 0)
 
         # добавляю кнопку Оплатить
-        pay_btn = QPushButton("\U0001F4B3 Оплатить", self)
+        pay_btn = QPushButton("Оплатить", self)
         pay_btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -306,7 +306,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -337,7 +337,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -404,7 +404,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -448,7 +448,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -529,7 +529,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 14px;
+                        font-size: 12px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -553,7 +553,7 @@ class CartWindow(QWidget):
                 color: #000;
                 border: 1px solid gray;
                 padding: 10px 20px;
-                font-size: 14px;
+                font-size: 12px;
                 cursor: pointer;
                 border-radius: 5px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -578,7 +578,7 @@ class CartWindow(QWidget):
                 color: #000;
                 border: 1px solid gray;
                 padding: 10px 20px;
-                font-size: 14px;
+                font-size: 12x;
                 cursor: pointer;
                 border-radius: 5px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -603,7 +603,7 @@ class CartWindow(QWidget):
                 color: #000;
                 border: 1px solid gray;
                 padding: 10px 20px;
-                font-size: 14px;
+                font-size: 12px;
                 cursor: pointer;
                 border-radius: 5px;
                 box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);

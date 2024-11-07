@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
             self.button_layout.setSpacing(10)
 
             # Создаем кнопку для сканирования фото
-            self.scan_button = QPushButton("\U0001F5A8 Отсканировать фото")
+            self.scan_button = QPushButton("Отсканировать фото")
             self.scan_button.setStyleSheet("background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
             self.scan_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
             self.scan_button.clicked.connect(self.open_cart_window)
@@ -61,7 +61,7 @@ class MainWindow(QMainWindow):
 
             # Сохранить фото
             if SAVE_PHOTO == "1":
-                self.scan_button = QPushButton("\U0001F4BE Сохранить фото")
+                self.scan_button = QPushButton("Сохранить фото")
                 self.scan_button.setStyleSheet(
                     "background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
                 self.scan_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
