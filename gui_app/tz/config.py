@@ -1,5 +1,3 @@
-SAVE_PHOTO = "1"
-
 DISTH_TYPE = {
     1: "салат",
     2: "суп",
@@ -54,3 +52,4 @@ COLORS = {
 HEIGHT = 640
 WIDTH = 1280
 FONT = 10
+SAVE_PHOTO = "1"

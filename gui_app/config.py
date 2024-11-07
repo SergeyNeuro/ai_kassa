@@ -61,5 +61,5 @@ COLORS = {
 # Глобальные переменные для размеров окон и элементов
 HEIGHT = int(os.getenv("HEIGHT"))
 WIDTH = int(os.getenv("WIDTH"))
-
+FONT = int(os.getenv("FONT"))
 

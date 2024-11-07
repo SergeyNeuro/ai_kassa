@@ -70,7 +70,7 @@ class MainWindow(QMainWindow):
                 self.button_layout.addWidget(self.scan_button)
 
             # Создаем кнопку для выхода
-            self.exit_button = QPushButton("Выход")
+            self.exit_button = QPushButton("\U0000274C Выход")
             self.exit_button.setStyleSheet("background-color: #73C5FC; color: #000; border-radius: 10px; padding: 10px 20px; border: 1px solid gray")
             self.exit_button.setFixedSize(int(WIDTH * 0.2), int(HEIGHT * 0.1))
             self.exit_button.clicked.connect(QApplication.quit)
@@ -115,24 +115,13 @@ class MainWindow(QMainWindow):
         logger.info("Открываю корзину")
         ret, frame = self.capture.read()
         # frame = cv2.imread("dron.jpg")
+        # resized_frame = cv2.resize(frame, (int(WIDTH * 0.7), int(HEIGHT * 0.7)))
         resized_frame = cv2.resize(frame, (640, 640))
 
         # отправляем изображение на сервер чтобы найти на нем блюда
         dishes_data = self.get_predict_data(image=resized_frame)
         if not dishes_data:
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Не удалось распознать блюда. Повторите попытку")
-
-            # Устанавливаем стиль для изменения цвета текста и фона
-            msg_box.setStyleSheet("QMessageBox { background-color: white; }"
-                                  "QLabel { color: black; }"
-                                  "QPushButton { color: white; background-color: gray; }")  # Цвет текста и фона кнопок
-
-            # Добавляем кнопки
-            msg_box.setStandardButtons(QMessageBox.StandardButton.Ok)
-
-            msg_box.exec()  # Отображаем сообщение
+            QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда. Повторите попытку")
         else:
             self.w = CartWindow(image=resized_frame, dishes_data=dishes_data)
             self.w.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
