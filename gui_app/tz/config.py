@@ -1,3 +1,5 @@
+SAVE_PHOTO = "1"
+
 DISTH_TYPE = {
     1: "салат",
     2: "суп",

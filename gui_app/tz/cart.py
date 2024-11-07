@@ -217,14 +217,14 @@ class CartWindow(QWidget):
             )
 
         # Добавляем кнопку Назад
-        back_btn = QPushButton("Назад", self)
+        back_btn = QPushButton("\U000021A9 Назад", self)
         back_btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14x;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -240,14 +240,14 @@ class CartWindow(QWidget):
         base_layout.addWidget(back_btn, index + 3, 0)
 
         # добавляю кнопку Оплатить
-        pay_btn = QPushButton("Оплатить", self)
+        pay_btn = QPushButton("\U0001F4B3 Оплатить", self)
         pay_btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -306,7 +306,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -337,7 +337,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -397,14 +397,14 @@ class CartWindow(QWidget):
             self.create_one_dish_node(data=dish, count=count + 1, index=index - 1, layout=layout)
 
         # добавляем кнопку Назад
-        back_btn = QPushButton("Назад", self)
+        back_btn = QPushButton("\U000021A9 Назад", self)
         back_btn.setStyleSheet("""
                     QPushButton {
                         background-color: #e4eafe;
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -448,7 +448,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -529,7 +529,7 @@ class CartWindow(QWidget):
                         color: #000;
                         border: 1px solid gray;
                         padding: 10px 20px;
-                        font-size: 10px;
+                        font-size: 14px;
                         cursor: pointer;
                         border-radius: 5px;
                         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
@@ -545,27 +545,79 @@ class CartWindow(QWidget):
         layout.addWidget(change_btn, index + 2, 5)
 
         # добавляем кнопку Назад
-        back_btn = QPushButton("Назад", self)
-        back_btn.setStyleSheet("""
-                    QPushButton {
-                        background-color: #e4eafe;
-                        color: #000;
-                        border: 1px solid gray;
-                        padding: 10px 20px;
-                        font-size: 10px;
-                        cursor: pointer;
-                        border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-                    }
-                    QPushButton:hover {
-                        background-color: #1a237e;
-                    }
-                    QPushButton:pressed {
-                        background-color: #0d47a1;
-                    }
-                """)
+        back_btn = QPushButton("\U000021A9 Назад", self)
+        back_btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #e4eafe;
+                color: #000;
+                border: 1px solid gray;
+                padding: 10px 20px;
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            QPushButton:hover {
+                background-color: #1a237e;
+            }
+            QPushButton:pressed {
+                background-color: #0d47a1;
+            }
+            """
+        )
         back_btn.clicked.connect(lambda: self.back(layout=layout))
         layout.addWidget(back_btn, index + 2, 0)
+
+        # добавляем кнопку Больше
+        manu_btn = QPushButton("\U000025B2", self)
+        manu_btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #e4eafe;
+                color: #000;
+                border: 1px solid gray;
+                padding: 10px 20px;
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            QPushButton:hover {
+                background-color: #1a237e;
+            }
+            QPushButton:pressed {
+                background-color: #0d47a1;
+            }
+            """
+        )
+        manu_btn.clicked.connect(lambda: self.back(layout=layout))
+        layout.addWidget(manu_btn, index + 2, 3)
+
+        # добавляем кнопку Меньше
+        loss_btn = QPushButton("\U000025BC", self)
+        loss_btn.setStyleSheet(
+            """
+            QPushButton {
+                background-color: #e4eafe;
+                color: #000;
+                border: 1px solid gray;
+                padding: 10px 20px;
+                font-size: 14px;
+                cursor: pointer;
+                border-radius: 5px;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            }
+            QPushButton:hover {
+                background-color: #1a237e;
+            }
+            QPushButton:pressed {
+                background-color: #0d47a1;
+            }
+            """
+        )
+        loss_btn.clicked.connect(lambda: self.back(layout=layout))
+        layout.addWidget(loss_btn, index + 3, 3)
 
     def change_dish_count(self, index: int, layout: QGridLayout):
         """Изменяем значение кол-ва блюда и производим
