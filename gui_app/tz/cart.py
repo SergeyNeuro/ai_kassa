@@ -160,6 +160,7 @@ class CartWindow(QWidget):
         label.setWordWrap(True)
         label.setFixedHeight(40)
         layout.addWidget(label, row, column)
+        return label
 
     def create_right_widget(self, base_layout: QGridLayout = None):
         """Настройка правого виджета корзины, на котором будут находится
@@ -513,7 +514,7 @@ class CartWindow(QWidget):
         self.add_label(
             layout=layout, text=COUNT_TYPE[data["count_type"]], font=font, row=index + 1, column=4, text_color="black"
         )  # единица измерения блюда
-        self.add_label(
+        self.price_label = self.add_label(
             layout=layout, text=str(data["price"]), font=font, row=index + 1, column=5, text_color="black"
         )  # цена блюда
 
@@ -570,8 +571,8 @@ class CartWindow(QWidget):
         layout.addWidget(back_btn, index + 2, 0)
 
         # добавляем кнопку Больше
-        manu_btn = QPushButton("\U000025B2", self)
-        manu_btn.setStyleSheet(
+        up_btn = QPushButton("\U000025B2", self)
+        up_btn.setStyleSheet(
             """
             QPushButton {
                 background-color: #e4eafe;
@@ -591,12 +592,12 @@ class CartWindow(QWidget):
             }
             """
         )
-        manu_btn.clicked.connect(lambda: self.back(layout=layout))
-        layout.addWidget(manu_btn, index + 2, 3)
+        up_btn.clicked.connect(lambda: self.up_dish_count(index=index))
+        layout.addWidget(up_btn, index + 2, 3)
 
         # добавляем кнопку Меньше
-        loss_btn = QPushButton("\U000025BC", self)
-        loss_btn.setStyleSheet(
+        down_btn = QPushButton("\U000025BC", self)
+        down_btn.setStyleSheet(
             """
             QPushButton {
                 background-color: #e4eafe;
@@ -616,8 +617,8 @@ class CartWindow(QWidget):
             }
             """
         )
-        loss_btn.clicked.connect(lambda: self.back(layout=layout))
-        layout.addWidget(loss_btn, index + 3, 3)
+        down_btn.clicked.connect(lambda: self.down_dish_count(index=index))
+        layout.addWidget(down_btn, index + 3, 3)
 
     def change_dish_count(self, index: int, layout: QGridLayout):
         """Изменяем значение кол-ва блюда и производим
@@ -649,6 +650,41 @@ class CartWindow(QWidget):
             if widget is not None:
                 widget.deleteLater()  # Удаляем виджет
             layout.removeItem(layout.itemAt(i))  # Удаляем элемент из layout
+
+    def up_dish_count(self, index: int):
+        """Увеличение кол-ва блюда
+        Args:
+            step: шаг на сколько за раз увеличивается блюдо
+            index: индекс элемента среди списка блюд
+        """
+        now_value = int(self.dish_count_edit.text())
+        data = self.dishes_data[index]["dish_data"]     # извлекаем информацию о блюде
+        new_count = now_value + int(data["min_count"])
+        self.dish_count_edit.setText(str(new_count))
+        new_price = (new_count * data["price"]) // data["count"]
+        data["count"] = new_count
+        data["price"] = new_price
+        self.price_label.setText(str(new_price))
+
+    def down_dish_count(self, index: int):
+        """Уменьшение кол-ва блюда
+        Args:
+            step: шаг на сколько за раз увеличивается блюдо
+            index: индекс элемента среди списка блюд
+        """
+        now_value = int(self.dish_count_edit.text())
+        data = self.dishes_data[index]["dish_data"]     # извлекаем информацию о блюде
+        new_count = now_value - int(data["min_count"])
+        if new_count < 0 or new_count < int(data["min_count"]):
+            pass
+        else:
+            self.dish_count_edit.setText(str(new_count))
+            new_price = (new_count * data["price"]) // data["count"]
+            data["count"] = new_count
+            data["price"] = new_price
+            self.price_label.setText(str(new_price))
+
+
 
 
 class DishCountVisual:
