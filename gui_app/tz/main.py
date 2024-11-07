@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
 
             self.setWindowTitle("Главное окно")
             self.setGeometry(0, 0, WIDTH, HEIGHT)
+            self.setGeometry(0, 0, 1024, 600)
 
             # Создаем основной макет
             self.main_layout = QVBoxLayout()
