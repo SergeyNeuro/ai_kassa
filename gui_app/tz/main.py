@@ -24,7 +24,7 @@ class MainWindow(QMainWindow):
 
             self.setWindowTitle("Главное окно")
             # self.setGeometry(0, 0, WIDTH, HEIGHT)
-            self.setGeometry(0, 0, 1024, 600)
+            self.setGeometry(0, 0, 1024, 800)
 
             # Создаем основной макет
             self.main_layout = QVBoxLayout()
@@ -165,6 +165,6 @@ class MainWindow(QMainWindow):
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     w = MainWindow()
-    # w.enter_full_screen()
+    w.enter_full_screen()
     w.show()
     app.exec()
