@@ -158,7 +158,7 @@ class CartWindow(QWidget):
         if center:
             label.setAlignment(Qt.AlignmentFlag.AlignCenter)    # центрируем текст
         label.setWordWrap(True)
-        label.setFixedHeight(30)
+        label.setFixedHeight(50)
         layout.addWidget(label, row, column)
 
     def create_right_widget(self, base_layout: QGridLayout = None):
