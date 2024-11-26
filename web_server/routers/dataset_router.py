@@ -1,8 +1,9 @@
 import logging
-import shutil
 import os
 from datetime import datetime
 from typing import Union
+from PIL import Image
+import io
 
 
 from fastapi import APIRouter, UploadFile, File, Depends
@@ -27,11 +28,7 @@ async def save_dataset_image(
         auth_obj=Depends(AuthObj),
         file: UploadFile = File(...),
 ):
-    """Данный роутер получает изображение.
-    Обращается в сервис для расшифровки изображения
-    для предсказания того, что изображено на фото
-    """
-    logger.info(f"Пришел запрос на сохранения фото в датасет")
+    logger.info(f"Пришел запрос на сохранение фото в датасет")
     auth_data = await auth_obj.check_authenticate(token=token, api="add_dish")
     if not auth_data:
         return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
@@ -39,21 +36,18 @@ async def save_dataset_image(
     date_folder = str(datetime.now().strftime("%d.%m.%Y").replace("20", ""))
     path = f"{STATIC_FILES_PATH}/customer_{auth_data.customer_id}/menu_{menu_id}/{date_folder}"
 
-    # Проверим, существует ли папка, если нет - создадим
     os.makedirs(path, exist_ok=True)
 
-    # Получаем текущее время для создания уникального имени файла
     current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-
-    # Создаем имя файла с текущей датой и временем
     file_name = f"frame_{current_time}.jpg"
-
-    # Полный путь к сохранению файла
     file_path = os.path.join(path, file_name)
 
-    # Сохраняем файл
-    with open(file_path, "wb") as buffer:
-        shutil.copyfileobj(file.file, buffer)
+    # Читаем файл и преобразуем его в RGB
+    image_data = await file.read()
+    image = Image.open(io.BytesIO(image_data)).convert('RGB')
+
+    # Сохраняем изображение в нужном формате
+    image.save(file_path, format='JPEG')
 
     return {"success": True}
 
