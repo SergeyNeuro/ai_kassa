@@ -1,6 +1,8 @@
 from PyQt6.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QMessageBox, QVBoxLayout, QHBoxLayout, QWidget
 from PyQt6.QtCore import Qt, QTimer
 from PyQt6.QtGui import QImage, QPixmap
+from PyQt6.QtGui import QColor, QPalette
+
 import cv2
 import numpy as np
 from config import HEIGHT, WIDTH, SAVE_PHOTO
@@ -114,14 +116,19 @@ class MainWindow(QMainWindow):
         """Открываем новое окно корзины"""
         logger.info("Открываю корзину")
         ret, frame = self.capture.read()
-        # frame = cv2.imread("dron.jpg")
+        # frame = cv2.imread("02.09.2024_frame_145.jpg")
         # resized_frame = cv2.resize(frame, (int(WIDTH * 0.7), int(HEIGHT * 0.7)))
         resized_frame = cv2.resize(frame, (640, 640))
 
         # отправляем изображение на сервер чтобы найти на нем блюда
         dishes_data = self.get_predict_data(image=resized_frame)
         if not dishes_data:
-            QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда. Повторите попытку")
+            # QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда. Повторите попытку")
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Не удалось распознать блюда. Повторите попытку")
+            msg_box.setStyleSheet("background-color: white; color: black;")
+            msg_box.exec()
         else:
             self.w = CartWindow(image=resized_frame, dishes_data=dishes_data)
             self.w.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -148,14 +155,29 @@ class MainWindow(QMainWindow):
             image: изображение в формате массива numpy
         """
         ret, frame = self.capture.read()
-        # frame = cv2.imread("dron.jpg")
+        # frame = cv2.imread("02.09.2024_frame_145.jpg")
         resized_frame = cv2.resize(frame, (640, 640))
 
         result = web_core.send_dataset_photo(image=resized_frame)
+        # if result:
+        #     QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
+        # else:
+        #     QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить фото")
+
+        msg_box = QMessageBox(self)
         if result:
-            QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
+            # msg_box = QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
+            msg_box.setWindowTitle("Информация")
+            msg_box.setText("Фото успешно сохранено")
         else:
-            QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить фото")
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Не удалось сохранить фото")
+
+        # Устанавливаем стиль
+        msg_box.setStyleSheet("background-color: white; color: black;")
+
+        msg_box.exec()
+
 
     def enter_full_screen(self):
         """Вход в полноэкранный режим"""

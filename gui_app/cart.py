@@ -34,7 +34,12 @@ class CartWindow(QWidget):
         self.dishes_data = dishes_data
 
         if not self.dishes_data:
-            QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда")
+            # QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда")
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Не удалось распознать блюда")
+            msg_box.setStyleSheet("background-color: white; color: black;")
+            msg_box.exec()
 
         else:
             self.image = image
@@ -66,13 +71,24 @@ class CartWindow(QWidget):
         total_price = 0
         for one_dish in self.dishes_data:
             if type(one_dish["dish_data"]) == list:
-                QMessageBox.information(self, "Ошибка", "Заполнен информация не по всем блюдам")
+                # QMessageBox.information(self, "Ошибка", "Заполнен информация не по всем блюдам")
+                msg_box = QMessageBox(self)
+                msg_box.setWindowTitle("Ошибка")
+                msg_box.setText("Заполнен информация не по всем блюдам")
+                msg_box.setStyleSheet("background-color: white; color: black;")
+                msg_box.exec()
+
                 break
             else:
                 total_price += one_dish["dish_data"]["price"]
         else:  # выполняется если цикл корректно завершился
             logger.info(f"Сумма оплаты заказа: {total_price}")
-            QMessageBox.information(self, "Оплата", f"Сумма к оплате: {total_price} рублей")
+            # QMessageBox.information(self, "Оплата", f"Сумма к оплате: {total_price} рублей")
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Сумма к оплате: {total_price} рублей")
+            msg_box.setStyleSheet("background-color: white; color: black;")
+            msg_box.exec()
             self.close()
 
     def create_left_widget(self):
@@ -98,7 +114,7 @@ class CartWindow(QWidget):
 
         # рисуем на изображении квадраты с отметкой какое блюдо изображено
         for index, one_dish in enumerate(self.dishes_data):
-            print(one_dish)
+            # print(one_dish)
             Painter(
                 image=image,
                 top_corner=(int(one_dish["x1"]), int(one_dish["y1"])),
@@ -638,7 +654,12 @@ class CartWindow(QWidget):
             data["count"] = new_dish_count
             self.create_right_widget(base_layout=layout)
         except Exception as _ex:
-            QMessageBox.information(self, "Ошибка", "Введено слишком маленькое или не корректное значение")
+            # QMessageBox.information(self, "Ошибка", "Введено слишком маленькое или не корректное значение")
+            msg_box = QMessageBox(self)
+            msg_box.setWindowTitle("Ошибка")
+            msg_box.setText("Введено слишком маленькое или не корректное значение")
+            msg_box.setStyleSheet("background-color: white; color: black;")
+            msg_box.exec()
 
     def back(self, layout: QGridLayout):
         """Перейти в центральное меню корзины

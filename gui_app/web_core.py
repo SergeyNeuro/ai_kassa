@@ -7,6 +7,7 @@ from PIL import Image
 import numpy as np
 from io import BytesIO
 import datetime as dt
+import cv2
 
 # глобальные настройки
 from config import WEB_SERVER_URL, TOKEN, MENU_ID
@@ -42,7 +43,9 @@ class WebCore:
         """
         try:
             # Преобразуем массив NumPy в объект PIL
-            pil_image = Image.fromarray(image)
+            rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+            pil_image = Image.fromarray(rgb_frame)
 
             # Сохраняем изображение в байтовый поток
             img_byte_arr = BytesIO()
@@ -79,7 +82,9 @@ class WebCore:
             url: адрес куда нужно отправлять фотографию
         """
         try:
-            pil_image = Image.fromarray(image)
+            rgb_frame = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+
+            pil_image = Image.fromarray(rgb_frame)
 
             # Сохраняем изображение в байтовый поток
             img_byte_arr = BytesIO()
