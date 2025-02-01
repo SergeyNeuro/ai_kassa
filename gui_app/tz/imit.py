@@ -11,7 +11,7 @@ imit_data = [
                 "type": 1,
                 "count_type": 11,
                 "count": 1,
-                "price": 1000,
+                "price": 1,
                 "changing_dish_id": None
             },
             {
@@ -22,7 +22,7 @@ imit_data = [
                 "type": 1,
                 "count_type": 11,
                 "count": 1,
-                "price": 300,
+                "price": 1,
                 "changing_dish_id": None
             },
             {
@@ -33,7 +33,7 @@ imit_data = [
                 "type": 1,
                 "count_type": 11,
                 "count": 1,
-                "price": 6000,
+                "price": 1,
                 "changing_dish_id": None
             },
         ],
@@ -51,7 +51,7 @@ imit_data = [
             "type": 1,
             "count_type": 11,
             "count": 1,
-            "price": 3000,
+            "price": 1,
             "changing_dish_id": None
         },
        "x1": 83,
@@ -69,7 +69,7 @@ imit_data = [
                 "type": 1,
                 "count_type": 11,
                 "count": 1,
-                "price": 500,
+                "price": 1,
                 "changing_dish_id": None
             },
             {
@@ -80,7 +80,7 @@ imit_data = [
                 "type": 1,
                 "count_type": 11,
                 "count": 1,
-                "price": 6000,
+                "price": 1,
                 "changing_dish_id": None
             },
        ],

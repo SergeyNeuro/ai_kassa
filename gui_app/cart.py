@@ -20,12 +20,17 @@ import cv2
 from config import DISTH_TYPE, COUNT_TYPE, COLORS, FONT
 from painter import Painter
 from config import HEIGHT, WIDTH
+from pay.base_pay_manager import choice_pay_manager
+from pay.base_check_manager import choice_check_manager
+from schemas import DishSchem
 
 logger = logging.getLogger(f"app.{__name__}")
 
 
 class CartWindow(QWidget):
     """Окно корзины с изображением и кнопками"""
+    pay_manager = choice_pay_manager()
+    check_manager = choice_check_manager()
 
     def __init__(self, image: numpy.ndarray, dishes_data: list):
         super().__init__()
@@ -83,13 +88,27 @@ class CartWindow(QWidget):
                 total_price += one_dish["dish_data"]["price"]
         else:  # выполняется если цикл корректно завершился
             logger.info(f"Сумма оплаты заказа: {total_price}")
-            # QMessageBox.information(self, "Оплата", f"Сумма к оплате: {total_price} рублей")
             msg_box = QMessageBox(self)
             msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Сумма к оплате: {total_price} рублей")
             msg_box.setStyleSheet("background-color: white; color: black;")
-            msg_box.exec()
-            self.close()
+            # отправляем информацию на платежный терминал
+            logger.info(f"Отправляю информацию на платежный терминал на сумму {total_price} рублей")
+            # pay = self.pay_manager.pay(value=int(total_price * 100))
+            # создаем чек
+            check = self.check_manager.execute(
+                self.check_manager.create_check,
+                ([DishSchem.model_validate(item["dish_data"]) for item in self.dishes_data],)
+            )
+            pay = 1
+            if pay:
+                msg_box.setWindowTitle("Информация")
+                msg_box.setText("Успешно оплачено")
+                msg_box.exec()
+                self.close()
+            else:
+                msg_box.setWindowTitle("Ошибка")
+                msg_box.setText("Ошибка при оплате")
+                msg_box.exec()
 
     def create_left_widget(self):
         """Настройка левого виджета окна корзины. В левой части находится изображение
@@ -99,7 +118,7 @@ class CartWindow(QWidget):
         self.image_label = QLabel()
         self.set_image(self.image)
         self.main_layout.addWidget(self.image_label)
-        self.setStyleSheet("background-color: #fffff;")
+        self.setStyleSheet("background-color: #ffffff;")
 
     def set_image(self, image: numpy.ndarray):
         """Обрабатываем изображение и наносим на него боксы и названия блюд

@@ -1,0 +1,337 @@
+22.01 18:18:17.721 PILOT: created process './upnixmn.out 42 2 ' with pid 282700
+22.01 18:18:18.435 SBPILOT: start with arguments '42 2 '
+22.01 18:18:18.439 SBPILOT: Pinpad status timeout 0 s
+22.01 18:18:18.440 SBPILOT: WaitPinpadSeconds=0
+22.01 18:18:18.440 SBPILOT: WaitPinpadSeconds=0
+22.01 18:18:18.441 SBPILOT: Start tmo 140200
+22.01 18:18:46.909 SBPILOT: Close com 9
+22.01 18:18:46.915 SBPILOT: finished with result 2000, GUID=046A16D0
+22.01 18:19:06.127 PILOT: created process './upnixmn.out 42 2 ' with pid 282735
+22.01 18:19:06.130 SBPILOT: start with arguments '42 2 '
+22.01 18:19:06.133 SBPILOT: Pinpad status timeout 0 s
+22.01 18:19:06.136 SBPILOT: WaitPinpadSeconds=0
+22.01 18:19:06.136 SBPILOT: WaitPinpadSeconds=0
+22.01 18:19:06.136 SBPILOT: Start tmo 140200
+22.01 18:21:30.839 SBPILOT: Close com 9
+22.01 18:21:30.842 SBPILOT: finished with result 2004, GUID=00000000
+22.01 18:23:20.303 PILOT: created process './upnixmn.out 47 2 ' with pid 282764
+22.01 18:23:20.306 SBPILOT: start with arguments '47 2 '
+22.01 18:23:20.311 SBPILOT: Pinpad status timeout 0 s
+22.01 18:23:20.313 SBPILOT: WaitPinpadSeconds=0
+22.01 18:23:20.313 SBPILOT: WaitPinpadSeconds=0
+22.01 18:23:20.314 SBPILOT: Start tmo 140200
+22.01 18:23:20.403 SBPILOT: Start connection
+22.01 18:23:20.403 SBPILOT: Connecting to port 650
+22.01 18:23:20.454 SBPILOT: Connect OK
+22.01 18:23:20.653 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:23:20.802 SBPILOT: Close connection
+22.01 18:23:20.914 SBPILOT: Close com 9
+22.01 18:23:20.918 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:36:07.568 PILOT: created process './upnixmn.out 47 2 ' with pid 283927
+22.01 18:36:07.579 SBPILOT: start with arguments '47 2 '
+22.01 18:36:07.585 SBPILOT: Pinpad status timeout 0 s
+22.01 18:36:07.590 SBPILOT: WaitPinpadSeconds=0
+22.01 18:36:07.591 SBPILOT: WaitPinpadSeconds=0
+22.01 18:36:07.592 SBPILOT: Start tmo 140200
+22.01 18:36:07.707 SBPILOT: Start connection
+22.01 18:36:07.707 SBPILOT: Connecting to port 650
+22.01 18:36:07.748 SBPILOT: Connect OK
+22.01 18:36:07.940 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:36:08.133 SBPILOT: Close connection
+22.01 18:36:08.238 SBPILOT: Close com 9
+22.01 18:36:08.243 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:36:23.074 PILOT: created process './upnixmn.out 47 2 ' with pid 283955
+22.01 18:36:23.080 SBPILOT: start with arguments '47 2 '
+22.01 18:36:23.088 SBPILOT: Pinpad status timeout 0 s
+22.01 18:36:23.090 SBPILOT: WaitPinpadSeconds=0
+22.01 18:36:23.090 SBPILOT: WaitPinpadSeconds=0
+22.01 18:36:23.091 SBPILOT: Start tmo 140200
+22.01 18:36:23.173 SBPILOT: Start connection
+22.01 18:36:23.173 SBPILOT: Connecting to port 650
+22.01 18:36:23.221 SBPILOT: Connect OK
+22.01 18:36:23.393 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:36:23.534 SBPILOT: Close connection
+22.01 18:36:23.650 SBPILOT: Close com 9
+22.01 18:36:23.654 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:40:12.916 PILOT: created process './upnixmn.out 7 ' with pid 284089
+22.01 18:40:12.920 SBPILOT: start with arguments '7 '
+22.01 18:40:12.925 SBPILOT: Pinpad status timeout 0 s
+22.01 18:40:12.928 SBPILOT: WaitPinpadSeconds=0
+22.01 18:40:12.928 SBPILOT: WaitPinpadSeconds=0
+22.01 18:40:12.930 SBPILOT: Start tmo 140200
+22.01 18:40:13.239 SBPILOT: Start connection
+22.01 18:40:13.239 SBPILOT: Connecting to port 700
+22.01 18:40:13.278 SBPILOT: Connect OK
+22.01 18:40:13.957 SBPILOT: Close connection
+22.01 18:40:14.066 SBPILOT: Start connection
+22.01 18:40:14.066 SBPILOT: Connecting to port 650
+22.01 18:40:14.119 SBPILOT: Connect OK
+22.01 18:40:14.308 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:40:14.417 SBPILOT: Close connection
+22.01 18:40:14.702 SBPILOT: Start connection
+22.01 18:40:14.702 SBPILOT: Connecting to port 690
+22.01 18:40:14.745 SBPILOT: Connect OK
+22.01 18:40:15.681 SBPILOT: Close connection
+22.01 18:40:15.783 SBPILOT: Close com 9
+22.01 18:40:15.787 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:40:15.788 PILOT: created process './u2updater' with pid 284109
+22.01 18:40:15.797 SBPILOT: start with arguments '26 '
+22.01 18:40:15.805 SBPILOT: Close com 9
+22.01 18:40:15.808 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:44:38.127 PILOT: created process './upnixmn.out 1 100 ' with pid 284235
+22.01 18:44:38.130 SBPILOT: start with arguments '1 100 '
+22.01 18:44:38.141 SBPILOT: Pinpad status timeout 0 s
+22.01 18:44:38.144 SBPILOT: WaitPinpadSeconds=0
+22.01 18:44:38.144 SBPILOT: WaitPinpadSeconds=0
+22.01 18:44:38.146 SBPILOT: Start tmo 140200
+22.01 18:44:38.429 SBPILOT: Start connection
+22.01 18:44:38.429 SBPILOT: Connecting to port 700
+22.01 18:44:38.469 SBPILOT: Connect OK
+22.01 18:44:43.928 SBPILOT: Close connection
+22.01 18:44:44.101 SBPILOT: Clear cheque on error 2000
+22.01 18:44:44.101 SBPILOT: Close com 9
+22.01 18:44:44.103 SBPILOT: finished with result 2000, GUID=04823182
+22.01 18:45:47.563 PILOT: created process './upnixmn.out 1 100 ' with pid 284268
+22.01 18:45:47.567 SBPILOT: start with arguments '1 100 '
+22.01 18:45:47.572 SBPILOT: Pinpad status timeout 0 s
+22.01 18:45:47.575 SBPILOT: WaitPinpadSeconds=0
+22.01 18:45:47.575 SBPILOT: WaitPinpadSeconds=0
+22.01 18:45:47.576 SBPILOT: Start tmo 140200
+22.01 18:45:47.747 SBPILOT: Start connection
+22.01 18:45:47.747 SBPILOT: Connecting to port 700
+22.01 18:45:47.787 SBPILOT: Connect OK
+22.01 18:45:48.021 SBPILOT: Close connection
+22.01 18:45:48.489 SBPILOT: Start connection
+22.01 18:45:48.489 SBPILOT: Connecting to port 700
+22.01 18:45:48.530 SBPILOT: Connect OK
+22.01 18:45:52.394 SBPILOT: Close connection
+22.01 18:45:52.541 SBPILOT: Clear cheque on error 2000
+22.01 18:45:52.541 SBPILOT: Close com 9
+22.01 18:45:52.545 SBPILOT: finished with result 2000, GUID=048340BC
+22.01 18:46:20.419 PILOT: created process './upnixmn.out 47 2 ' with pid 284299
+22.01 18:46:20.421 SBPILOT: start with arguments '47 2 '
+22.01 18:46:20.428 SBPILOT: Pinpad status timeout 0 s
+22.01 18:46:20.431 SBPILOT: WaitPinpadSeconds=0
+22.01 18:46:20.431 SBPILOT: WaitPinpadSeconds=0
+22.01 18:46:20.432 SBPILOT: Start tmo 140200
+22.01 18:46:20.531 SBPILOT: Start connection
+22.01 18:46:20.531 SBPILOT: Connecting to port 650
+22.01 18:46:20.571 SBPILOT: Connect OK
+22.01 18:46:20.781 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:46:20.935 SBPILOT: Close connection
+22.01 18:46:21.052 SBPILOT: Close com 9
+22.01 18:46:21.056 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:47:09.806 PILOT: created process './upnixmn.out 7 ' with pid 284338
+22.01 18:47:09.809 SBPILOT: start with arguments '7 '
+22.01 18:47:09.816 SBPILOT: Pinpad status timeout 0 s
+22.01 18:47:09.820 SBPILOT: WaitPinpadSeconds=0
+22.01 18:47:09.821 SBPILOT: WaitPinpadSeconds=0
+22.01 18:47:09.822 SBPILOT: Start tmo 140200
+22.01 18:47:10.074 SBPILOT: Start connection
+22.01 18:47:10.074 SBPILOT: Connecting to port 700
+22.01 18:47:10.118 SBPILOT: Connect OK
+22.01 18:47:10.391 SBPILOT: Close connection
+22.01 18:47:10.583 SBPILOT: Start connection
+22.01 18:47:10.583 SBPILOT: Connecting to port 700
+22.01 18:47:10.628 SBPILOT: Connect OK
+22.01 18:47:12.319 SBPILOT: Close connection
+22.01 18:47:12.391 SBPILOT: Start connection
+22.01 18:47:12.391 SBPILOT: Connecting to port 650
+22.01 18:47:12.430 SBPILOT: Connect OK
+22.01 18:47:12.618 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:47:12.701 SBPILOT: Close connection
+22.01 18:47:13.011 SBPILOT: Start connection
+22.01 18:47:13.011 SBPILOT: Connecting to port 690
+22.01 18:47:13.088 SBPILOT: Connect OK
+22.01 18:47:13.804 SBPILOT: Close connection
+22.01 18:47:13.961 SBPILOT: Close com 9
+22.01 18:47:13.964 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:47:13.965 PILOT: created process './u2updater' with pid 284349
+22.01 18:47:13.967 SBPILOT: start with arguments '26 '
+22.01 18:47:13.980 SBPILOT: Close com 9
+22.01 18:47:13.982 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:47:35.041 PILOT: created process './upnixmn.out 47 2 ' with pid 284366
+22.01 18:47:35.043 SBPILOT: start with arguments '47 2 '
+22.01 18:47:35.052 SBPILOT: Pinpad status timeout 0 s
+22.01 18:47:35.056 SBPILOT: WaitPinpadSeconds=0
+22.01 18:47:35.056 SBPILOT: WaitPinpadSeconds=0
+22.01 18:47:35.058 SBPILOT: Start tmo 140200
+22.01 18:47:35.165 SBPILOT: Start connection
+22.01 18:47:35.165 SBPILOT: Connecting to port 650
+22.01 18:47:35.226 SBPILOT: Connect OK
+22.01 18:47:35.436 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:47:35.619 SBPILOT: Close connection
+22.01 18:47:35.749 SBPILOT: Close com 9
+22.01 18:47:35.754 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:48:50.324 PILOT: created process './upnixmn.out 47 2 ' with pid 284419
+22.01 18:48:50.329 SBPILOT: start with arguments '47 2 '
+22.01 18:48:50.334 SBPILOT: Pinpad status timeout 0 s
+22.01 18:48:50.338 SBPILOT: WaitPinpadSeconds=0
+22.01 18:48:50.338 SBPILOT: WaitPinpadSeconds=0
+22.01 18:48:50.340 SBPILOT: Start tmo 140200
+22.01 18:48:50.427 SBPILOT: Start connection
+22.01 18:48:50.427 SBPILOT: Connecting to port 650
+22.01 18:48:50.488 SBPILOT: Connect OK
+22.01 18:48:50.675 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:48:50.855 SBPILOT: Close connection
+22.01 18:48:50.964 SBPILOT: Close com 9
+22.01 18:48:50.968 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:49:34.204 PILOT: created process './upnixmn.out 47 2 ' with pid 284454
+22.01 18:49:34.206 SBPILOT: start with arguments '47 2 '
+22.01 18:49:34.213 SBPILOT: Pinpad status timeout 0 s
+22.01 18:49:34.216 SBPILOT: WaitPinpadSeconds=0
+22.01 18:49:34.216 SBPILOT: WaitPinpadSeconds=0
+22.01 18:49:34.217 SBPILOT: Start tmo 140200
+22.01 18:49:34.335 SBPILOT: Start connection
+22.01 18:49:34.335 SBPILOT: Connecting to port 650
+22.01 18:49:34.375 SBPILOT: Connect OK
+22.01 18:49:34.588 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:49:34.781 SBPILOT: Close connection
+22.01 18:49:34.900 SBPILOT: Close com 9
+22.01 18:49:34.903 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:49:42.252 PILOT: created process './upnixmn.out 7 ' with pid 284469
+22.01 18:49:42.260 SBPILOT: start with arguments '7 '
+22.01 18:49:42.266 SBPILOT: Pinpad status timeout 0 s
+22.01 18:49:42.268 SBPILOT: WaitPinpadSeconds=0
+22.01 18:49:42.268 SBPILOT: WaitPinpadSeconds=0
+22.01 18:49:42.268 SBPILOT: Start tmo 140200
+22.01 18:49:42.634 SBPILOT: Start connection
+22.01 18:49:42.634 SBPILOT: Connecting to port 700
+22.01 18:49:42.682 SBPILOT: Connect OK
+22.01 18:49:43.901 SBPILOT: Close connection
+22.01 18:49:43.982 SBPILOT: Start connection
+22.01 18:49:43.982 SBPILOT: Connecting to port 650
+22.01 18:49:44.021 SBPILOT: Connect OK
+22.01 18:49:44.211 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:49:44.318 SBPILOT: Close connection
+22.01 18:49:44.636 SBPILOT: Start connection
+22.01 18:49:44.636 SBPILOT: Connecting to port 690
+22.01 18:49:44.692 SBPILOT: Connect OK
+22.01 18:49:45.385 SBPILOT: Close connection
+22.01 18:49:45.554 SBPILOT: Close com 9
+22.01 18:49:45.557 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:49:45.558 PILOT: created process './u2updater' with pid 284478
+22.01 18:49:45.562 SBPILOT: start with arguments '26 '
+22.01 18:49:45.571 SBPILOT: Close com 9
+22.01 18:49:45.574 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:50:14.773 PILOT: created process './upnixmn.out 1 100 ' with pid 284495
+22.01 18:50:14.775 SBPILOT: start with arguments '1 100 '
+22.01 18:50:14.783 SBPILOT: Pinpad status timeout 0 s
+22.01 18:50:14.787 SBPILOT: WaitPinpadSeconds=0
+22.01 18:50:14.787 SBPILOT: WaitPinpadSeconds=0
+22.01 18:50:14.788 SBPILOT: Start tmo 140200
+22.01 18:50:15.098 SBPILOT: Start connection
+22.01 18:50:15.098 SBPILOT: Connecting to port 700
+22.01 18:50:15.149 SBPILOT: Connect OK
+22.01 18:50:18.130 SBPILOT: Close connection
+22.01 18:50:18.299 SBPILOT: Clear cheque on error 2000
+22.01 18:50:18.300 SBPILOT: Close com 9
+22.01 18:50:18.302 SBPILOT: finished with result 2000, GUID=04875485
+22.01 18:51:05.289 PILOT: created process './upnixmn.out 1 100 ' with pid 284517
+22.01 18:51:05.291 SBPILOT: start with arguments '1 100 '
+22.01 18:51:05.296 SBPILOT: Pinpad status timeout 0 s
+22.01 18:51:05.299 SBPILOT: WaitPinpadSeconds=0
+22.01 18:51:05.299 SBPILOT: WaitPinpadSeconds=0
+22.01 18:51:05.299 SBPILOT: Start tmo 140200
+22.01 18:51:05.466 SBPILOT: Start connection
+22.01 18:51:05.466 SBPILOT: Connecting to port 700
+22.01 18:51:05.505 SBPILOT: Connect OK
+22.01 18:51:05.799 SBPILOT: Close connection
+22.01 18:51:06.062 SBPILOT: Start connection
+22.01 18:51:06.062 SBPILOT: Connecting to port 700
+22.01 18:51:06.100 SBPILOT: Connect OK
+22.01 18:51:10.668 SBPILOT: Close connection
+22.01 18:51:11.804 SBPILOT: Close com 9
+22.01 18:51:11.806 SBPILOT: finished with result 0, GUID=048819D8
+22.01 18:51:53.080 PILOT: created process './upnixmn.out 1 100 ' with pid 284549
+22.01 18:51:53.083 SBPILOT: start with arguments '1 100 '
+22.01 18:51:53.090 SBPILOT: Pinpad status timeout 0 s
+22.01 18:51:53.094 SBPILOT: WaitPinpadSeconds=0
+22.01 18:51:53.094 SBPILOT: WaitPinpadSeconds=0
+22.01 18:51:53.096 SBPILOT: Start tmo 140200
+22.01 18:51:53.542 SBPILOT: Start connection
+22.01 18:51:53.543 SBPILOT: Connecting to port 700
+22.01 18:51:53.587 SBPILOT: Connect OK
+22.01 18:51:59.550 SBPILOT: Close connection
+22.01 18:52:00.620 SBPILOT: Close com 9
+22.01 18:52:00.623 SBPILOT: finished with result 0, GUID=0488D488
+22.01 18:52:00.625 PILOT: created process './upnixmn.out 7 ' with pid 284563
+22.01 18:52:00.626 SBPILOT: start with arguments '7 '
+22.01 18:52:00.630 SBPILOT: Pinpad status timeout 0 s
+22.01 18:52:00.632 SBPILOT: WaitPinpadSeconds=0
+22.01 18:52:00.632 SBPILOT: WaitPinpadSeconds=0
+22.01 18:52:00.633 SBPILOT: Start tmo 140200
+22.01 18:52:00.702 SBPILOT: Start connection
+22.01 18:52:00.702 SBPILOT: Connecting to port 700
+22.01 18:52:00.744 SBPILOT: Connect OK
+22.01 18:52:02.105 SBPILOT: Close connection
+22.01 18:52:02.129 SBPILOT: Start connection
+22.01 18:52:02.129 SBPILOT: Connecting to port 650
+22.01 18:52:02.170 SBPILOT: Connect OK
+22.01 18:52:02.259 SBPILOT: Device /dev/nvme0n1p2 open error 13
+22.01 18:52:02.571 SBPILOT: Close connection
+22.01 18:52:02.879 SBPILOT: Start connection
+22.01 18:52:02.879 SBPILOT: Connecting to port 690
+22.01 18:52:02.936 SBPILOT: Connect OK
+22.01 18:52:03.680 SBPILOT: Close connection
+22.01 18:52:03.811 SBPILOT: Close com 9
+22.01 18:52:03.815 SBPILOT: finished with result 0, GUID=00000000
+22.01 18:52:03.815 PILOT: created process './u2updater' with pid 284567
+22.01 18:52:03.818 SBPILOT: start with arguments '26 '
+22.01 18:52:03.829 SBPILOT: Close com 9
+22.01 18:52:03.832 SBPILOT: finished with result 0, GUID=00000000
+24.01 05:48:03.854 SBPILOT: start with arguments '1 300 '
+24.01 05:48:04.347 SBPILOT: Pinpad status timeout 0 s
+24.01 05:48:04.349 SBPILOT: WaitPinpadSeconds=0
+24.01 05:48:04.349 SBPILOT: WaitPinpadSeconds=0
+24.01 05:48:04.849 SBPILOT: Start tmo 140200
+24.01 05:48:05.194 SBPILOT: Start connection
+24.01 05:48:05.194 SBPILOT: Connecting to port 700
+24.01 05:48:05.194 SBPILOT: Connect OK
+24.01 05:48:32.948 SBPILOT: Close connection
+24.01 05:48:33.115 SBPILOT: Clear cheque on error 2000
+24.01 05:48:33.115 SBPILOT: Close com 9
+24.01 05:48:33.119 SBPILOT: finished with result 2000, GUID=015AF9CE
+24.01 05:49:29.918 SBPILOT: start with arguments '1 300 '
+24.01 05:49:29.922 SBPILOT: Pinpad status timeout 0 s
+24.01 05:49:29.924 SBPILOT: WaitPinpadSeconds=0
+24.01 05:49:29.925 SBPILOT: WaitPinpadSeconds=0
+24.01 05:49:29.925 SBPILOT: Start tmo 140200
+24.01 05:49:30.125 SBPILOT: Start connection
+24.01 05:49:30.125 SBPILOT: Connecting to port 700
+24.01 05:49:30.126 SBPILOT: Connect OK
+24.01 05:50:30.220 SBPILOT: Close connection
+24.01 05:50:36.321 SBPILOT: Clear cheque on error 2000
+24.01 05:50:36.321 SBPILOT: Close com 9
+24.01 05:50:36.326 SBPILOT: finished with result 2000, GUID=015C49FD
+24.01 05:51:40.659 SBPILOT: start with arguments '1 300 '
+24.01 05:51:40.663 SBPILOT: Pinpad status timeout 0 s
+24.01 05:51:40.666 SBPILOT: WaitPinpadSeconds=0
+24.01 05:51:40.666 SBPILOT: WaitPinpadSeconds=0
+24.01 05:51:40.666 SBPILOT: Start tmo 140200
+24.01 05:51:49.142 SBPILOT: Clear cheque on error 2000
+24.01 05:51:49.142 SBPILOT: Close com 9
+24.01 05:51:49.145 SBPILOT: finished with result 2000, GUID=015E48B2
+24.01 05:52:38.121 SBPILOT: start with arguments '1 300 '
+24.01 05:52:38.125 SBPILOT: Pinpad status timeout 0 s
+24.01 05:52:38.128 SBPILOT: WaitPinpadSeconds=0
+24.01 05:52:38.128 SBPILOT: WaitPinpadSeconds=0
+24.01 05:52:38.128 SBPILOT: Start tmo 140200
+24.01 05:52:42.529 SBPILOT: Clear cheque on error 2000
+24.01 05:52:42.529 SBPILOT: Close com 9
+24.01 05:52:42.532 SBPILOT: finished with result 2000, GUID=015F2929
+24.01 05:52:49.424 SBPILOT: start with arguments '1 300 '
+24.01 05:52:49.435 SBPILOT: Pinpad status timeout 0 s
+24.01 05:52:49.439 SBPILOT: WaitPinpadSeconds=0
+24.01 05:52:49.439 SBPILOT: WaitPinpadSeconds=0
+24.01 05:52:49.440 SBPILOT: Start tmo 140200
+24.01 05:53:37.477 SBPILOT: Close com 9
+24.01 05:53:37.480 SBPILOT: finished with result 0, GUID=015F554F
+27.01 16:27:27.198 SBPILOT: start with arguments '1 300 '
+27.01 16:27:27.203 SBPILOT: Pinpad status timeout 0 s
+27.01 16:27:27.205 SBPILOT: WaitPinpadSeconds=0
+27.01 16:27:27.205 SBPILOT: WaitPinpadSeconds=0
+27.01 16:27:27.206 SBPILOT: Start tmo 140200
+27.01 16:27:35.543 SBPILOT: Clear cheque on error 2000
+27.01 16:27:35.543 SBPILOT: Close com 9
+27.01 16:27:35.548 SBPILOT: finished with result 2000, GUID=002AF9AF

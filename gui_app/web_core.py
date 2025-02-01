@@ -14,6 +14,7 @@ from config import WEB_SERVER_URL, TOKEN, MENU_ID
 
 logger = logging.getLogger(f"app.{__name__}")
 
+from tz.imit import imit_data
 
 class TestWebCore:
     """Класс для взаимодействия с веб сервером"""

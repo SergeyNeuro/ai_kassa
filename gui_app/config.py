@@ -62,4 +62,5 @@ COLORS = {
 HEIGHT = int(os.getenv("HEIGHT"))
 WIDTH = int(os.getenv("WIDTH"))
 FONT = int(os.getenv("FONT"))
-
+PAY_MANAGER = os.getenv("PAY_MANAGER")
+CHECK_MANAGER = os.getenv("CHECK_MANAGER")

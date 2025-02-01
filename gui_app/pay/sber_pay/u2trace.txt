@@ -1,0 +1,252 @@
+SN:L40528002577, MODEL:UNKNOWN, ECR:
+Connecting to http://185.157.96.41:80/upos2-web/block1, result=0
+
+Sent:
+-----
+POST /upos2-web/block1 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/json, application/*+json
+Content-type: application/json;charset=UTF-8
+Content-Length: 248
+
+{"REPLIES":[{"CONF_HASH":"0000000000000000000000000000000000000000","ECR_HASH":"0000000000000000000000000000000000000000","KCV_KLK":"000000","MODEL_A":"LINUX","MODEL_T":"UNKNOWN","SN":"L40528002577","SN_OLD":"L40528002577","VERSION_A":"30.26.10"}]}
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:40:16 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 359
+Connection: keep-alive
+x-envoy-upstream-service-time: 132
+Server: SOWA
+Accept-Ranges: bytes
+{"success":true,"body":{"COMMANDS":[{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"TERMINAL"}},{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"ECR"}}]}}
+
+Disconnected.
+
+
+
+Connecting to http://185.157.96.41:80/upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577, result=0
+
+Sent:
+-----
+GET /upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/octet-stream
+Content-Type: application/octet-stream
+
+
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:40:16 GMT
+Content-Type: application/octet-stream
+Content-Length: 49
+Connection: keep-alive
+x-envoy-upstream-service-time: 23
+content-disposition: attachment; filename=UPDATE.TXT
+pragma: public
+cache-control: private
+Server: SOWA
+Accept-Ranges: bytes
+
+
+Disconnected.
+
+
+
+SN:L40528002577, MODEL:UNKNOWN, ECR:
+Connecting to http://185.157.96.41:80/upos2-web/block1, result=0
+
+Sent:
+-----
+POST /upos2-web/block1 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/json, application/*+json
+Content-type: application/json;charset=UTF-8
+Content-Length: 248
+
+{"REPLIES":[{"CONF_HASH":"0000000000000000000000000000000000000000","ECR_HASH":"0000000000000000000000000000000000000000","KCV_KLK":"000000","MODEL_A":"LINUX","MODEL_T":"UNKNOWN","SN":"L40528002577","SN_OLD":"L40528002577","VERSION_A":"30.26.10"}]}
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:47:14 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 359
+Connection: keep-alive
+x-envoy-upstream-service-time: 99
+Server: SOWA
+Accept-Ranges: bytes
+{"success":true,"body":{"COMMANDS":[{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"TERMINAL"}},{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"ECR"}}]}}
+
+Disconnected.
+
+
+
+Connecting to http://185.157.96.41:80/upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577, result=0
+
+Sent:
+-----
+GET /upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/octet-stream
+Content-Type: application/octet-stream
+
+
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:47:14 GMT
+Content-Type: application/octet-stream
+Content-Length: 49
+Connection: keep-alive
+x-envoy-upstream-service-time: 23
+content-disposition: attachment; filename=UPDATE.TXT
+pragma: public
+cache-control: private
+Server: SOWA
+Accept-Ranges: bytes
+
+
+Disconnected.
+
+
+
+SN:L40528002577, MODEL:UNKNOWN, ECR:
+Connecting to http://185.157.96.41:80/upos2-web/block1, result=0
+
+Sent:
+-----
+POST /upos2-web/block1 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/json, application/*+json
+Content-type: application/json;charset=UTF-8
+Content-Length: 248
+
+{"REPLIES":[{"CONF_HASH":"0000000000000000000000000000000000000000","ECR_HASH":"0000000000000000000000000000000000000000","KCV_KLK":"000000","MODEL_A":"LINUX","MODEL_T":"UNKNOWN","SN":"L40528002577","SN_OLD":"L40528002577","VERSION_A":"30.26.10"}]}
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:49:46 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 359
+Connection: keep-alive
+x-envoy-upstream-service-time: 113
+Server: SOWA
+Accept-Ranges: bytes
+{"success":true,"body":{"COMMANDS":[{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"TERMINAL"}},{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"ECR"}}]}}
+
+Disconnected.
+
+
+
+Connecting to http://185.157.96.41:80/upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577, result=0
+
+Sent:
+-----
+GET /upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/octet-stream
+Content-Type: application/octet-stream
+
+
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:49:46 GMT
+Content-Type: application/octet-stream
+Content-Length: 49
+Connection: keep-alive
+x-envoy-upstream-service-time: 32
+content-disposition: attachment; filename=UPDATE.TXT
+pragma: public
+cache-control: private
+Server: SOWA
+Accept-Ranges: bytes
+
+
+Disconnected.
+
+
+
+SN:L40528002577, MODEL:UNKNOWN, ECR:
+Connecting to http://185.157.96.41:80/upos2-web/block1, result=0
+
+Sent:
+-----
+POST /upos2-web/block1 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/json, application/*+json
+Content-type: application/json;charset=UTF-8
+Content-Length: 248
+
+{"REPLIES":[{"CONF_HASH":"0000000000000000000000000000000000000000","ECR_HASH":"0000000000000000000000000000000000000000","KCV_KLK":"000000","MODEL_A":"LINUX","MODEL_T":"UNKNOWN","SN":"L40528002577","SN_OLD":"L40528002577","VERSION_A":"30.26.10"}]}
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:52:04 GMT
+Content-Type: application/json;charset=UTF-8
+Content-Length: 359
+Connection: keep-alive
+x-envoy-upstream-service-time: 104
+Server: SOWA
+Accept-Ranges: bytes
+{"success":true,"body":{"COMMANDS":[{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"TERMINAL"}},{"CMD":"CHECK_FILES","DETAILS":{"FILES":[{"FILE_HASH":"BB09BCA1B45FC17EF2CE8EFE0F9519AFE15A285D","FILE_NAME":"UPDATE.TXT","FILE_SIZE":"49"}],"TARGET":"ECR"}}]}}
+
+Disconnected.
+
+
+
+Connecting to http://185.157.96.41:80/upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577, result=0
+
+Sent:
+-----
+GET /upos2-web/getFile/block1?name=UPDATE.TXT&terminalSN=L40528002577 HTTP/1.1
+Host: 185.157.96.41
+Connection: keep-alive
+User-Agent: TERMINAL
+Accept: application/octet-stream
+Content-Type: application/octet-stream
+
+
+
+Received:
+---------
+HTTP/1.1 200 OK
+Date: Wed, 22 Jan 2025 18:52:04 GMT
+Content-Type: application/octet-stream
+Content-Length: 49
+Connection: keep-alive
+x-envoy-upstream-service-time: 21
+content-disposition: attachment; filename=UPDATE.TXT
+pragma: public
+cache-control: private
+Server: SOWA
+Accept-Ranges: bytes
+
+
+Disconnected.
+
+
+

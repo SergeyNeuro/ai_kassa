@@ -17,6 +17,7 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(funcName)
 logger = logging.getLogger("app")
 
 web_core = WebCore()
+web_core = TestWebCore()
 
 class MainWindow(QMainWindow):
     """Главное окно приложения"""
@@ -159,14 +160,8 @@ class MainWindow(QMainWindow):
         resized_frame = cv2.resize(frame, (640, 640))
 
         result = web_core.send_dataset_photo(image=resized_frame)
-        # if result:
-        #     QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
-        # else:
-        #     QMessageBox.critical(self, "Ошибка", f"Не удалось сохранить фото")
-
         msg_box = QMessageBox(self)
         if result:
-            # msg_box = QMessageBox.information(self, "Информация", f"Фото успешно сохранено")
             msg_box.setWindowTitle("Информация")
             msg_box.setText("Фото успешно сохранено")
         else:
@@ -175,7 +170,6 @@ class MainWindow(QMainWindow):
 
         # Устанавливаем стиль
         msg_box.setStyleSheet("background-color: white; color: black;")
-
         msg_box.exec()
 
 

@@ -1,12 +1,16 @@
+annotated-types==0.7.0
 certifi==2024.8.30
 charset-normalizer==3.4.0
 idna==3.10
 numpy==2.1.2
 opencv-python-headless==4.10.0.84
 pillow==11.0.0
+pydantic==2.10.6
+pydantic_core==2.27.2
 PyQt6==6.7.1
 PyQt6-Qt6==6.7.3
 PyQt6_sip==13.8.0
 python-dotenv==1.0.1
 requests==2.32.3
+typing_extensions==4.12.2
 urllib3==2.2.3
