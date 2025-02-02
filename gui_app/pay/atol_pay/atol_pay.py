@@ -14,7 +14,9 @@ class Atol:
     atol: IFptr
 
     def __init__(self, settings_com_file: str = "/dev/ttyACM1"):
+        logger.info(f'Инициализирую кассу ATOL')
         self.init(settings_com_file=settings_com_file)
+        self.execute(self.close_shift)
 
     def init(self, settings_com_file: str):
         """Иницифлизация объекта класса для взаимодействия с кассовым аппататом Atol"""
@@ -63,7 +65,8 @@ class Atol:
             "type": "closeShift",
             "operator": {
                 "name": "Иванов"
-            }
+            },
+            "electronically": True
         }
         data = json.dumps(data)
         name = "close_shift"
@@ -152,40 +155,40 @@ if __name__ == '__main__':
 
     # obj.execute(obj.create_check, (1,))
     obj.execute(command_func=obj.close_shift)
-    items_list = [
-        DishSchem(
-            id=1,
-            name="dish_1",
-            menu_id=1,
-            code_name="code",
-            type=1,
-            count_type=1,
-            count=2,
-            price=2,
-            changing_dish_id=None
-        ),
-        DishSchem(
-            id=1,
-            name="dish_2",
-            menu_id=1,
-            code_name="code",
-            type=1,
-            count_type=1,
-            count=1,
-            price=1,
-            changing_dish_id=None
-        ),
-        DishSchem(
-            id=1,
-            name="dish_3",
-            menu_id=1,
-            code_name="code",
-            type=1,
-            count_type=1,
-            count=3,
-            price=3,
-            changing_dish_id=None
-        ),
-    ]
+    # items_list = [
+    #     DishSchem(
+    #         id=1,
+    #         name="dish_1",
+    #         menu_id=1,
+    #         code_name="code",
+    #         type=1,
+    #         count_type=1,
+    #         count=2,
+    #         price=2,
+    #         changing_dish_id=None
+    #     ),
+    #     DishSchem(
+    #         id=1,
+    #         name="dish_2",
+    #         menu_id=1,
+    #         code_name="code",
+    #         type=1,
+    #         count_type=1,
+    #         count=1,
+    #         price=1,
+    #         changing_dish_id=None
+    #     ),
+    #     DishSchem(
+    #         id=1,
+    #         name="dish_3",
+    #         menu_id=1,
+    #         code_name="code",
+    #         type=1,
+    #         count_type=1,
+    #         count=3,
+    #         price=3,
+    #         changing_dish_id=None
+    #     ),
+    # ]
     # obj.create_check(items_list)
     # obj.execute(obj.create_check, (items_list,))

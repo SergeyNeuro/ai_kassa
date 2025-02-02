@@ -13,3 +13,8 @@ class DishSchem(BaseModel):
     count: int
     price: int
     changing_dish_id: Optional[int] = None
+
+
+class OperationSchem(BaseModel):
+    success: bool
+    info: str

@@ -1,5 +1,5 @@
 from PyQt6.QtWidgets import QMainWindow, QApplication, QPushButton, QLabel, QMessageBox, QVBoxLayout, QHBoxLayout, QWidget
-from PyQt6.QtCore import Qt, QTimer
+from PyQt6.QtCore import Qt, QTimer, pyqtSignal, QThread
 from PyQt6.QtGui import QImage, QPixmap
 from PyQt6.QtGui import QColor, QPalette
 
@@ -12,6 +12,7 @@ import sys
 from cart import CartWindow
 from web_core import TestWebCore
 from web_core import WebCore
+from pay import base_check_manager, base_pay_manager
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s")
 logger = logging.getLogger("app")
@@ -19,12 +20,39 @@ logger = logging.getLogger("app")
 web_core = WebCore()
 web_core = TestWebCore()
 
+
+class MainPayThread(QThread):
+    finished = pyqtSignal(bool, str)  # Сигнал для передачи результата оплаты
+
+    def __init__(
+            self,
+            pay_manager: base_pay_manager.IngenicoPay,
+            check_manager: base_check_manager.Atol
+    ):
+        super().__init__()
+        self.pay_manager = pay_manager
+        self.check_manager = check_manager
+
+    def run(self):
+        """Метод запуска инициализации кассы и терминала"""
+        terminal = self.pay_manager.check_connection()
+        if terminal.success:
+            terminal.info = "Связь терминала с банком исправна"
+
+        # возвращаем сигнал в основной поток
+        self.finished.emit(terminal.success, terminal.info)
+        
+
 class MainWindow(QMainWindow):
     """Главное окно приложения"""
     def __init__(self):
         try:
             super().__init__()
             logger.info(f"Инициализирую главное окно")
+
+            # создаем объекты для взаимодейсвия с кассой и платежным терминалом
+            self.pay_manager = base_pay_manager.choice_pay_manager()
+            self.check_manager = base_check_manager.choice_check_manager()
 
             self.setWindowTitle("Главное окно")
             self.setGeometry(0, 0, WIDTH, HEIGHT)
@@ -85,7 +113,7 @@ class MainWindow(QMainWindow):
             self.central_widget = QWidget()
             self.central_widget.setLayout(self.main_layout)
             self.setCentralWidget(self.central_widget)
-            self.setStyleSheet("background-color: #FFFFFF;")
+            # self.setStyleSheet("background-color: #FFFFFF;")
 
             # Создаем объект cv2.VideoCapture один раз
             self.capture = cv2.VideoCapture(0)
@@ -124,12 +152,7 @@ class MainWindow(QMainWindow):
         # отправляем изображение на сервер чтобы найти на нем блюда
         dishes_data = self.get_predict_data(image=resized_frame)
         if not dishes_data:
-            # QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда. Повторите попытку")
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Не удалось распознать блюда. Повторите попытку")
-            msg_box.setStyleSheet("background-color: white; color: black;")
-            msg_box.exec()
+            QMessageBox.warning(None, "Ошибка!!!", "Не удалось распознать блюда. Повторите попытку")
         else:
             self.w = CartWindow(image=resized_frame, dishes_data=dishes_data)
             self.w.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
@@ -162,11 +185,9 @@ class MainWindow(QMainWindow):
         result = web_core.send_dataset_photo(image=resized_frame)
         msg_box = QMessageBox(self)
         if result:
-            msg_box.setWindowTitle("Информация")
-            msg_box.setText("Фото успешно сохранено")
+            QMessageBox.information(None, "Информация", "Фото успешно сохранено")
         else:
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Не удалось сохранить фото")
+            QMessageBox.warning(None, "Ошибка!!!", "Не удалось сохранить фото")
 
         # Устанавливаем стиль
         msg_box.setStyleSheet("background-color: white; color: black;")
@@ -184,3 +205,4 @@ if __name__ == '__main__':
     w.showMaximized()
     w.show()
     app.exec()
+

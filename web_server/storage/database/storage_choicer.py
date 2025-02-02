@@ -62,3 +62,23 @@ class StorageTypeChoicer:
             "cache_db": cache_db.WeekDayDishDbCache
         }
         return data_dict[self.storage_type]()
+
+    def r_keeper_credentials_obj(self) -> database.BaseRKeeperCredentials:
+        """
+        Метод выбирает объект для взаимодействия
+        с данными авторизации в системе r-keeper
+        """
+        data_dict = {
+            "cache_db": cache_db.RKeeperCredentialsDbCache
+        }
+        return data_dict[self.storage_type]()
+
+    def r_keeper_dish_obj(self) -> database.BaseRKeeperDish:
+        """
+        Метод выбирает объект для взаимодействия
+        с данными блюд из системы r-keeper
+        """
+        data_dict = {
+            "cache_db": cache_db.RKeeperDishDbCache
+        }
+        return data_dict[self.storage_type]()

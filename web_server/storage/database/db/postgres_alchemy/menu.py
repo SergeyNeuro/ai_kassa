@@ -23,6 +23,7 @@ class MenuTable(Base):
         details: описание меню
         ai_model_name: наименование модели нейросети
         customer_id: идентификатор заказчика к которому меню относится
+        system_name: наименование системы учета (например r_keeper)
     """
 
     __tablename__ = "menu_table"
@@ -32,6 +33,7 @@ class MenuTable(Base):
     details: Mapped[str] = mapped_column(nullable=True)
     ai_model_name: Mapped[str] = mapped_column(nullable=False)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
+    system_name: Mapped[str] = mapped_column(nullable=False)
 
 
 class MenuDAL(database.BaseMenu):

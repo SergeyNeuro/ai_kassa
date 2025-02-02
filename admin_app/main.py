@@ -22,5 +22,7 @@ admin.add_view(model_view.DishModelView(models.DishTable, icon="fa fa-cutlery", 
 admin.add_view(model_view.ChangingDishModelView(models.ChangingDishTable, icon="fa fa-question", label="Сомневающиеся позиции"))
 admin.add_view(model_view.WeekDayDishModelView(models.WeekDayDishTable, icon="fa fa-calendar", label="Блюда по дням недели"))
 admin.add_view(model_view.FoodPointModelView(models.FoodPointTable, icon="fa fa-building", label="Точки приема пищи"))
+admin.add_view(model_view.RKeeperCredentialsModelView(models.RKeeperCredentialsTable, icon="fa fa-registered", label="r-keeper авторизация"))
+admin.add_view(model_view.RKeeperDishModelView(models.RKeeperDishTable, icon="fa fa-search-minus", label="Блюда r_keeper"))
 
 admin.mount_to(app)

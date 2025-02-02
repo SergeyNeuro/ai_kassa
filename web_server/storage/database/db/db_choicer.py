@@ -64,3 +64,23 @@ class DbChoicer:
             "postgres_alchemy": postgres_alchemy.WeekDayDishDAL
         }
         return data_dict[self.db_name]()
+
+    def choice_r_keeper_credentials_obj(self) -> database.BaseRKeeperCredentials:
+        """
+        Метод выбирает объект для взаимодействия с авторизационными данными для доступа к r_keeper
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.RKeeperCredentialsDAL
+        }
+        return data_dict[self.db_name]()
+
+    def choice_r_keeper_dish_obj(self) -> database.BaseRKeeperDish:
+        """
+        Метод выбирает объект для взаимодействия с блюдами из r_keeper
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.RKeeperDishDAL
+        }
+        return data_dict[self.db_name]()

@@ -2,7 +2,8 @@ from starlette_admin.contrib.sqla import ModelView
 
 from models import CustomersTable, AuthTokenTable, MenuTable
 from models import ChangingDishTable, DishTable, FoodPointTable
-from models import WeekDayDishTable
+from models import WeekDayDishTable, RKeeperCredentialsTable
+from models import RKeeperDishTable
 
 
 class CustomerModelView(ModelView):
@@ -36,7 +37,8 @@ class MenuModelView(ModelView):
         MenuTable.name,
         MenuTable.customer,
         MenuTable.ai_model_name,
-        MenuTable.details
+        MenuTable.details,
+        MenuTable.system_name
     ]
 
 
@@ -81,4 +83,28 @@ class WeekDayDishModelView(ModelView):
         WeekDayDishTable.week_day,
         WeekDayDishTable.dish,
         WeekDayDishTable.changing_dish
+    ]
+
+
+class RKeeperCredentialsModelView(ModelView):
+    fields = [
+        RKeeperCredentialsTable.id,
+        RKeeperCredentialsTable.name,
+        RKeeperCredentialsTable.token,
+        RKeeperCredentialsTable.object_id,
+        RKeeperCredentialsTable.menu,
+        RKeeperCredentialsTable.created_at,
+        RKeeperCredentialsTable.update_at,
+    ]
+
+    exclude_fields_from_create = [RKeeperCredentialsTable.created_at, RKeeperCredentialsTable.update_at]
+    exclude_fields_from_edit = [RKeeperCredentialsTable.created_at, RKeeperCredentialsTable.update_at]
+
+
+class RKeeperDishModelView(ModelView):
+    fields = [
+        RKeeperDishTable.id,
+        RKeeperDishTable.name,
+        RKeeperDishTable.dish,
+        RKeeperDishTable.menu
     ]

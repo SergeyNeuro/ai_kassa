@@ -71,6 +71,7 @@ class MenuTable(Base):
     ai_model_name: Mapped[str] = mapped_column(nullable=False)
     details: Mapped[str] = mapped_column(nullable=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
+    system_name: Mapped[str] = mapped_column(nullable=False)
     customer = relationship("CustomersTable")
 
 
@@ -150,3 +151,47 @@ class WeekDayDishTable(Base):
                                                   nullable=False)
     dish = relationship("DishTable")
     changing_dish = relationship("ChangingDishTable")
+
+
+class RKeeperCredentialsTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название меню
+        details: описание меню
+        ai_model_name: наименование модели нейросети
+        customer_id: идентификатор заказчика к которому меню относится
+        system_name: наименование системы учета (например r_keeper)
+    """
+
+    __tablename__ = "r_keeper_credentials_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=False, unique=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    token: Mapped[str] = mapped_column(nullable=False)
+    object_id: Mapped[int] = mapped_column(nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+    menu = relationship("MenuTable")
+
+
+class RKeeperDishTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название меню
+        details: описание меню
+        ai_model_name: наименование модели нейросети
+        customer_id: идентификатор заказчика к которому меню относится
+        system_name: наименование системы учета (например r_keeper)
+    """
+
+    __tablename__ = "r_keeper_dish_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    dish_id: Mapped[int] = mapped_column(ForeignKey("dish_table.id", ondelete="CASCADE"), nullable=True, unique=True)
+    dish = relationship("DishTable")
+    name: Mapped[str] = mapped_column(nullable=False)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=True)
+    menu = relationship("MenuTable")

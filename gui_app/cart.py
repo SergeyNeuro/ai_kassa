@@ -16,13 +16,14 @@ from PyQt6.QtCore import Qt
 from PyQt6.QtGui import QFont
 import numpy
 import cv2
+from concurrent.futures import ThreadPoolExecutor
 
 from config import DISTH_TYPE, COUNT_TYPE, COLORS, FONT
 from painter import Painter
 from config import HEIGHT, WIDTH
 from pay.base_pay_manager import choice_pay_manager
 from pay.base_check_manager import choice_check_manager
-from schemas import DishSchem
+from schemas import DishSchem, OperationSchem
 
 logger = logging.getLogger(f"app.{__name__}")
 
@@ -38,13 +39,10 @@ class CartWindow(QWidget):
         # отправляем изображение на веб сервер, для предсказания какие блюда на фото
         self.dishes_data = dishes_data
 
+        self.executor = ThreadPoolExecutor(max_workers=1)
+
         if not self.dishes_data:
-            # QMessageBox.information(self, "Ошибка", "Не удалось распознать блюда")
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Не удалось распознать блюда")
-            msg_box.setStyleSheet("background-color: white; color: black;")
-            msg_box.exec()
+            QMessageBox.warning(None, "Ошибка!!!", "Не удалось распознать блюда")
 
         else:
             self.image = image
@@ -70,45 +68,61 @@ class CartWindow(QWidget):
         """Вход в полноэкранный режим"""
         self.showFullScreen()
 
+    def start_pay_event(self):
+        """Запускаем ивент на работу с устройствами оплаты в отдельном потоке"""
+        # блокируем все кнопки, чтобы во время оплаты пользователь не нажал лишнего
+        self.toggle_buttons()
+        future = self.executor.submit(self.pay_cart)
+        future.add_done_callback(self.on_pay_finished)
+
     def pay_cart(self):
         """Проводим логику оплаты заказа"""
         logger.info("Обрабатываю ивент на оплату")
         total_price = 0
         for one_dish in self.dishes_data:
             if type(one_dish["dish_data"]) == list:
-                # QMessageBox.information(self, "Ошибка", "Заполнен информация не по всем блюдам")
-                msg_box = QMessageBox(self)
-                msg_box.setWindowTitle("Ошибка")
-                msg_box.setText("Заполнен информация не по всем блюдам")
-                msg_box.setStyleSheet("background-color: white; color: black;")
-                msg_box.exec()
-
-                break
+                logger.error(f"Заполнена информация не по всем блюдам. Спорная ситуаци: {one_dish['dish_data']}")
+                return OperationSchem(success=False, info="Заполнен информация не по всем блюдам")
             else:
                 total_price += one_dish["dish_data"]["price"]
         else:  # выполняется если цикл корректно завершился
             logger.info(f"Сумма оплаты заказа: {total_price}")
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setStyleSheet("background-color: white; color: black;")
             # отправляем информацию на платежный терминал
             logger.info(f"Отправляю информацию на платежный терминал на сумму {total_price} рублей")
-            # pay = self.pay_manager.pay(value=int(total_price * 100))
-            # создаем чек
-            check = self.check_manager.execute(
-                self.check_manager.create_check,
-                ([DishSchem.model_validate(item["dish_data"]) for item in self.dishes_data],)
-            )
-            pay = 1
-            if pay:
-                msg_box.setWindowTitle("Информация")
-                msg_box.setText("Успешно оплачено")
-                msg_box.exec()
-                self.close()
+            pay = self.pay_manager.pay(value=int(total_price * 100))
+
+            if pay.success:
+                # создаем чек
+                self.check_manager.execute(
+                    self.check_manager.create_check,
+                    ([DishSchem.model_validate(item["dish_data"]) for item in self.dishes_data],)
+                )
+                print("HERE")
+                return OperationSchem(success=True, info="Оплата прошла успешно")
             else:
-                msg_box.setWindowTitle("Ошибка")
-                msg_box.setText("Ошибка при оплате")
-                msg_box.exec()
+                return OperationSchem(success=False, info=pay.info)
+
+    def on_pay_finished(self, future):
+        """callback обработка ивента оплаты
+        Args:
+            future: футура, в которую поместится результа выполнения функции из другого потока
+        """
+        # разблокируем все кнопки, чтобы во время оплаты пользователь не нажал лишнего
+        self.toggle_buttons()
+        res: OperationSchem = future.result()
+        if res.success:
+            QMessageBox.information(None, "Оплата", "Оплата прошла успешно")
+            self.close()
+        else:
+            QMessageBox.critical(None, "Ошибка!!!", res.info)
+
+    def toggle_buttons(self):
+        """Блокировка или разблокировка всех кнопок на странице"""
+        # Находим все кнопки на странице
+        buttons = self.findChildren(QPushButton)
+        # Переключаем состояние каждой кнопки
+        for button in buttons:
+            button.setEnabled(not button.isEnabled())
 
     def create_left_widget(self):
         """Настройка левого виджета окна корзины. В левой части находится изображение
@@ -210,18 +224,14 @@ class CartWindow(QWidget):
         if not base_layout:
             logger.info(f"Правый слой не создан. Создаю его")
             base_layout = QGridLayout()
-
             # Устанавливаем расстояние между виджетами
             base_layout.setHorizontalSpacing(0)  # Устанавливаем горизонтальное расстояние на 0
             base_layout.setVerticalSpacing(0)  # Устанавливаем вертикальное расстояние на 0
-
             # Устанавливаем отступы для содержимого
             base_layout.setContentsMargins(0, 0, 0, 0)  # Устанавливаем отступы (левый, верхний, правый, нижний) на 0
-
             right_widget = QWidget()
             right_widget.setLayout(base_layout)
             right_widget.setStyleSheet("background-color: #ffffff;")
-
             # Добавляем текст
             self.fill_tail_dishes_layout(layout=base_layout)
 
@@ -262,9 +272,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12x;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -285,9 +293,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -296,7 +302,8 @@ class CartWindow(QWidget):
                         background-color: #0d47a1;
                     }
                 """)
-        pay_btn.clicked.connect(lambda: self.pay_cart())
+        # pay_btn.clicked.connect(lambda: self.pay_cart())
+        pay_btn.clicked.connect(self.start_pay_event)
         base_layout.addWidget(pay_btn, index + 3, 5)
         for i in range(base_layout.rowCount()):
             base_layout.itemAt(i).widget().setSizePolicy(QSizePolicy.Policy.Expanding,
@@ -345,9 +352,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -376,9 +381,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -443,9 +446,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -487,9 +488,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -569,9 +568,7 @@ class CartWindow(QWidget):
                         border: 1px solid gray;
                         padding: 10px 20px;
                         font-size: 12px;
-                        cursor: pointer;
                         border-radius: 5px;
-                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
                     }
                     QPushButton:hover {
                         background-color: #1a237e;
@@ -593,9 +590,7 @@ class CartWindow(QWidget):
                 border: 1px solid gray;
                 padding: 10px 20px;
                 font-size: 12px;
-                cursor: pointer;
                 border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             QPushButton:hover {
                 background-color: #1a237e;
@@ -618,9 +613,7 @@ class CartWindow(QWidget):
                 border: 1px solid gray;
                 padding: 10px 20px;
                 font-size: 12x;
-                cursor: pointer;
                 border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             QPushButton:hover {
                 background-color: #1a237e;
@@ -643,9 +636,7 @@ class CartWindow(QWidget):
                 border: 1px solid gray;
                 padding: 10px 20px;
                 font-size: 12px;
-                cursor: pointer;
                 border-radius: 5px;
-                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             }
             QPushButton:hover {
                 background-color: #1a237e;
@@ -673,12 +664,7 @@ class CartWindow(QWidget):
             data["count"] = new_dish_count
             self.create_right_widget(base_layout=layout)
         except Exception as _ex:
-            # QMessageBox.information(self, "Ошибка", "Введено слишком маленькое или не корректное значение")
-            msg_box = QMessageBox(self)
-            msg_box.setWindowTitle("Ошибка")
-            msg_box.setText("Введено слишком маленькое или не корректное значение")
-            msg_box.setStyleSheet("background-color: white; color: black;")
-            msg_box.exec()
+            QMessageBox.warning(None, "Ошибка!!!", "Введено слишком маленькое или не корректное значение")
 
     def back(self, layout: QGridLayout):
         """Перейти в центральное меню корзины

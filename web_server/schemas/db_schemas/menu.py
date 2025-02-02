@@ -19,3 +19,4 @@ class MenuSchem(BaseModel):
     customer_id: int
     ai_model_name: str
     details: Union[str, None]
+    system_name: str

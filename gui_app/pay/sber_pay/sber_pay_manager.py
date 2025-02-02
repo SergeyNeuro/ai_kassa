@@ -3,27 +3,27 @@ import logging
 from typing import Optional
 import os
 
+from schemas import OperationSchem
+
 
 logger = logging.getLogger(f"app.{__name__}")
 app_dir = os.path.join(os.path.dirname(__file__))
-# pilot_path = os.path.join('pay', 'sber_pay', 'sb_pilot')
 
 class SberPayManager:
     """Объект для взаимодействия с платежным терминалом Сбербанка"""
 
-    def pay(self, value: int) -> bool:
+    def pay(self, value: int) -> OperationSchem:
         """Отправка счета на оплату на платежный терминал
         Args:
             value: сумма на оплату в копейках
         """
         data = self.run_command(command=['./sb_pilot', '1', str(value)])
-        # data = self.run_command(command=['./' + pilot_path, '1', str(value)])
         if data == 0:
             logger.info(f"Оплата на сумму: {value} в <Сбербанк> успешно проведена")
-            return True
+            return OperationSchem(success=True, info=f"Успешно плачено")
         else:
             logger.error(f"Ошибка при оплате суммы: {value} <Сбербанк> -> {data}")
-            return False
+            return OperationSchem(success=False, info="Ошибка при оплате")
 
     def close_shift(self) -> bool:
         """Закрытие смены, чтобы средства поступили на расчетный счёт"""

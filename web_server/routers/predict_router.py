@@ -18,6 +18,7 @@ router = APIRouter(prefix="/predict", tags=['predict'])
 async def predict_image_data(
         menu_id: int,
         timestamp: int,
+        kassa_id: int,
         token: Union[str, None] = Depends(get_token_by_headers),
         auth_obj=Depends(AuthObj),
         file: UploadFile = File(...),
@@ -26,6 +27,11 @@ async def predict_image_data(
     """Данный роутер получает изображение.
     Обращается в сервис для расшифровки изображения
     для предсказания того, что изображено на фото
+    Args:
+        menu_id: идентификатор меню от которого приходит запрос
+        timestamp: дата отправки запроса
+        kassa_id: идентификатор кассы от которой приходит запрос
+        token: токен доступа
     """
 
     # проверяем токен на валидность
