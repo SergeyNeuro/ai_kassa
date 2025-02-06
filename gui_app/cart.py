@@ -12,34 +12,72 @@ from PyQt6.QtWidgets import (
     QLineEdit, QSizePolicy
 )
 from PyQt6.QtGui import QPixmap, QImage
-from PyQt6.QtCore import Qt
+from PyQt6.QtCore import Qt, pyqtSignal, QThread
 from PyQt6.QtGui import QFont
 import numpy
 import cv2
-from concurrent.futures import ThreadPoolExecutor
 
 from config import DISTH_TYPE, COUNT_TYPE, COLORS, FONT
 from painter import Painter
 from config import HEIGHT, WIDTH
-from pay.base_pay_manager import choice_pay_manager
-from pay.base_check_manager import choice_check_manager
 from schemas import DishSchem, OperationSchem
+from pay.base_pay_manager import IngenicoPay
+from pay.base_check_manager import Atol
 
 logger = logging.getLogger(f"app.{__name__}")
 
 
+class CartKassaTerminalThread(QThread):
+    finished = pyqtSignal(bool, str)  # Сигнал для передачи результата оплаты
+
+    def __init__(self, pay_manager: IngenicoPay, check_manager: Atol, dishes_data: list):
+        super().__init__()
+        self.pay_manager = pay_manager
+        self.check_manager = check_manager
+        self.dishes_data = dishes_data
+
+
+    def run(self):
+        """Проводим логику оплаты заказа"""
+        logger.info("Обрабатываю ивент на оплату")
+        total_price = 0
+        for one_dish in self.dishes_data:
+            if type(one_dish["dish_data"]) == list:
+                logger.error(f"Заполнена информация не по всем блюдам. Спорная ситуаци: {one_dish['dish_data']}")
+                # return OperationSchem(success=False, info="Заполнен информация не по всем блюдам")
+                self.finished.emit(False, "Заполнен информация не по всем блюдам")
+                return
+            else:
+                total_price += one_dish["dish_data"]["price"]
+        else:  # выполняется если цикл корректно завершился
+            logger.info(f"Сумма оплаты заказа: {total_price}")
+            # отправляем информацию на платежный терминал
+            logger.info(f"Отправляю информацию на платежный терминал на сумму {total_price} рублей")
+            pay = self.pay_manager.pay(value=int(total_price * 100))
+
+            if pay.success:
+                # создаем чек
+                self.check_manager.execute(
+                    self.check_manager.create_check,
+                    ([DishSchem.model_validate(item["dish_data"]) for item in self.dishes_data],)
+                )
+                # return OperationSchem(success=True, info="Оплата прошла успешно")
+                self.finished.emit(True, "Оплата прошла проведена")
+            else:
+                # return OperationSchem(success=False, info=pay.info)
+                self.finished.emit(False, pay.info)
+            
+        
 class CartWindow(QWidget):
     """Окно корзины с изображением и кнопками"""
-    pay_manager = choice_pay_manager()
-    check_manager = choice_check_manager()
 
-    def __init__(self, image: numpy.ndarray, dishes_data: list):
+    def __init__(self, image: numpy.ndarray, dishes_data: list, pay_manager: IngenicoPay, check_manager: Atol):
         super().__init__()
+        self.pay_manager = pay_manager
+        self.check_manager = check_manager
 
         # отправляем изображение на веб сервер, для предсказания какие блюда на фото
         self.dishes_data = dishes_data
-
-        self.executor = ThreadPoolExecutor(max_workers=1)
 
         if not self.dishes_data:
             QMessageBox.warning(None, "Ошибка!!!", "Не удалось распознать блюда")
@@ -72,49 +110,27 @@ class CartWindow(QWidget):
         """Запускаем ивент на работу с устройствами оплаты в отдельном потоке"""
         # блокируем все кнопки, чтобы во время оплаты пользователь не нажал лишнего
         self.toggle_buttons()
-        future = self.executor.submit(self.pay_cart)
-        future.add_done_callback(self.on_pay_finished)
+        self.thread = CartKassaTerminalThread(
+            pay_manager=self.pay_manager, 
+            check_manager=self.check_manager,
+            dishes_data=self.dishes_data
+            )
+        self.thread.finished.connect(self.on_pay_finished)
+        self.thread.start()
 
-    def pay_cart(self):
-        """Проводим логику оплаты заказа"""
-        logger.info("Обрабатываю ивент на оплату")
-        total_price = 0
-        for one_dish in self.dishes_data:
-            if type(one_dish["dish_data"]) == list:
-                logger.error(f"Заполнена информация не по всем блюдам. Спорная ситуаци: {one_dish['dish_data']}")
-                return OperationSchem(success=False, info="Заполнен информация не по всем блюдам")
-            else:
-                total_price += one_dish["dish_data"]["price"]
-        else:  # выполняется если цикл корректно завершился
-            logger.info(f"Сумма оплаты заказа: {total_price}")
-            # отправляем информацию на платежный терминал
-            logger.info(f"Отправляю информацию на платежный терминал на сумму {total_price} рублей")
-            pay = self.pay_manager.pay(value=int(total_price * 100))
-
-            if pay.success:
-                # создаем чек
-                self.check_manager.execute(
-                    self.check_manager.create_check,
-                    ([DishSchem.model_validate(item["dish_data"]) for item in self.dishes_data],)
-                )
-                print("HERE")
-                return OperationSchem(success=True, info="Оплата прошла успешно")
-            else:
-                return OperationSchem(success=False, info=pay.info)
-
-    def on_pay_finished(self, future):
+    def on_pay_finished(self, success: bool, info: str):
         """callback обработка ивента оплаты
         Args:
-            future: футура, в которую поместится результа выполнения функции из другого потока
+            
         """
         # разблокируем все кнопки, чтобы во время оплаты пользователь не нажал лишнего
         self.toggle_buttons()
-        res: OperationSchem = future.result()
-        if res.success:
+
+        if success:
             QMessageBox.information(None, "Оплата", "Оплата прошла успешно")
             self.close()
         else:
-            QMessageBox.critical(None, "Ошибка!!!", res.info)
+            QMessageBox.critical(None, "Ошибка!!!", info)
 
     def toggle_buttons(self):
         """Блокировка или разблокировка всех кнопок на странице"""

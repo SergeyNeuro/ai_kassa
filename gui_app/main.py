@@ -21,28 +21,32 @@ web_core = WebCore()
 web_core = TestWebCore()
 
 
-class MainPayThread(QThread):
+class MainKassaTerminalThread(QThread):
     finished = pyqtSignal(bool, str)  # Сигнал для передачи результата оплаты
 
-    def __init__(
-            self,
-            pay_manager: base_pay_manager.IngenicoPay,
-            check_manager: base_check_manager.Atol
-    ):
+    def __init__(self, pay_manager: base_pay_manager.IngenicoPay, check_manager: base_check_manager.Atol):
         super().__init__()
         self.pay_manager = pay_manager
         self.check_manager = check_manager
 
     def run(self):
         """Метод запуска инициализации кассы и терминала"""
-        terminal = self.pay_manager.check_connection()
-        if terminal.success:
-            terminal.info = "Связь терминала с банком исправна"
+        result = ""
+        kassa = self.check_manager.init()
+        if not kassa:
+            self.finished.emit(False, "Нет связи с кассой")
+        else:
+            result += "Касса готова к работе\n"
 
-        # возвращаем сигнал в основной поток
-        self.finished.emit(terminal.success, terminal.info)
+        terminal = self.pay_manager.init()
+        if not terminal.success:
+            terminal.success = False
+            result += terminal.info
+        else:
+            result += "Терминал готов к работе"
+        self.finished.emit(terminal.success, result)
+
         
-
 class MainWindow(QMainWindow):
     """Главное окно приложения"""
     def __init__(self):
@@ -123,8 +127,23 @@ class MainWindow(QMainWindow):
             self.timer = QTimer(self)
             self.timer.timeout.connect(self.update_frame)
             self.timer.start(50)  # Устанавливаем таймер обновления кадров на 50 мс
+
+            self.init_kassa_terminal()
         except Exception as _ex:
             logger.error(f"Ошибка при создании главного окна -> {_ex}")
+
+    def init_kassa_terminal(self):
+        """Запуск инициализации платежного терминала в отдельном потоке"""
+        self.thread = MainKassaTerminalThread(self.pay_manager, self.check_manager)
+        self.thread.finished.connect(self.init_terminal_result)
+        self.thread.start()
+
+    def init_terminal_result(self, success, info):
+        """Обработка результата инициализации платежного терминала"""
+        if success:
+            QMessageBox.information(self, "Информация", info)
+        else:
+            QMessageBox.critical(self, "Ошибка!!!", info)
 
     def update_frame(self):
         """Метод обновления изображения с камеры"""
@@ -154,7 +173,7 @@ class MainWindow(QMainWindow):
         if not dishes_data:
             QMessageBox.warning(None, "Ошибка!!!", "Не удалось распознать блюда. Повторите попытку")
         else:
-            self.w = CartWindow(image=resized_frame, dishes_data=dishes_data)
+            self.w = CartWindow(image=resized_frame, dishes_data=dishes_data, pay_manager=self.pay_manager, check_manager=self.check_manager)
             self.w.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
             self.w.enter_full_screen()
             self.w.show()

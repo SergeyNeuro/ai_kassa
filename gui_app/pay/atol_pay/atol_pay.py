@@ -2,9 +2,13 @@ from typing import Callable, Optional, List
 import json
 import logging
 
-from .libfptr10 import IFptr
+from libfptr10 import IFptr
 
-from schemas import DishSchem
+# from schemas import DishSchem
+# from devices import DeviceChecker
+
+class DishSchem:
+    pass
 
 
 logger = logging.getLogger(f"app.{__name__}")
@@ -12,28 +16,61 @@ logger = logging.getLogger(f"app.{__name__}")
 
 class Atol:
     atol: IFptr
+    # checker = DeviceChecker()
 
-    def __init__(self, settings_com_file: str = "/dev/ttyACM1"):
+    def __init__(self, settings_com_file):
         logger.info(f'Инициализирую кассу ATOL')
         self.init(settings_com_file=settings_com_file)
-        self.execute(self.close_shift)
 
-    def init(self, settings_com_file: str):
+    def init(self, settings_com_file) -> bool:
         """Иницифлизация объекта класса для взаимодействия с кассовым аппататом Atol"""
         # создаем объект класса
         self.atol = IFptr("")
+
+        # port = self.checker.get_device(device_name="Audioengine")
+        # if not port:
+        #     return False
+        
+        # logger.info(f"Нашел порт от устройства: {port}")
 
         # применяем настройки к объекту класса
         self.atol.setSettings(
             {
                 IFptr.LIBFPTR_SETTING_MODEL: IFptr.LIBFPTR_MODEL_ATOL_AUTO,
                 IFptr.LIBFPTR_SETTING_PORT: IFptr.LIBFPTR_PORT_USB,
+                # IFptr.LIBFPTR_SETTING_COM_FILE: port,
                 IFptr.LIBFPTR_SETTING_COM_FILE: settings_com_file,
                 IFptr.LIBFPTR_SETTING_BAUDRATE: IFptr.LIBFPTR_PORT_BR_115200
             }
         )
 
         logger.info(f"Create object for connect ATOL kassa. Driver version: {self.atol.version()}")
+        
+        self.execute(self.close_shift)
+
+        return True
+    
+    def prin_docs_from_db(self, start = 1, end = 10):
+        data = {
+            "type": "reportOfdExchangeStatus"
+        }
+        data = json.dumps(data)
+        name = "check_connection"
+        validate = self.validate_json_cmd(name=name, data=data)
+        if validate:
+            execute = self.process_json_cmd(name=name, data=data)
+            return execute
+        return False
+    
+    def get_x_report(self):
+        data = {"type": "reportX"}
+        data = json.dumps(data)
+        name = "check_connection"
+        validate = self.validate_json_cmd(name=name, data=data)
+        if validate:
+            execute = self.process_json_cmd(name=name, data=data)
+            return execute
+        return False
 
     def execute(self, command_func: Callable, args: Optional[tuple] = None) -> bool:
         """Базовый метод выполнения команд в системе Atol
@@ -58,6 +95,18 @@ class Atol:
         else:
             logger.error(f"Не удалось создать соединение с ATOL. Command: {command_func}, args: {args}")
             return False
+
+    def check_connection(self) -> bool:
+        """Проверяем есть ли связь с сервером"""
+        logger.info(f"Проверяю связь с банком у кассы Atol")
+        data = {"type": "pingIsm"}
+        data = json.dumps(data)
+        name = "check_connection"
+        validate = self.validate_json_cmd(name=name, data=data)
+        if validate:
+            execute = self.process_json_cmd(name=name, data=data)
+            return execute
+        return False
 
     def close_shift(self) -> bool:
         logger.info(f"Закрываю смену")
@@ -147,48 +196,9 @@ class Atol:
 
 
 if __name__ == '__main__':
-    obj = Atol()
-
-    def func(a, b):
-        print(a, b)
-        return True
+    obj = Atol(settings_com_file="/dev/ttyACM0")
+    # obj.init()
 
     # obj.execute(obj.create_check, (1,))
-    obj.execute(command_func=obj.close_shift)
-    # items_list = [
-    #     DishSchem(
-    #         id=1,
-    #         name="dish_1",
-    #         menu_id=1,
-    #         code_name="code",
-    #         type=1,
-    #         count_type=1,
-    #         count=2,
-    #         price=2,
-    #         changing_dish_id=None
-    #     ),
-    #     DishSchem(
-    #         id=1,
-    #         name="dish_2",
-    #         menu_id=1,
-    #         code_name="code",
-    #         type=1,
-    #         count_type=1,
-    #         count=1,
-    #         price=1,
-    #         changing_dish_id=None
-    #     ),
-    #     DishSchem(
-    #         id=1,
-    #         name="dish_3",
-    #         menu_id=1,
-    #         code_name="code",
-    #         type=1,
-    #         count_type=1,
-    #         count=3,
-    #         price=3,
-    #         changing_dish_id=None
-    #     ),
-    # ]
-    # obj.create_check(items_list)
-    # obj.execute(obj.create_check, (items_list,))
+    # obj.execute(command_func=obj.close_shift)
+    obj.execute(obj.prin_docs_from_db)
