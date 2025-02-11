@@ -7,6 +7,12 @@ WEB_SERVER_URL = os.getenv("WEB_SERVER_URL")
 MENU_ID = os.getenv("MENU_ID")
 TOKEN = os.getenv("TOKEN")
 SAVE_PHOTO = os.getenv("SAVE_PHOTO")
+# Глобальные переменные для размеров окон и элементов
+HEIGHT = int(os.getenv("HEIGHT"))
+WIDTH = int(os.getenv("WIDTH"))
+FONT = int(os.getenv("FONT"))
+PAY_MANAGER = os.getenv("PAY_MANAGER")
+BARCODE_SCANNER = os.getenv("BARCODE_SCANNER")
 
 DISTH_TYPE = {
     1: "салат",
@@ -57,10 +63,3 @@ COLORS = {
     20: (70, 130, 180),
     21: (186, 85, 211)
 }
-
-# Глобальные переменные для размеров окон и элементов
-HEIGHT = int(os.getenv("HEIGHT"))
-WIDTH = int(os.getenv("WIDTH"))
-FONT = int(os.getenv("FONT"))
-PAY_MANAGER = os.getenv("PAY_MANAGER")
-CHECK_MANAGER = os.getenv("CHECK_MANAGER")

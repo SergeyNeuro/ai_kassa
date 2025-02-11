@@ -55,8 +55,10 @@ class MainWindow(QMainWindow):
             logger.info(f"Инициализирую главное окно")
 
             # создаем объекты для взаимодейсвия с кассой и платежным терминалом
-            self.pay_manager = base_pay_manager.choice_pay_manager()
-            self.check_manager = base_check_manager.choice_check_manager()
+            # self.pay_manager = base_pay_manager.choice_pay_manager()
+            # self.check_manager = base_check_manager.choice_check_manager()
+            self.pay_manager = None
+            self.check_manager = None
 
             self.setWindowTitle("Главное окно")
             self.setGeometry(0, 0, WIDTH, HEIGHT)
@@ -128,7 +130,7 @@ class MainWindow(QMainWindow):
             self.timer.timeout.connect(self.update_frame)
             self.timer.start(50)  # Устанавливаем таймер обновления кадров на 50 мс
 
-            self.init_kassa_terminal()
+            # self.init_kassa_terminal()
         except Exception as _ex:
             logger.error(f"Ошибка при создании главного окна -> {_ex}")
 

@@ -1,5 +1,5 @@
 import datetime
-from typing import Union, List
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -13,9 +13,10 @@ class DishSchem(BaseModel):
     code_name: str
     type: int
     count_type: int
-    count: Union[int, None]
+    count: Optional[int]
     price: int
-    changing_dish_id: Union[int, None]
+    changing_dish_id: Optional[int]
+    barcode: Optional[str]
 
 
 class DishListSchem(BaseModel):

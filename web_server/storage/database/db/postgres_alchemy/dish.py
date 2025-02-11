@@ -30,6 +30,7 @@ class DishTable(Base):
     count: Mapped[int] = mapped_column(nullable=False)
     price: Mapped[int] = mapped_column(nullable=False)
     changing_dish_id: Mapped[int] = mapped_column(ForeignKey("changing_dish_table.id", ondelete="SET NULL"), nullable=True)
+    barcode: Mapped[str] = mapped_column(nullable=True)
 
 
 class DishDAL(database.BaseDish):

@@ -4,7 +4,7 @@
 import logging
 from datetime import datetime
 
-from sqlalchemy import String, ForeignKey, text
+from sqlalchemy import String, ForeignKey, text, Column, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 import logging
 
@@ -29,6 +29,7 @@ class CustomersTable(Base):
     name: Mapped[str] = mapped_column(String(40))
     phone: Mapped[str] = mapped_column(String(12), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
+    discount_type: Mapped[int] = mapped_column(nullable=True)
 
 
 class AuthTokenTable(Base):
@@ -107,6 +108,7 @@ class DishTable(Base):
     count: Mapped[int] = mapped_column(nullable=False)
     price: Mapped[int] = mapped_column(nullable=False)
     changing_dish_id: Mapped[int] = mapped_column(ForeignKey("changing_dish_table.id", ondelete="SET NULL"), nullable=True)
+    barcode: Mapped[str] = mapped_column(nullable=True)
     menu = relationship("MenuTable")
     changing_dish = relationship("ChangingDishTable")
 
@@ -195,3 +197,91 @@ class RKeeperDishTable(Base):
     name: Mapped[str] = mapped_column(nullable=False)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=True)
     menu = relationship("MenuTable")
+
+
+class DiscountAccountTable(Base):
+    """ Таблица с данными скидочных аккаунтов
+    Attr:
+        id: уникальный идентификатор заказчика
+        discount_id: идентификатор карточки или другого, что однозначно идентифицирует покупателя в системе
+        phone: номер телефона покупателя
+        email: почта покупателя
+        type: тип обработки скидочной системы (1 - столовая 67)
+        customer_id: идентификатор заказчика к которому относится данный покупатель
+        created_at: дата создания записи
+        update_at: дата обновления записи
+        balance: баланс покупателя
+    """
+    __tablename__ = "discount_account_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    discount_id: Mapped[str] = mapped_column(String(100))
+    phone: Mapped[str] = mapped_column(String(12), nullable=True)
+    email: Mapped[str] = mapped_column(String(100), nullable=True)
+    type: Mapped[int] = mapped_column(nullable=True)
+    customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+    balance: Mapped[int] = mapped_column(default=0)
+    customer = relationship("CustomersTable")
+
+
+class KassaTable(Base):
+    """Таблица с данными о меню
+    Attr:
+        id: идентификатор записи
+        name: название меню
+        login: логин для входа на кассу
+        password: пароль для входа на кассу
+        address: ip адрес на котором стоит касса
+        food_point_id: идентификатор точки питания на котором установлена касса
+    """
+
+    __tablename__ = "kassa_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    login: Mapped[str] = mapped_column(nullable=True)
+    password: Mapped[str] = mapped_column(nullable=True)
+    address: Mapped[str] = mapped_column(nullable=False)
+    food_point_id: Mapped[int] = mapped_column(ForeignKey("food_point_table.id", ondelete="SET NULL"), nullable=False)
+    food_point = relationship("FoodPointTable")
+
+
+class HistoryTable(Base):
+    """Таблица с данными истории покупок через кассу
+    Attr:
+        id: идентификатор записи
+        products: JSON с данными что именно и в каком кол-вы было куплено на кассе
+        value: сумма на которую была сделана покупка
+        kassa_id: идентификатор кассы с который была сделана покупка
+        created_at: дата и время покупки
+    """
+
+    __tablename__ = "history_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    products = Column(JSON, nullable=False)
+    value: Mapped[int] = mapped_column(nullable=False)
+    kassa_id: Mapped[int] = mapped_column(ForeignKey("kassa_table.id", ondelete="SET NULL"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    kassa = relationship("KassaTable")
+
+
+class DiscountTransactionTable(Base):
+    """ Таблица с данными транзакций по пополнению/трате баллов
+    Attr:
+        id: уникальный идентификатор заказчика
+        way: путь транзакции (1 - трата, 2 - пополнение)
+        value: кол-во баллов
+        history_id: транзакция по покупке по которой были потрачены/пополнены баллы
+        created_at: дата создания записи
+    """
+    __tablename__ = "discount_transaction_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    way: Mapped[int] = mapped_column(nullable=False)
+    value: Mapped[int] = mapped_column(nullable=False)
+    history_id: Mapped[int] = mapped_column(ForeignKey("history_table.id", ondelete="SET NULL"), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    kassa = relationship("HistoryTable")

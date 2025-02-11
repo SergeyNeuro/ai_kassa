@@ -7,7 +7,7 @@ import model_view
 from db_core import Base
 from db_core import engine
 
-Base.metadata.create_all(engine)
+# Base.metadata.create_all(engine)
 
 
 # Создаем приложение Starlette
@@ -22,7 +22,11 @@ admin.add_view(model_view.DishModelView(models.DishTable, icon="fa fa-cutlery", 
 admin.add_view(model_view.ChangingDishModelView(models.ChangingDishTable, icon="fa fa-question", label="Сомневающиеся позиции"))
 admin.add_view(model_view.WeekDayDishModelView(models.WeekDayDishTable, icon="fa fa-calendar", label="Блюда по дням недели"))
 admin.add_view(model_view.FoodPointModelView(models.FoodPointTable, icon="fa fa-building", label="Точки приема пищи"))
+admin.add_view(model_view.KassaView(models.KassaTable, icon="fa fa-shopping-cart", label="Касса"))
+admin.add_view(model_view.HistoryView(models.HistoryTable, icon="fa fa-book", label="История покупок"))
 admin.add_view(model_view.RKeeperCredentialsModelView(models.RKeeperCredentialsTable, icon="fa fa-registered", label="r-keeper авторизация"))
 admin.add_view(model_view.RKeeperDishModelView(models.RKeeperDishTable, icon="fa fa-search-minus", label="Блюда r_keeper"))
+admin.add_view(model_view.DiscountAccountView(models.DiscountAccountTable, icon="fa fa-percent", label="Скидочный аккаунт"))
+admin.add_view(model_view.DiscountTransactionView(models.DiscountTransactionTable, icon="fa fa-arrows-h", label="Транзакции баллов"))
 
 admin.mount_to(app)

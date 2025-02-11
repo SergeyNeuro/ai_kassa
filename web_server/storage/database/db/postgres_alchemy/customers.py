@@ -28,3 +28,4 @@ class CustomersTable(Base):
     name: Mapped[str] = mapped_column(String(40))
     phone: Mapped[str] = mapped_column(String(12), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
+    discount_type: Mapped[int] = mapped_column(nullable=True)

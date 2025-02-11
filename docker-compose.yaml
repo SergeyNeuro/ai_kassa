@@ -46,3 +46,6 @@ services:
         command: ["sh", "-c", "sleep 3 && gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:${ADMIN_APP_PORT} --forwarded-allow-ips=*"]
 #        depends_on:
 #          - ai_kassa_web_app
+
+
+# docker-compose --env-file .env up

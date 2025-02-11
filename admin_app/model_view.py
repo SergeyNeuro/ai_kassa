@@ -1,9 +1,11 @@
 from starlette_admin.contrib.sqla import ModelView
+from starlette_admin.fields import EnumField
 
-from models import CustomersTable, AuthTokenTable, MenuTable
-from models import ChangingDishTable, DishTable, FoodPointTable
-from models import WeekDayDishTable, RKeeperCredentialsTable
-from models import RKeeperDishTable
+from models import (
+    CustomersTable, AuthTokenTable, MenuTable, ChangingDishTable, DishTable,
+    FoodPointTable, WeekDayDishTable, RKeeperCredentialsTable, RKeeperDishTable,
+    DiscountAccountTable, KassaTable, HistoryTable, DiscountTransactionTable
+)
 
 
 class CustomerModelView(ModelView):
@@ -11,7 +13,11 @@ class CustomerModelView(ModelView):
         CustomersTable.id,
         CustomersTable.name,
         CustomersTable.phone,
-        CustomersTable.email
+        CustomersTable.email,
+        EnumField("discount_type", choices=[
+            (1, "Без скидок"),
+            (2, "Столовая 67")
+        ])
     ]
 
 
@@ -62,6 +68,7 @@ class DishModelView(ModelView):
         DishTable.price,
         DishTable.menu,
         DishTable.changing_dish,
+        DishTable.barcode
     ]
 
 
@@ -108,3 +115,59 @@ class RKeeperDishModelView(ModelView):
         RKeeperDishTable.dish,
         RKeeperDishTable.menu
     ]
+
+
+class DiscountAccountView(ModelView):
+    fields = [
+        DiscountAccountTable.id,
+        DiscountAccountTable.discount_id,
+        EnumField("type", choices=[
+            (2, "Столовая 67")
+        ]),
+        DiscountAccountTable.email,
+        DiscountAccountTable.phone,
+        DiscountAccountTable.balance,
+        DiscountAccountTable.created_at,
+        DiscountAccountTable.update_at,
+        DiscountAccountTable.customer
+    ]
+
+    exclude_fields_from_create = [DiscountAccountTable.created_at, DiscountAccountTable.update_at]
+    exclude_fields_from_edit = [DiscountAccountTable.created_at, DiscountAccountTable.update_at]
+
+
+class KassaView(ModelView):
+    fields = [
+        KassaTable.id,
+        KassaTable.name,
+        KassaTable.login,
+        KassaTable.password,
+        KassaTable.address,
+        KassaTable.food_point
+    ]
+
+
+class HistoryView(ModelView):
+    fields = [
+        HistoryTable.id,
+        HistoryTable.kassa,
+        HistoryTable.value,
+        HistoryTable.products,
+        HistoryTable.created_at
+    ]
+
+    exclude_fields_from_create = [HistoryTable.created_at]
+    exclude_fields_from_edit = [HistoryTable.created_at]
+
+
+class DiscountTransactionView(ModelView):
+    fields = [
+        DiscountTransactionTable.id,
+        DiscountTransactionTable.kassa,
+        EnumField("way", choices=[(1, "Трата баллов"), (2, "Пополнение баллов")]),
+        DiscountTransactionTable.value,
+        DiscountTransactionTable.created_at
+    ]
+
+    exclude_fields_from_create = [DiscountTransactionTable.created_at]
+    exclude_fields_from_edit = [DiscountTransactionTable.created_at]

@@ -5,3 +5,7 @@ from .dish import DishDAL
 from .week_day_dish import WeekDayDishDAL
 from .r_keeper_credentials import RKeeperCredentialsDAL
 from .r_keeper_dish import RKeeperDishDAL
+from .discount_account import DiscountAccountDAL
+from .kassa import KassaDAL
+from .history import HistoryDAL
+from .discount_transaction import DiscountTransactionDAL

@@ -28,6 +28,10 @@ from storage.database.db.postgres_alchemy.food_point import FoodPointTable
 from storage.database.db.postgres_alchemy.week_day_dish import WeekDayDishTable
 from storage.database.db.postgres_alchemy.r_keeper_credentials import RKeeperCredentialsTable
 from storage.database.db.postgres_alchemy.r_keeper_dish import RKeeperDishTable
+from storage.database.db.postgres_alchemy.discount_account import DiscountAccountTable
+from storage.database.db.postgres_alchemy.kassa import KassaTable
+from storage.database.db.postgres_alchemy.history import HistoryTable
+from storage.database.db.postgres_alchemy.discount_transaction import DiscountTransactionTable
 
 # импортируем глобальные переменные
 from config import DB_HOST, DB_NAME, DB_PORT, DB_PASS, DB_USER
