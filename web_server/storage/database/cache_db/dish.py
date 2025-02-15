@@ -110,6 +110,26 @@ class DishDbCache(database.BaseDish, CommonCacheDb):
         logger.debug(f"Извлек данные меню -> {data}")
         return data
 
+    async def get_data_by_menu_and_barcode(
+            self,
+            menu_id: int,
+            barcode: str
+    ) -> Union[db_schemas.dish.DishSchem, None]:
+        """Извлечения блюда по штрихкоду
+        Args:
+            menu_id: (FK) идентификатор меню
+            barcode: значения штрихкода по которому нужно найти блюдо
+        """
+        data = await self.search_in_cache_or_db_and_save(
+            key=f"menu:{menu_id}:barcode:{barcode}",
+            db_func=self.db.get_data_by_menu_and_barcode,
+            schema=db_schemas.dish.DishSchem,
+            live_time=60,
+            args=(menu_id, barcode,)
+        )
+        logger.debug(f"Извлек данные меню -> {data}")
+        return data
+
     async def get_data_by_changing_id(self, changing_id: int) -> Union[db_schemas.dish.DishListSchem, None]:
         """Извлечение списка блюд по внешнему ключу ссылки на сомневающееся блюдо
         Args:

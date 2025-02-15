@@ -66,6 +66,34 @@ class DishDAL(database.BaseDish):
         except Exception as _ex:
             logger.error(f"Ошибка при извлечении блюд из меню: {menu_id} и кодовым именам: {code_names} -> {_ex}")
 
+    async def get_data_by_menu_and_barcode(
+            self,
+            menu_id: int,
+            barcode: str
+    ) -> Union[db_schemas.dish.DishSchem, None]:
+        """Извлечения блюда по штрихкоду
+        Args:
+            menu_id: (FK) идентификатор меню
+            barcode: значения штрихкода по которому нужно найти блюдо
+        """
+        try:
+            async with async_session_maker() as session:
+                async with session.begin():
+                    query = select(DishTable).where(
+                        (DishTable.menu_id == menu_id) &
+                        (DishTable.barcode == barcode)
+                    )
+                    res = await session.execute(query)
+                    data = res.fetchone()
+                    if data is not None:
+                        return db_schemas.dish.DishSchem.model_validate(
+                            from_attributes=True,
+                            obj=data[0],
+                        )
+
+        except Exception as _ex:
+            logger.error(f"Ошибка при извлечении блюд из меню: {menu_id} и barcode: {barcode} -> {_ex}")
+
     async def add_new_dish(
             self,
             name: str,

@@ -78,6 +78,20 @@ class BaseDish(ABC):
         """
         pass
 
+    @abstractmethod
+    async def get_data_by_menu_and_barcode(
+            self,
+            menu_id: int,
+            barcode: str
+    ) -> Union[db_schemas.dish.DishSchem, None]:
+        """Извлечения блюда по штрихкоду
+        Args:
+            menu_id: (FK) идентификатор меню
+            barcode: значения штрихкода по которому нужно найти блюдо
+        """
+        pass
+
+    @abstractmethod
     async def get_data_by_changing_id(self, changing_id: int) -> Union[db_schemas.dish.DishListSchem, None]:
         """Извлечение списка блюд по внешнему ключу ссылающемуся сомневающиеся блюда
         Args:

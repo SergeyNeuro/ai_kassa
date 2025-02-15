@@ -237,7 +237,7 @@ async def confirm_pay(
         dish_service: объект для работы с данными блюж
     """
     try:
-        auth_data = await auth_obj.check_authenticate(token=token, api="check_work")
+        auth_data = await auth_obj.check_authenticate(token=token, api="confirm")
         if not auth_data:
             return JSONResponse(content={"success": True})
 
@@ -250,4 +250,37 @@ async def confirm_pay(
 
     except Exception as _ex:
         logger.error(f"Ошибка подтверждения покупки: {_ex}")
+        return JSONResponse(status_code=400, content={"success": False, "info": "indefinite error"})
+
+
+@router.get("/barcode")
+async def get_barcode_data(
+        menu_id: int,
+        barcode: str,
+        token: Union[str, None] = Depends(get_token_by_headers),
+        auth_obj=Depends(AuthObj),
+        dish_service: DishService = Depends(DishService)
+):
+    """Метод извлечения данный блюда по штрихкоду
+    Args:
+        menu_id: идентификатор меню
+        barcode: расшифрованный штрихкод
+        token: токен доступа
+        auth_obj: объект для проверки аутентификации
+        dish_service: логический объект
+    """
+    try:
+        auth_data = await auth_obj.check_authenticate(token=token, api="barcode")
+        if not auth_data:
+            return JSONResponse(content={"success": False})
+
+        # вызываем метод объекта для подтверждения покупки
+        res = await dish_service.get_dish_by_barcode(menu_id=menu_id, barcode=barcode)
+        if res:
+            return JSONResponse(content={"success": True, "data": {"dish_data": res.model_dump()}})
+        else:
+            return JSONResponse(content={"success": False})
+
+    except Exception as _ex:
+        logger.error(f"Ошибка при поиске по баркоду: {_ex}")
         return JSONResponse(status_code=400, content={"success": False, "info": "indefinite error"})

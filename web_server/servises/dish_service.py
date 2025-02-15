@@ -1,5 +1,6 @@
 import logging
 from typing import List
+import re
 
 from storage.storage_core import StorageCommon
 from schemas import logic_schemas
@@ -66,3 +67,13 @@ class DishService(StorageCommon):
         logger.info(f"Пришел запрос на подтвержение покупки r-keeper через кассу: {kassa_id}. menu_id: {menu_id}. data: {dishes_data}")
         obj = RKeeper()
         return await obj.blank_method(menu_id=menu_id)
+
+    async def get_dish_by_barcode(self, menu_id: int, barcode: str):
+        """Извлекаем данные блюда по штрихкоду"""
+        digits = re.findall(r'\d', barcode)
+
+        # Объединяем найденные цифры в одну строку
+        barcode = ''.join(digits)
+
+        logger.info(f"Извлекаем данные блюда по штрихкоду: {barcode} из меню: {menu_id}")
+        return await self.dish_obj.get_data_by_menu_and_barcode(menu_id=menu_id, barcode=barcode)
