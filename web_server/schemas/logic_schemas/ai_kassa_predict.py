@@ -3,7 +3,7 @@
 """
 
 import datetime
-from typing import Union
+from typing import Union, Optional
 
 from pydantic import BaseModel
 
@@ -14,3 +14,23 @@ class AiKassaPredictSchem(BaseModel):
     """
     timestamp: int
     menu_id: int
+
+
+class OneDishConfirmSchem(BaseModel):
+    id: int
+    name: str
+    menu_id: int
+    code_name: str
+    type: int
+    count_type: int
+    count: int
+    price: int
+    changing_dish_id: Optional[int] = None
+
+
+class ConfirmSchem(BaseModel):
+    dish_data: OneDishConfirmSchem
+    x1: Optional[int] = None
+    y1: Optional[int] = None
+    x2: Optional[int] = None
+    y2: Optional[int] = None

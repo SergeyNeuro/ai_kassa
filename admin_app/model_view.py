@@ -44,7 +44,7 @@ class MenuModelView(ModelView):
         MenuTable.customer,
         MenuTable.ai_model_name,
         MenuTable.details,
-        MenuTable.system_name
+        EnumField("system_name", choices=[("r-keeper", "r-keeper")])
     ]
 
 
@@ -62,8 +62,39 @@ class DishModelView(ModelView):
         DishTable.id,
         DishTable.name,
         DishTable.code_name,
-        DishTable.type,
-        DishTable.count_type,
+        # DishTable.type,
+        EnumField(
+            "type",
+            choices=[
+                (1, "салат"),
+                (2, "суп"),
+                (3, "гарнир"),
+                (4, "овощное блюдо"),
+                (5, "рыбное блюдо"),
+                (6, "блюдо из птицы"),
+                (7, "блюдо из мяса"),
+                (8, "выпечка"),
+                (9, "напиток"),
+                (10, "добавки"),
+                (11, "неопределенное")
+            ],
+            coerce=int
+        ),
+        # DishTable.count_type,
+        EnumField(
+            "count_type",
+            choices=[
+                (1, "порций (неизм)"),
+                (2, "шт (неизм)"),
+                (3, "грамм (неизм)"),
+                (4, "мл (неизм)"),
+                (11, "порций"),
+                (12, "шт"),
+                (13, "грамм"),
+                (14, "мл"),
+            ],
+            coerce=int
+        ),
         DishTable.count,
         DishTable.price,
         DishTable.menu,

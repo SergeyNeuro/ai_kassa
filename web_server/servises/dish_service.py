@@ -1,13 +1,9 @@
-from typing import Any
 import logging
-import os
-
-from ultralytics import YOLO
-import cv2
-import numpy as np
+from typing import List
 
 from storage.storage_core import StorageCommon
 from schemas import logic_schemas
+from servises.r_keeper import RKeeper
 
 logger = logging.getLogger(f"app.{__name__}")
 
@@ -32,3 +28,41 @@ class DishService(StorageCommon):
                 return True
             else:
                 return False
+
+    async def confirm_pay(
+            self,
+            menu_id: int,
+            kassa_id: int,
+            dishes_data: List[logic_schemas.ai_kassa_predict.ConfirmSchem]
+    ):
+        """Метод для подтверждения покупки через кассу.
+        Нужен чтобы занести результаты в системы (например в r-keeper
+        Args:
+            menu_id: идентификатор меню
+            kassa_id: идентификатор кассового аппарата
+            dishes_data: Данные по покупке
+        """
+        logger.info(f"Пришел запрос на подтвержение покупки через кассу: {kassa_id}. menu_id: {menu_id}. data: {dishes_data}")
+        # извлекаем данные меню
+        menu_data = await self.menu_obj.get_data_by_id(node_id=menu_id)
+
+        method_dict = {
+            "r-keeper": self.confirm_r_keeper_order
+        }
+        return await method_dict[menu_data.system_name](menu_id, kassa_id, dishes_data)
+
+    async def confirm_r_keeper_order(
+            self,
+            menu_id: int,
+            kassa_id: int,
+            dishes_data: logic_schemas.ai_kassa_predict.ConfirmSchem
+    ):
+        """Подтверждение заказа если работает конкретно с системой r-keeper
+        Args:
+            menu_id: идентификатор меню
+            kassa_id: идентификатор кассового аппарата
+            dishes_data: данный блюд по которым нужно подтвердить покупку
+        """
+        logger.info(f"Пришел запрос на подтвержение покупки r-keeper через кассу: {kassa_id}. menu_id: {menu_id}. data: {dishes_data}")
+        obj = RKeeper()
+        return await obj.blank_method(menu_id=menu_id)
