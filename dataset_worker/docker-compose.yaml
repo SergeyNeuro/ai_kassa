@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  smart_kassa_dataset_bot:
+    build:
+      context: .
+    container_name: smart_kassa_dataset_bot
+    command: python main.py
+    env_file:
+      - .env
+    mem_limit: 512m
+    restart: always
+    network_mode: host

@@ -29,6 +29,7 @@ class RKeeperDishTable(Base):
     __tablename__ = "r_keeper_dish_table"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    r_keeper_id: Mapped[int] = mapped_column(nullable=False)
     dish_id: Mapped[int] = mapped_column(ForeignKey("dish_table.id", ondelete="CASCADE"), nullable=True, unique=True)
     name: Mapped[str] = mapped_column(nullable=False)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=True)

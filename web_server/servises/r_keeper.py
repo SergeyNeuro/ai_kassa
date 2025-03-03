@@ -1,8 +1,7 @@
-import requests
+import httpx
 import logging
-from typing import Optional
-
-import requests
+from typing import Optional, List, Dict, Union
+import datetime as dt
 
 from storage.storage_core import StorageCommon
 
@@ -34,7 +33,7 @@ class RKeeper(StorageCommon):
             payload: тело запроса
         """
         try:
-            response = requests.post(
+            response = httpx.post(
                 url=self.base_url,
                 headers={"AggregatorAuthentication": self.token},
                 json=payload
@@ -44,7 +43,7 @@ class RKeeper(StorageCommon):
         except Exception as _ex:
             logger.error(f"Ошибка при отправке запроса в r-keeper. payload: {payload} -> {_ex}")
 
-    async def blank_method(self, menu_id: int):
+    async def get_menu(self, menu_id: int):
         if not self.object_id or self.token:
             await self.pull_object(menu_id=menu_id)
         payload = {
@@ -56,77 +55,70 @@ class RKeeper(StorageCommon):
                 },
             }
         }
-        logger.info(f"Вызываю пустой метод проверки: {payload}")
-        return True
+        return await self.base_method(payload=payload)
 
-
-
-    # def get_menu(self, r_keeper_):
-
-    def create_order(self):
-        data = {
+    async def create_order(self, menu_id: int, product_list: List[Dict[str, Union[str, int, float]]], total_price: float):
+        if not self.object_id or self.token:
+            await self.pull_object(menu_id=menu_id)
+        payload = {
             'taskType': 'CreateOrder',
             'params': {
                 'sync': {
-                    'objectId': 305320001,
+                    'objectId': self.object_id,
                     'timeout': 120
                 },
                 'order': {
-                    # 'originalOrderId': '777',
-                    # 'customer': {
-                    #     'name': 'customerName',
-                    #     'phone': '111-222-333',
-                    #     'email': 'email@test.ru'
-                    # },
                     'payment': {
                         'type': 'online'
                     },
-                    'expeditionType': 'pickup',
-                    'pickup': {
-                        # 'courier': {
-                        #     'name': 'courierName',
-                        #     'phone': '12-34-56'
-                        # },
-                        'expectedTime': '2025-02-15T11:00:00+03:00',
-                        'taker': 'customer'
-                    },
-                    'products': [
-                        {
-                            'id': 1029341,
-                            'name': 'Тест 1',
-                            'price': '1',
-                            'quantity': 1
-                        }
-                    ],
-                    'comment': 'commentString',
+                    'products': product_list,
+                    'comment': 'Smart Kassa',
                     'price': {
-                        'total': 1
+                        'total': total_price
                     },
-                    'personsQuantity': 1
                 }
             }
         }
 
-        data = {
-            "taskType": "GetMenu",
+        return await self.base_method(payload=payload)
+
+    async def confirm_order(self, menu_id: int, task_guid: str):
+        """Подтверждение заказа
+        Args:
+            menu_id: меню к которому относится заказ
+            task_guid: идентификатор заказа
+        """
+        logger.info(f"подтверждаю заказ: {task_guid} в меню: {menu_id}")
+        if not self.object_id or self.token:
+            await self.pull_object(menu_id=menu_id)
+        payload = {
+            "taskType": "CompleteOrder",
             "params": {
-                'sync': {
-                    'objectId': 305320001,
-                    'timeout': 120
+                "sync": {
+                    "objectId": self.object_id,
+                    "timeout": 120
                 },
+                "orderGuid": task_guid
             }
         }
-
-        headers = {
-            "AggregatorAuthentication": "jN+y3tJvAd4=YrgXQ8/FD0CZ6ANaPBBe3JfQZ+vEUkHtpD+CUm5moketVby7nd+zlxWRuWbLPYr+7X0xHn/Lz/QpmFCtK4oyMs0xkBB7t9x3Z1MKUyDzI7rxXwpTwW5OGMfqp41SXUsKqSfER6v9X7seK6eGsSMCZ+arOZSiaVwzH7xbgBVGJMYnqATFVDpGK1WHpdANb3LzwwaMo5wh9nL5c0dFbqRJIfYRTP/lZfZx"
-        }
-
-        url = "https://ws.ucs.ru/wsserverlp/api/v2/aggregators/Create"
-
-        response = requests.post(url=url, headers=headers, json=data)
-        print(response.json())
+        return await self.base_method(payload=payload)
 
 
 if __name__ == '__main__':
-    obj = RKeeper()
-    print(obj.create_order())
+    import asyncio
+    async def main():
+        obj = RKeeper()
+        # пример создания заказа
+        products_list = [
+            {
+                'id': 1029341,
+                'name': 'Тест 1',
+                'price': '1',
+                'quantity': 1
+            }
+        ]
+        total_price = 1
+        res = await obj.create_order(menu_id=2, product_list=products_list, total_price=total_price)
+        print(res)
+
+    asyncio.run(main())

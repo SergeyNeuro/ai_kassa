@@ -56,8 +56,8 @@ class DishService(StorageCommon):
             self,
             menu_id: int,
             kassa_id: int,
-            dishes_data: logic_schemas.ai_kassa_predict.ConfirmSchem
-    ):
+            dishes_data: List[logic_schemas.ai_kassa_predict.ConfirmSchem]
+    ) -> bool:
         """Подтверждение заказа если работает конкретно с системой r-keeper
         Args:
             menu_id: идентификатор меню
@@ -66,7 +66,45 @@ class DishService(StorageCommon):
         """
         logger.info(f"Пришел запрос на подтвержение покупки r-keeper через кассу: {kassa_id}. menu_id: {menu_id}. data: {dishes_data}")
         obj = RKeeper()
-        return await obj.blank_method(menu_id=menu_id)
+
+        # получаем список продуктов + цену необходимые для системы r-keeper
+        products_list, total_price = await self.create_r_keeper_product_list(dishes_data=dishes_data)
+        # отправляем запрос на создания заказа
+        order_data = await obj.create_order(menu_id=menu_id, product_list=products_list, total_price=total_price)
+        if "taskResponse" in order_data:
+            order_guid = order_data["taskResponse"]["order"]["orderGuid"]
+
+            confirm = await obj.confirm_order(menu_id=menu_id, task_guid=order_guid)
+            if "error" in confirm:
+                return False
+            return True
+        return False
+
+    async def create_r_keeper_product_list(
+            self,
+            dishes_data: List[logic_schemas.ai_kassa_predict.ConfirmSchem]
+    ) -> tuple[list, float]:
+        """Создаем список словарей, который будет отправлен в r-keeper чтобы подтвердить заказ
+        Args:
+            menu_id: идентификатор меню к которому относятся блюда
+            dishes_data: блюда которые были куплены
+        return: возвращает список блюд + цену за все блюда
+        """
+        logger.info(f"Формирую список продукто в для r-keeper products: {dishes_data}")
+        total_price = 0
+        total_list = list()
+        for dish in dishes_data:
+            # извлекаем данные по эквивалетному блюду из r-keeper
+            r_keeper_data = await self.r_keeper_dish.get_data_by_dish_id(dish_id=dish.dish_data.id)
+            total_list.append({
+                'id': r_keeper_data.r_keeper_id,
+                'name': r_keeper_data.name,
+                'price': round(float(dish.dish_data.price), 2),
+                'quantity': dish.dish_data.count
+            })
+            total_price += dish.dish_data.price
+        return total_list, round(float(total_price), 2)
+
 
     async def get_dish_by_barcode(self, menu_id: int, barcode: str):
         """Извлекаем данные блюда по штрихкоду"""

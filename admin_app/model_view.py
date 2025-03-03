@@ -143,6 +143,7 @@ class RKeeperDishModelView(ModelView):
     fields = [
         RKeeperDishTable.id,
         RKeeperDishTable.name,
+        RKeeperDishTable.r_keeper_id,
         RKeeperDishTable.dish,
         RKeeperDishTable.menu
     ]

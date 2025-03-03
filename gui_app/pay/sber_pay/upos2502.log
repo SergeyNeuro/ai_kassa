@@ -5,3 +5,22 @@
 01.02 14:48:47.175 SBPILOT: Close com 100
 01.02 14:48:47.577 SBPILOT: Find COM result:99
 01.02 14:48:47.580 SBPILOT: finished with result 99, GUID=00000000
+24.02 17:29:49.496 PILOT: created process './upnixmn.out ' with pid 93652
+24.02 17:29:49.503 SBPILOT: start with arguments ''
+24.02 17:29:49.505 SBPILOT: finished with result 4300, GUID=00000000
+24.02 17:30:13.853 PILOT: created process './upnixmn.out ' with pid 93680
+24.02 17:30:13.861 SBPILOT: start with arguments ''
+24.02 17:30:13.862 SBPILOT: finished with result 4300, GUID=00000000
+24.02 17:31:43.959 PILOT: created process './upnixmn.out 11 ' with pid 93863
+24.02 17:31:43.967 SBPILOT: start with arguments '11 '
+24.02 17:31:43.968 SBPILOT: Err 2 opening COM port
+24.02 17:31:43.969 SBPILOT: Start Find COM
+24.02 17:31:51.483 SBPILOT: Close com 100
+24.02 17:32:49.187 PILOT: created process './upnixmn.out 47 2 ' with pid 94009
+24.02 17:32:49.194 SBPILOT: start with arguments '47 2 '
+24.02 17:32:49.194 SBPILOT: Err 2 opening COM port
+24.02 17:32:49.195 SBPILOT: Start Find COM
+24.02 17:32:56.704 SBPILOT: Close com 100
+24.02 17:33:04.613 SBPILOT: Close com 100
+24.02 17:33:05.014 SBPILOT: Find COM result:99
+24.02 17:33:05.022 SBPILOT: finished with result 99, GUID=00000000
