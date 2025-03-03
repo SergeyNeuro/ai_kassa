@@ -20,20 +20,20 @@ services:
         env_file:
           - .env
 
-#    ai_kassa_web_app:
-#        build:
-#            context: web_server/.
-#        container_name: ai_kassa_web_app
-#        command: ["sh", "-c", "alembic upgrade head && gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:${WEB_APP_PORT}"]
-#        ports:
-#          - "${WEB_APP_PORT}:${WEB_APP_PORT}"
-#        env_file:
-#          - .env
-#        depends_on:
-#          - ai_kassa_db
-#          - ai_kassa_redis
-#        volumes:
-#          - "${STATIC_FILES_PATH}:${STATIC_FILES_PATH}"
+    ai_kassa_web_app:
+        build:
+            context: web_server/.
+        container_name: ai_kassa_web_app
+        command: ["sh", "-c", "alembic upgrade head && gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:${WEB_APP_PORT}"]
+        ports:
+          - "${WEB_APP_PORT}:${WEB_APP_PORT}"
+        env_file:
+          - .env
+        depends_on:
+          - ai_kassa_db
+          - ai_kassa_redis
+        volumes:
+          - "${STATIC_FILES_PATH}:${STATIC_FILES_PATH}"
 
     ai_kassa_admin:
         container_name: ai_kassa_admin
