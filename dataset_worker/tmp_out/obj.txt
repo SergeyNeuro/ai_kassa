@@ -1,9 +1,9 @@
-___0: 1 ---> vipechka_beken_s_kapustoi
+___0: 1 ---> vipechka_beken_s_kapustoi -> ['frame_2024-12-04_04-54-59.txt']
 ___1: 0 ---> vipechka_vak_belish
 ___2: 0 ---> vipechka_vatrushka_povidlo
 ___3: 0 ---> vipechka_pirog_egg_luk
-___4: 1 ---> vipechka_keks_tvorojnyi
-___5: 1 ---> vipechka_pizza_s_kolbasoi
+___4: 1 ---> vipechka_keks_tvorojnyi -> ['frame_2024-12-04_04-54-59.txt']
+___5: 1 ---> vipechka_pizza_s_kolbasoi -> ['frame_2024-12-04_05-18-41.txt']
 ___6: 0 ---> vipechka_sosiska_v_teste
 ___7: 0 ---> vipechka_sochnik_s_tvrogom
 ___8: 0 ---> vipechka_kartofel_shanga
@@ -24,19 +24,19 @@ __22: 0 ---> garnir_kartofel_fri
 __23: 0 ---> garnirkartofel_fri_05
 __24: 0 ---> garnir_pure
 __25: 0 ---> garnir_pure_05
-__26: 1 ---> garnir_bulgur
+__26: 1 ---> garnir_bulgur -> ['frame_2024-12-04_07-00-28.txt']
 __27: 0 ---> garnir_bulgur_05
 __28: 0 ---> garnir_kuskus
 __29: 0 ---> garnir_kuskus_05
-__30: 1 ---> garnir_grecha
-__31: 1 ---> garnir_grecha_05
+__30: 1 ---> garnir_grecha -> ['frame_2024-12-04_06-53-12.txt']
+__31: 1 ---> garnir_grecha_05 -> ['frame_2024-12-04_07-01-23.txt']
 __32: 0 ---> garnir_perlovka
 __33: 0 ---> garnir_perlovka_05
 __34: 0 ---> garnir_polbyanay
 __35: 0 ---> garnir_polbyanaya_05
 __36: 0 ---> garnir_pshenichnaya
 __37: 0 ---> garnir_pshenichnaya_05
-__38: 2 ---> garnir_makarony
+__38: 2 ---> garnir_makarony -> ['frame_2024-12-04_06-35-02.txt', 'frame_2024-12-04_05-53-07.txt']
 __39: 0 ---> garnir_makarony_05
 __40: 0 ---> garnir_mexika_smes
 __41: 0 ---> garnir_mexica_smes_05
@@ -65,31 +65,31 @@ __63: 0 ---> garnir_chechevica_05
 __64: 0 ---> garnir_nutovoe_pure
 __65: 0 ---> garnir_nutovoe_pure_05
 __66: 0 ---> zavtrak
-__67: 18 ---> zavtrak_kasha_ris_molochnaya
+__67: 18 ---> zavtrak_kasha_ris_molochnaya -> ['frame_2024-12-04_05-22-23.txt', 'frame_2024-12-04_06-03-31.txt', 'frame_2024-12-04_04-54-59.txt', 'frame_2024-12-04_06-05-02.txt', 'frame_2024-12-04_05-24-31.txt', 'frame_2024-12-04_05-58-42.txt', 'frame_2024-12-04_05-54-04.txt', 'frame_2024-12-04_05-30-09.txt', 'frame_2024-12-04_04-26-05.txt', 'frame_2024-12-04_05-48-12.txt', 'frame_2024-12-04_06-01-01.txt', 'frame_2024-12-04_06-15-21.txt', 'frame_2024-12-04_05-07-02.txt', 'frame_2024-12-04_05-55-03.txt', 'frame_2024-12-04_06-02-46.txt', 'frame_2024-12-04_06-04-30.txt', 'frame_2024-12-04_04-38-39.txt', 'frame_2024-12-04_05-28-23.txt']
 __68: 0 ---> zavtrak_tvorog_smetana
-__69: 4 ---> zavtrak_syrnik
+__69: 4 ---> zavtrak_syrnik -> ['frame_2024-12-04_04-26-05.txt', 'frame_2024-12-04_06-04-30.txt', 'frame_2024-12-04_06-04-30.txt', 'frame_2024-12-04_04-38-39.txt']
 __70: 0 ---> zavtrak_zapekanka_izum
 __71: 0 ---> zavtrak_glazunya
-__72: 1 ---> zavtrak_omlet
+__72: 1 ---> zavtrak_omlet -> ['frame_2024-12-04_05-22-03.txt']
 __73: 0 ---> zavtrak_omlet_vetchina
 __74: 0 ---> zavtrak_blin
 __75: 0 ---> zavtrak_blin_nachinka
 __76: 0 ---> zavtrak_blin_djem
-__77: 1 ---> zavtrak_blin_sgushenka
-__78: 2 ---> zavtrak_blin_farsh
+__77: 1 ---> zavtrak_blin_sgushenka -> ['frame_2024-12-04_05-22-23.txt']
+__78: 2 ---> zavtrak_blin_farsh -> ['frame_2024-12-04_05-24-31.txt', 'frame_2024-12-04_05-55-03.txt']
 __79: 0 ---> zavtrak_blin_egg_luk
 __80: 0 ---> zavtrak_blin_fish_farsh
 __81: 0 ---> zavtrak_blin_banan_shokolad
-__82: 2 ---> zavtrak_blin_chicken
-__83: 4 ---> zavtrak_blin_vetchina_syr
+__82: 2 ---> zavtrak_blin_chicken -> ['frame_2024-12-04_06-05-40.txt', 'frame_2024-12-04_06-15-21.txt']
+__83: 4 ---> zavtrak_blin_vetchina_syr -> ['frame_2024-12-04_06-05-02.txt', 'frame_2024-12-04_05-07-02.txt', 'frame_2024-12-04_07-08-28.txt', 'frame_2024-12-04_05-28-23.txt']
 __84: 0 ---> zavtrak_blin_syr_chicken
-__85: 2 ---> zavtrak_pancake
-__86: 1 ---> zavtrak_vetchina_zharenaya
+__85: 2 ---> zavtrak_pancake -> ['frame_2024-12-04_05-22-23.txt', 'frame_2024-12-04_05-22-23.txt']
+__86: 1 ---> zavtrak_vetchina_zharenaya -> ['frame_2024-12-04_05-48-12.txt']
 __87: 0 ---> zavtrak_holodec
 __88: 0 ---> zavtrak_bitochki_na_zavtrak
 __89: 0 ---> chicken
 __90: 0 ---> chicken_bitochki_indeika
-__91: 1 ---> chicken_graten_smak
+__91: 1 ---> chicken_graten_smak -> ['frame_2024-12-04_06-35-02.txt']
 __92: 0 ---> chicken_julen_griby
 __93: 0 ---> chicken_indeika_zapechenaya
 __94: 0 ---> chicken_indeika_tushenaya_smetana
@@ -115,7 +115,7 @@ _113: 0 ---> chicken_ananas_otbivnaya
 _114: 0 ---> chicken_griby_otbivnaya
 _115: 0 ---> chicken_luk_pechen
 _116: 0 ---> chicken_pechen_po_gruzinski
-_117: 1 ---> chicken_podjarka
+_117: 1 ---> chicken_podjarka -> ['frame_2024-12-04_07-00-28.txt']
 _118: 0 ---> chicken_rulet_vetchina
 _119: 0 ---> chicken_indeika_file
 _120: 0 ---> chicken_bolgar_perec_file
@@ -142,7 +142,7 @@ _140: 0 ---> myaso_gulyash_telyatina
 _141: 0 ---> myaso_zharkoe_po_domashnemu
 _142: 0 ---> myaso_zapekanka_s_farshem
 _143: 0 ---> myaso_zrazy_rublenye
-_144: 1 ---> myaso_kolbasa
+_144: 1 ---> myaso_kolbasa -> ['frame_2024-12-04_05-54-04.txt']
 _145: 0 ---> myaso_domashnyaya_kotleta
 _146: 0 ---> myaso_stozhok_kotleta
 _147: 0 ---> myaso_po_hlynovski_kotleta
@@ -160,28 +160,28 @@ _158: 0 ---> myaso_po_stroganovski_pechen
 _159: 0 ---> myaso_plov_telyatina
 _160: 0 ---> myaso_plov_kazahskii
 _161: 0 ---> myaso_podjarka_svinina
-_162: 2 ---> myaso_sardelki
+_162: 2 ---> myaso_sardelki -> ['frame_2024-12-04_05-53-07.txt', 'frame_2024-12-04_05-53-07.txt']
 _163: 0 ---> myaso_po_milanski_svinina
 _164: 0 ---> myaso_po_dvoryanski_svinina
 _165: 0 ---> myaso_tefteli
 _166: 0 ---> myaso_klyar_svinina
 _167: 0 ---> myaso_svinina_pod_shuboi
-_168: 2 ---> myaso_sosiski
+_168: 2 ---> myaso_sosiski -> ['frame_2024-12-04_06-02-46.txt', 'frame_2024-12-04_06-02-46.txt']
 _169: 0 ---> myaso_frikadelki
 _170: 0 ---> myaso_chashushuli
 _171: 0 ---> myaso_yazyk_otvarnoi
 _172: 0 ---> napitki
-_173: 8 ---> napitki_chai
-_174: 8 ---> napitki_chai_fruktovyi
-_175: 2 ---> napitki_kofe
-_176: 1 ---> napitki_klyukva_mors
+_173: 8 ---> napitki_chai -> ['frame_2024-12-04_06-03-31.txt', 'frame_2024-12-04_06-05-02.txt', 'frame_2024-12-04_05-24-31.txt', 'frame_2024-12-04_05-07-02.txt', 'frame_2024-12-04_05-55-03.txt', 'frame_2024-12-04_07-08-28.txt', 'frame_2024-12-04_06-02-46.txt', 'frame_2024-12-04_05-28-23.txt']
+_174: 8 ---> napitki_chai_fruktovyi -> ['frame_2024-12-04_05-22-23.txt', 'frame_2024-12-04_04-54-59.txt', 'frame_2024-12-04_05-54-04.txt', 'frame_2024-12-04_05-30-09.txt', 'frame_2024-12-04_04-26-05.txt', 'frame_2024-12-04_07-00-28.txt', 'frame_2024-12-04_05-53-07.txt', 'frame_2024-12-04_04-38-39.txt']
+_175: 2 ---> napitki_kofe -> ['frame_2024-12-04_06-01-01.txt', 'frame_2024-12-04_06-15-21.txt']
+_176: 1 ---> napitki_klyukva_mors -> ['frame_2024-12-04_06-18-53.txt']
 _177: 0 ---> napitki_oblepiha_mors
-_178: 1 ---> napitki_suhofrukt_kompot
+_178: 1 ---> napitki_suhofrukt_kompot -> ['frame_2024-12-04_06-35-02.txt']
 _179: 0 ---> napitki_smorodina_kompot
-_180: 1 ---> napitki_kisel
+_180: 1 ---> napitki_kisel -> ['frame_2024-12-04_06-05-40.txt']
 _181: 0 ---> napitki_malina_kisel
-_182: 2 ---> napitki_citrus
-_183: 1 ---> napitki_kefir
+_182: 2 ---> napitki_citrus -> ['frame_2024-12-04_06-15-21.txt', 'frame_2024-12-04_06-53-12.txt']
+_183: 1 ---> napitki_kefir -> ['frame_2024-12-04_06-04-30.txt']
 _184: 0 ---> ovochi
 _185: 0 ---> ovochi_kabachki_syr_pomidory
 _186: 0 ---> fish
@@ -191,8 +191,8 @@ _189: 0 ---> fish_gorbusha_na_paru
 _190: 0 ---> fish_kambala_jarenaya
 _191: 0 ---> fish_kotleta_lubitelskaya
 _192: 0 ---> fish_mintai_zharenyi
-_193: 1 ---> fish_mintai_ovochi
-_194: 1 ---> fish_piksha_jarenaya
+_193: 1 ---> fish_mintai_ovochi -> ['frame_2024-12-04_07-01-23.txt']
+_194: 1 ---> fish_piksha_jarenaya -> ['frame_2024-12-04_06-53-12.txt']
 _195: 0 ---> fish_mintai_v_folge
 _196: 0 ---> fish_skubriya_v_suharyah
 _197: 0 ---> fish_skumbriya_na_paru
@@ -202,7 +202,7 @@ _200: 0 ---> fish_file_klassnaya
 _201: 0 ---> salati
 _202: 0 ---> salati_bahor
 _203: 0 ---> salati_vesna
-_204: 1 ---> salati_vinegret_ovochnoi
+_204: 1 ---> salati_vinegret_ovochnoi -> ['frame_2024-12-04_05-22-03.txt']
 _205: 0 ---> salati_grecheskii
 _206: 0 ---> salati_dachnyi
 _207: 0 ---> salati_zagadka
@@ -231,7 +231,7 @@ _229: 0 ---> salati_samarkand
 _230: 0 ---> salati_svejest
 _231: 0 ---> salati_greckiy_oreh_svekla
 _232: 0 ---> salati_chesnok_svekla
-_233: 1 ---> salati_smetana_svekla
+_233: 1 ---> salati_smetana_svekla -> ['frame_2024-12-04_05-18-41.txt']
 _234: 0 ---> salati_seld_pod_shuboi
 _235: 0 ---> salati_stolichnyi
 _236: 0 ---> salati_fasol_morskaya_kapusta
@@ -241,11 +241,11 @@ _239: 0 ---> salati_shanhai
 _240: 0 ---> salati_sharm
 _241: 0 ---> salati_shetka
 _242: 0 ---> salati_morkov_izum
-_243: 2 ---> salati_fruktoviy
+_243: 2 ---> salati_fruktoviy -> ['frame_2024-12-04_06-35-02.txt', 'frame_2024-12-04_05-22-03.txt']
 _244: 0 ---> salati_morkov_smetana
-_245: 2 ---> salati_egg_maionez_goroh
+_245: 2 ---> salati_egg_maionez_goroh -> ['frame_2024-12-04_06-18-53.txt', 'frame_2024-12-04_06-53-12.txt']
 _246: 0 ---> salati_fasol_file
-_247: 3 ---> sous_smetana
+_247: 3 ---> sous_smetana -> ['frame_2024-12-04_05-24-31.txt', 'frame_2024-12-04_04-26-05.txt', 'frame_2024-12-04_04-38-39.txt']
 _248: 0 ---> sous
 _249: 0 ---> sup
 _250: 0 ---> sup_okroshka
@@ -256,22 +256,22 @@ _254: 0 ---> sup_vermishel
 _255: 0 ---> sup_lapsha
 _256: 0 ---> sup_perlovyi
 _257: 0 ---> sup_shi_svejaya
-_258: 7 ---> hleb
-_259: 9 ---> egg
+_258: 7 ---> hleb -> ['frame_2024-12-04_06-03-31.txt', 'frame_2024-12-04_05-58-42.txt', 'frame_2024-12-04_05-54-04.txt', 'frame_2024-12-04_06-01-01.txt', 'frame_2024-12-04_06-53-12.txt', 'frame_2024-12-04_05-55-03.txt', 'frame_2024-12-04_06-02-46.txt']
+_259: 9 ---> egg -> ['frame_2024-12-04_05-22-23.txt', 'frame_2024-12-04_05-22-23.txt', 'frame_2024-12-04_04-54-59.txt', 'frame_2024-12-04_05-58-42.txt', 'frame_2024-12-04_04-26-05.txt', 'frame_2024-12-04_05-48-12.txt', 'frame_2024-12-04_06-01-01.txt', 'frame_2024-12-04_04-38-39.txt', 'frame_2024-12-04_04-38-39.txt']
 _260: 0 ---> dobavki
-_261: 3 ---> dobavki_syr_porciya
+_261: 3 ---> dobavki_syr_porciya -> ['frame_2024-12-04_05-58-42.txt', 'frame_2024-12-04_05-54-04.txt', 'frame_2024-12-04_05-55-03.txt']
 _262: 0 ---> dobavki_smetana
-_263: 2 ---> dobavki_sgushenka
-_264: 3 ---> dobavki_maslo_slivochnoe
+_263: 2 ---> dobavki_sgushenka -> ['frame_2024-12-04_05-18-41.txt', 'frame_2024-12-04_06-04-30.txt']
+_264: 3 ---> dobavki_maslo_slivochnoe -> ['frame_2024-12-04_05-58-42.txt', 'frame_2024-12-04_05-54-04.txt', 'frame_2024-12-04_06-01-01.txt']
 _265: 0 ---> dobavki_maionez
 _266: 0 ---> dobavki_slivki
 _267: 0 ---> dobavki_pomidor
-_268: 1 ---> dobavki_bekon
+_268: 1 ---> dobavki_bekon -> ['frame_2024-12-04_06-01-01.txt']
 _269: 0 ---> dobavki_luk
 _270: 0 ---> dobavki_syr
 _271: 0 ---> dobavki_solenyi_ogurec
 _272: 0 ---> dobavki_zelen
-_273: 3 ---> dobavki_lemon
+_273: 3 ---> dobavki_lemon -> ['frame_2024-12-04_06-05-02.txt', 'frame_2024-12-04_05-07-02.txt', 'frame_2024-12-04_07-08-28.txt']
 _274: 0 ---> vipechka_treugolnik
 _275: 0 ---> salati_rukkola
 _276: 0 ---> dobavki_opyata

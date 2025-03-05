@@ -57,11 +57,13 @@ async def handle_document(message: types.Message):
 
         names = diagram_obj.get_names_dict(file_path="./tmp_in/data.yaml")
 
-        data = diagram_obj.get_all_frame_category(dir_path="./tmp_in/labels/train")
+        data, file_categories = diagram_obj.get_all_frame_category(dir_path="./tmp_in/labels/train")
 
         diagram_obj.create_diagram(data=data)
 
-        diagram_obj.create_txt_file(data=data, names_dict=names)
+        diagram_obj.create_txt_file(data=data, names_dict=names, file_categories=file_categories)
+
+
 
         await message.answer_document(FSInputFile(f"./tmp_out/histogram.png"))
         await message.answer_document(FSInputFile(f"./tmp_out/obj.txt"))

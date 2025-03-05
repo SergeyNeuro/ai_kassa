@@ -23,6 +23,7 @@ class DiagramWriter:
 
     def get_all_frame_category(self, dir_path: str):
         res_dict = dict()
+        category_name_dict = dict()
 
         files_list = os.listdir(dir_path)
         print(files_list)
@@ -30,11 +31,17 @@ class DiagramWriter:
             one_frame_category = self.get_one_frame_category(file_path=f"{dir_path}/{file_name}")
             for one_dish in one_frame_category:
                 one_dish = int(one_dish)
+
+                if not one_dish in category_name_dict:
+                    category_name_dict[one_dish] = [file_name]
+                else:
+                    category_name_dict[one_dish].append(file_name)
+
                 if one_dish not in res_dict:
                     res_dict[one_dish] = 1
                 else:
                     res_dict[one_dish] += 1
-        return res_dict
+        return res_dict, category_name_dict
 
     def create_diagram(self, data: dict, shot = False):
         # Преобразуем ключи в числа и значения в список
@@ -65,18 +72,18 @@ class DiagramWriter:
             print(f"Архив успешно распакован в {extract_path}")
 
 
-    def create_txt_file(self, data: dict, names_dict: dict):
+    def create_txt_file(self, data: dict, names_dict: dict, file_categories: dict):
         names_count_dict = dict()
         for key in names_dict:
             names_count_dict[key] = 0
         for i in data:
             names_count_dict[i] = data[i]
 
-        self.save_txt_file(name="obj.txt", data=names_count_dict, categry_dict=names_dict)
+        self.save_txt_file(name="obj.txt", data=names_count_dict, categry_dict=names_dict, file_categories=file_categories)
 
         print(names_count_dict)
 
-    def save_txt_file(self, name: str, data: dict, categry_dict: dict):
+    def save_txt_file(self, name: str, data: dict, categry_dict: dict, file_categories: dict):
         with open(f"./tmp_out/{name}", 'w', encoding='utf-8') as file:
             # Записываем каждую пару ключ-значение в файл
             for key, value in data.items():
@@ -89,7 +96,10 @@ class DiagramWriter:
                     str_key = f"_{key}:"
                 else:
                     str_key = f"{key}:"
-                file.write(f"{str_key} {value} ---> {categry_dict[key]}\n")
+                if key in file_categories:
+                    file.write(f"{str_key} {value} ---> {categry_dict[key]} -> {file_categories[key]}\n")
+                else:
+                    file.write(f"{str_key} {value} ---> {categry_dict[key]}\n")
 
 
 if __name__ == '__main__':
