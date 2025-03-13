@@ -64,9 +64,9 @@ async def handle_document(message: types.Message):
         diagram_obj.create_txt_file(data=data, names_dict=names, file_categories=file_categories)
 
 
-
         await message.answer_document(FSInputFile(f"./tmp_out/histogram.png"))
         await message.answer_document(FSInputFile(f"./tmp_out/obj.txt"))
+        await message.answer_document(FSInputFile(f"./tmp_out/obj.xlsx"))
 
         # Удаляем временную папку целиком, включая подпапки
         shutil.rmtree(TEMP_FOLDER)

@@ -3,6 +3,7 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 import zipfile
+import pandas as pd
 
 
 class DiagramWriter:
@@ -80,8 +81,8 @@ class DiagramWriter:
             names_count_dict[i] = data[i]
 
         self.save_txt_file(name="obj.txt", data=names_count_dict, categry_dict=names_dict, file_categories=file_categories)
+        self.save_excel_file(name="obj.txt", data=names_count_dict, categry_dict=names_dict,file_categories=file_categories)
 
-        print(names_count_dict)
 
     def save_txt_file(self, name: str, data: dict, categry_dict: dict, file_categories: dict):
         with open(f"./tmp_out/{name}", 'w', encoding='utf-8') as file:
@@ -100,6 +101,28 @@ class DiagramWriter:
                     file.write(f"{str_key} {value} ---> {categry_dict[key]} -> {file_categories[key]}\n")
                 else:
                     file.write(f"{str_key} {value} ---> {categry_dict[key]}\n")
+
+    def save_excel_file(self, name: str, data: dict, categry_dict: dict, file_categories: dict):
+        total_list = list()
+        for key, value in data.items():
+            if key in file_categories:
+                total_list.append({
+                    "number": key,
+                    "tag": categry_dict[key],
+                    "count": value,
+                    "files": str(file_categories[key])
+                })
+            else:
+                total_list.append({
+                    "number": key,
+                    "tag": categry_dict[key],
+                    "count": value,
+                    "files": None
+                })
+        df = pd.DataFrame(total_list)
+        df = df.fillna("")
+        df.to_excel("./tmp_out/obj.xlsx", index=False)
+
 
 
 if __name__ == '__main__':
