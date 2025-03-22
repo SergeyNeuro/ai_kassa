@@ -41,7 +41,7 @@ class StartDialogSender:
             data: список данных которые необходимо отправить
         """
         for body in data:
-            headers = {"Content-Type": "application/json", "auth_token": self.token}
+            headers = {"Content-Type": "application/json", "AuthToken": self.token}
             response = requests.post(url=self.url, json=body.model_dump(), headers=headers)
             logger.info(f"Пришел ответ от ЯДРА: {response.json()}")
             time.sleep(0.1)
@@ -68,6 +68,7 @@ class StartDialogSender:
 if __name__ == '__main__':
     obj = StartDialogSender(
         token="test",
-        file_path="all_dish.xlsx"
+        file_path="/home/udalov/dishes.xlsx",
+        url="https://app.neurotaw.beget.tech/api/dataset/dish"
     )
     obj.send_start_dialogs_in_core()
