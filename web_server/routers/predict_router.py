@@ -43,129 +43,129 @@ async def predict_image_data(
     try:
         logger.info(f"Пришел запрос от кассового аппарата №{kassa_id}. menu_id: {menu_id} на опознание фотографии")
 
-        # имитационная логика
-        await asyncio.sleep(10)
-        imit_data = [
-            {
-                "dish_data": [
-                    {
-                        "id": 1,
-                        "name": "Салат летний",
-                        "menu_id": 1,
-                        "code_name": "Drone",
-                        "type": 1,
-                        "count_type": 11,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                    {
-                        "id": 1,
-                        "name": "Салат зимний",
-                        "menu_id": 1,
-                        "code_name": "fly",
-                        "type": 1,
-                        "count_type": 11,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                    {
-                        "id": 1,
-                        "name": "Салат весенний",
-                        "menu_id": 1,
-                        "code_name": "helicopter",
-                        "type": 1,
-                        "count_type": 11,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                ],
-                "x1": 350,
-                "y1": 102,
-                "x2": 486,
-                "y2": 323
-            },
-            {
-                "dish_data": {
-                    "id": 1,
-                    "name": "Рис с котлетой",
-                    "menu_id": 1,
-                    "code_name": "human",
-                    "type": 3,
-                    "count_type": 11,
-                    "count": 1,
-                    "price": 4,
-                    "changing_dish_id": None
-                },
-                "x1": 133,
-                "y1": 85,
-                "x2": 272,
-                "y2": 330
-            },
-            {
-                "dish_data": [
-                    {
-                        "id": 1,
-                        "name": "Солянка",
-                        "menu_id": 1,
-                        "code_name": "Phone",
-                        "type": 2,
-                        "count_type": 11,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                    {
-                        "id": 1,
-                        "name": "Рассольник",
-                        "menu_id": 1,
-                        "code_name": "pult",
-                        "type": 2,
-                        "count_type": 11,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                ],
-                "x1": 224,
-                "y1": 385,
-                "x2": 380,
-                "y2": 570
-            },
-            {
-                "dish_data": [
-                    {
-                        "id": 1,
-                        "name": "Компот яблочный",
-                        "menu_id": 1,
-                        "code_name": "Phone",
-                        "type": 9,
-                        "count_type": 4,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                    {
-                        "id": 1,
-                        "name": "Сок яблочный",
-                        "menu_id": 1,
-                        "code_name": "pult",
-                        "type": 9,
-                        "count_type": 4,
-                        "count": 1,
-                        "price": 4,
-                        "changing_dish_id": None
-                    },
-                ],
-                "x1": 446,
-                "y1": 400,
-                "x2": 525,
-                "y2": 530
-            },
-        ]
-        return JSONResponse(status_code=200, content={"success": True, "data": imit_data})
+        # # имитационная логика
+        # await asyncio.sleep(10)
+        # imit_data = [
+        #     {
+        #         "dish_data": [
+        #             {
+        #                 "id": 1,
+        #                 "name": "Салат летний",
+        #                 "menu_id": 1,
+        #                 "code_name": "Drone",
+        #                 "type": 1,
+        #                 "count_type": 11,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #             {
+        #                 "id": 1,
+        #                 "name": "Салат зимний",
+        #                 "menu_id": 1,
+        #                 "code_name": "fly",
+        #                 "type": 1,
+        #                 "count_type": 11,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #             {
+        #                 "id": 1,
+        #                 "name": "Салат весенний",
+        #                 "menu_id": 1,
+        #                 "code_name": "helicopter",
+        #                 "type": 1,
+        #                 "count_type": 11,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #         ],
+        #         "x1": 350,
+        #         "y1": 102,
+        #         "x2": 486,
+        #         "y2": 323
+        #     },
+        #     {
+        #         "dish_data": {
+        #             "id": 1,
+        #             "name": "Рис с котлетой",
+        #             "menu_id": 1,
+        #             "code_name": "human",
+        #             "type": 3,
+        #             "count_type": 11,
+        #             "count": 1,
+        #             "price": 4,
+        #             "changing_dish_id": None
+        #         },
+        #         "x1": 133,
+        #         "y1": 85,
+        #         "x2": 272,
+        #         "y2": 330
+        #     },
+        #     {
+        #         "dish_data": [
+        #             {
+        #                 "id": 1,
+        #                 "name": "Солянка",
+        #                 "menu_id": 1,
+        #                 "code_name": "Phone",
+        #                 "type": 2,
+        #                 "count_type": 11,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #             {
+        #                 "id": 1,
+        #                 "name": "Рассольник",
+        #                 "menu_id": 1,
+        #                 "code_name": "pult",
+        #                 "type": 2,
+        #                 "count_type": 11,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #         ],
+        #         "x1": 224,
+        #         "y1": 385,
+        #         "x2": 380,
+        #         "y2": 570
+        #     },
+        #     {
+        #         "dish_data": [
+        #             {
+        #                 "id": 1,
+        #                 "name": "Компот яблочный",
+        #                 "menu_id": 1,
+        #                 "code_name": "Phone",
+        #                 "type": 9,
+        #                 "count_type": 4,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #             {
+        #                 "id": 1,
+        #                 "name": "Сок яблочный",
+        #                 "menu_id": 1,
+        #                 "code_name": "pult",
+        #                 "type": 9,
+        #                 "count_type": 4,
+        #                 "count": 1,
+        #                 "price": 4,
+        #                 "changing_dish_id": None
+        #             },
+        #         ],
+        #         "x1": 446,
+        #         "y1": 400,
+        #         "x2": 525,
+        #         "y2": 530
+        #     },
+        # ]
+        # return JSONResponse(status_code=200, content={"success": True, "data": imit_data})
 
         auth_data =  await auth_obj.check_authenticate(token=token, api="predict")
         if not auth_data:
