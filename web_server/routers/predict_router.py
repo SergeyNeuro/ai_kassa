@@ -1,14 +1,19 @@
 import asyncio
 import logging
 from typing import Any, Union, List
+from datetime import datetime
+import os
+from PIL import Image
+import io
 
-from fastapi import APIRouter, UploadFile, File, Depends
+from fastapi import APIRouter, UploadFile, File, Depends, Request
 from fastapi.responses import JSONResponse
 
 from servises.yolo_predicter import AiKassaService
 from servises.dish_service import DishService
 from servises.auth_service import get_token_by_headers, AuthObj
 from schemas import logic_schemas
+from config import STATIC_FILES_PATH
 
 
 logger = logging.getLogger(f"app.{__name__}")
@@ -18,6 +23,7 @@ router = APIRouter(prefix="/predict", tags=['predict'])
 
 @router.post('/')
 async def predict_image_data(
+        request: Request,
         menu_id: int,
         timestamp: int,
         kassa_id: int,
@@ -42,6 +48,19 @@ async def predict_image_data(
     # проверяем токен на валидность
     try:
         logger.info(f"Пришел запрос от кассового аппарата №{kassa_id}. menu_id: {menu_id} на опознание фотографии")
+
+        headers = request.headers
+        possible_headers = [
+            "X-Forwarded-For",
+            "X-Real-IP",
+            "CF-Connecting-IP",  # Cloudflare
+            "True-Client-IP",  # Akamai, Cloudflare
+        ]
+
+        for header in possible_headers:
+            if header in headers:
+                ip = headers[header].split(",")[0].strip()
+                logger.info(f"IP адрес с которго пришел запрос: {ip}. Касса: {kassa_id}, menu: {menu_id}")
 
         # # имитационная логика
         # await asyncio.sleep(10)
@@ -172,6 +191,7 @@ async def predict_image_data(
             return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
 
         # прогоняем дальнейшую логику
+        await save_image(customer_id=auth_data.customer_id, menu_id=menu_id, file=file)
 
         file_data = await file.read()
 
@@ -188,6 +208,26 @@ async def predict_image_data(
     except Exception as _ex:
         logger.error(f"Ошибка распознавании фотографии: {_ex}")
         return JSONResponse(status_code=400, content={"success": False, "info": "indefinite error"})
+
+
+async def save_image(
+        customer_id: int,
+        menu_id: int,
+        file: UploadFile
+):
+    date_folder = str(datetime.now().strftime("%d.%m.%Y").replace("20", ""))
+    path = f"{STATIC_FILES_PATH}/customer_{customer_id}/menu_{menu_id}/{date_folder}"
+    os.makedirs(path, exist_ok=True)
+    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    file_name = f"frame_{current_time}.jpg"
+    file_path = os.path.join(path, file_name)
+    image_data = await file.read()
+    image = Image.open(io.BytesIO(image_data)).convert('RGB')
+
+    # Сохраняем изображение в нужном формате
+    image.save(file_path, format='JPEG')
+
+    return {"success": True}
 
 
 @router.get("/")
