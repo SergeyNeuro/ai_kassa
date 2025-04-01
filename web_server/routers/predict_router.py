@@ -191,9 +191,9 @@ async def predict_image_data(
             return JSONResponse(status_code=403, content={"success": False, "info": "authentication error"})
 
         # прогоняем дальнейшую логику
-        await save_image(customer_id=auth_data.customer_id, menu_id=menu_id, file=file)
+        file_data = await save_image(customer_id=auth_data.customer_id, menu_id=menu_id, file=file)
 
-        file_data = await file.read()
+        # file_data = await file.read()
 
         predict_data = await ai_obj.get_prediction_data(
             customer_id=auth_data.customer_id,
@@ -227,7 +227,7 @@ async def save_image(
     # Сохраняем изображение в нужном формате
     image.save(file_path, format='JPEG')
 
-    return {"success": True}
+    return image_data
 
 
 @router.get("/")
