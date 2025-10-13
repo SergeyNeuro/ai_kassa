@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Union
 from PIL import Image
 import io
+from zoneinfo import ZoneInfo
 
 
 from fastapi import APIRouter, UploadFile, File, Depends
@@ -38,7 +39,8 @@ async def save_dataset_image(
 
     os.makedirs(path, exist_ok=True)
 
-    current_time = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+    moscow_tz = ZoneInfo("Europe/Moscow")
+    current_time = datetime.now(moscow_tz).strftime("%Y-%m-%d_%H-%M-%S")
     file_name = f"frame_{current_time}.jpg"
     file_path = os.path.join(path, file_name)
 
