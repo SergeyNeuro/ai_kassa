@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <title>Загрузка | AI Kassa</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='css/style.css') }}">
+  <style>
+    body{
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: linear-gradient(145deg,#e6f1ff,#ffffff);
+      min-height:100vh; margin:0;
+      display:flex; align-items:center; justify-content:center;
+    }
+    .wrap { width: 100%; max-width: 920px; padding: 24px; }
+
+    .header {
+      display:flex; align-items:center; gap:14px;
+      justify-content:center; margin-bottom: 12px;
+    }
+    .header svg { width: 54px; height:54px; }
+    .title { font-size: 26px; font-weight: 800; color:#1c60aa; }
+
+    .card {
+      background:#fff; border:2px solid #3fa2ff; border-radius:16px;
+      box-shadow:0 8px 24px rgba(0,0,0,.08);
+      padding:28px;
+    }
+
+    .hint { color:#2f7ccf; font-weight:600; margin-bottom:14px; }
+
+    .uploader {
+      border:2px dashed #3fa2ff; border-radius:14px;
+      background:#f6fbff;
+      padding:28px; text-align:center;
+      transition: .15s border-color, .15s background;
+    }
+    .uploader.dragover {
+      border-color:#1c60aa; background:#eef6ff;
+    }
+
+    .choose {
+      display:inline-flex; align-items:center; gap:10px;
+      background:#2f7ccf; color:#fff; border:none; border-radius:10px;
+      padding:10px 16px; cursor:pointer; font-size:16px; font-weight:600;
+    }
+    .file-name { margin-top:10px; color:#1c60aa; font-weight:600; min-height:1.2em; }
+
+    .actions { display:flex; gap:12px; margin-top:20px; justify-content:center; }
+    .btn {
+      background:#2f7ccf; color:#fff; border:none; border-radius:10px;
+      padding:10px 16px; cursor:pointer; font-size:16px; font-weight:600;
+    }
+    .btn:disabled { opacity:.6; cursor:not-allowed; }
+    .link { color:#2f7ccf; text-decoration:none; font-weight:700; }
+    .link:hover { text-decoration:underline; }
+
+    /* мелкая адаптация */
+    @media (max-width: 560px){
+      .card{ padding:20px; }
+      .title{ font-size:22px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="header">
+      <!-- SVG-логотип -->
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle cx="50" cy="50" r="46" fill="#e6f1ff" stroke="#2f7ccf" stroke-width="4"/>
+        <text x="50%" y="55%" text-anchor="middle" fill="#1c60aa" font-size="32" font-family="Arial" font-weight="700">AI</text>
+      </svg>
+      <div class="title">AI Kassa — загрузка изображения</div>
+    </div>
+
+    <div class="card">
+      <div class="hint">Перетащите фото на область ниже или выберите файл вручную</div>
+      {% if error %}
+        <div style="margin:10px 0 0; color:#d93025; font-weight:700;">
+          {{ error }}
+        </div>
+      {% endif %}
+      <form id="form" action="/predict/upload" method="post" enctype="multipart/form-data">
+        <div id="drop" class="uploader" tabindex="0">
+          <input id="file" name="file" type="file" accept="image/*" hidden />
+          <input type="hidden" name="customer_id" value="1" />
+          <input type="hidden" name="menu_id" value="1" />
+          <button type="button" id="choose" class="choose">Выбрать файл</button>
+          <div class="file-name" id="fileName">Файл не выбран</div>
+          <div style="margin-top:6px; color:#6c8db8;">Поддерживаются форматы: JPG, PNG, WEBP…</div>
+        </div>
+
+        <div class="actions">
+          <button id="submitBtn" class="btn" type="submit" disabled>Распознать</button>
+          <a href="/logout" class="link">Выйти</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const drop = document.getElementById('drop');
+    const input = document.getElementById('file');
+    const choose = document.getElementById('choose');
+    const fileName = document.getElementById('fileName');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setFile(f){
+      if(!f) return;
+      input.files = new DataTransfer().files; // очистить
+      const dt = new DataTransfer();
+      dt.items.add(f);
+      input.files = dt.files;
+      fileName.textContent = f.name;
+      submitBtn.disabled = false;
+    }
+
+    choose.addEventListener('click', () => input.click());
+    input.addEventListener('change', (e) => setFile(e.target.files[0]));
+
+    // drag & drop
+    ['dragenter','dragover'].forEach(ev =>
+      drop.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); drop.classList.add('dragover'); })
+    );
+    ['dragleave','drop'].forEach(ev =>
+      drop.addEventListener(ev, (e)=>{ e.preventDefault(); e.stopPropagation(); drop.classList.remove('dragover'); })
+    );
+    drop.addEventListener('drop', (e)=>{
+      const f = e.dataTransfer.files && e.dataTransfer.files[0];
+      if(f) setFile(f);
+    });
+  </script>
+</body>
+</html>
+

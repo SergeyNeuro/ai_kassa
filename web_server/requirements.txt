@@ -72,3 +72,4 @@ ultralytics==8.3.7
 ultralytics-thop==2.0.9
 urllib3==2.2.3
 uvicorn==0.31.0
+PyJWT==2.9.0

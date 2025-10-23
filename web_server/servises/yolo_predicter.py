@@ -22,45 +22,96 @@ class AiKassaService(StorageCommon):
             menu_id: int,
             file_data: Any,
     ):
-        """При помощи компьютерного зрения разбираем что изображено на фото
-        и возвращаем объект обработанные данные обратно
-        Args:
-            customer_id: идентификатор заказчика
-            menu_id: идентификатор меню
-            file_data: фотография, на которой требуется распознать данные
         """
+        Распознаёт изображение YOLO-моделью, возвращает:
+        - total_list: список распознанных блюд в прежнем формате (с координатами)
+        - image_url: относительный URL до сохранённого изображения с нарисованными рамками
+        """
+        logger.info(f"Запрос на распознавание: customer_id={customer_id}, menu_id={menu_id}")
 
-        logger.info(f"Пришел запрос на распознавание фотографии относящейся к customer_id: {customer_id}, menu_id: {menu_id}")
+        # 1) Готовим модель
         menu_data = await self.menu_obj.get_data_by_id(node_id=menu_id)
 
-        models_dir_path = f"{STATIC_FILES_PATH}/models"
-
+        models_dir_path = os.path.join(STATIC_FILES_PATH, "models")
         os.makedirs(models_dir_path, exist_ok=True)
 
-        # создаем модель для распознавания
-        model = YOLO(f"{models_dir_path}/{menu_data.ai_model_name}")
+        model_path = os.path.join(models_dir_path, menu_data.ai_model_name)
+        if not os.path.exists(model_path):
+            logger.error(f"Файл модели не найден: {model_path}")
+            raise FileNotFoundError(f"Модель не найдена: {model_path}")
 
+        model = YOLO(model_path)
+
+        # 2) Декодим изображение из байтов
         np_array = np.frombuffer(file_data, np.uint8)
         image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+        if image is None:
+            raise ValueError("Не удалось декодировать изображение")
 
+        # 3) Инференс
         results = model(image)
-
         total_list = []
+        output_image = image.copy()
 
-        for result in results:
-            if result.boxes:
-                for index, value in enumerate(result.boxes.xyxy):
-                    one_dish = await self.create_one_dish_obj(
-                        menu_id=menu_id,
-                        code_name=result.names[int(result.boxes.cls[index])],
-                        x1=int(value[0]),
-                        y1=int(value[1]),
-                        x2=int(value[2]),
-                        y2=int(value[3]),
-                    )
-                    if one_dish:
-                        total_list.append(one_dish)
-        return total_list
+        # 4) Разбираем боксы, собираем блюда и рисуем рамки
+        for r in results:
+            if not getattr(r, "boxes", None):
+                continue
+
+            # r.boxes.xyxy — тензор Nx4, r.boxes.cls — классы (индексы)
+            xyxys = r.boxes.xyxy.tolist()
+            clss = r.boxes.cls.tolist() if hasattr(r.boxes, "cls") else [0] * len(xyxys)
+
+            for idx, box in enumerate(xyxys):
+                x1, y1, x2, y2 = [int(v) for v in box]
+                cls_id = int(clss[idx]) if idx < len(clss) else 0
+                cls_name = r.names[cls_id] if hasattr(r, "names") else str(cls_id)
+
+                # Собираем один item (как раньше)
+                one_dish = await self.create_one_dish_obj(
+                    menu_id=menu_id,
+                    code_name=cls_name,
+                    x1=x1, y1=y1, x2=x2, y2=y2
+                )
+                if one_dish:
+                    total_list.append(one_dish)
+
+                # Рисуем рамку
+                cv2.rectangle(output_image, (x1, y1), (x2, y2), (0, 255, 0), 3)
+
+                # Подпись класса (безопасно по Y)
+                label_y = max(y1 - 10, 20)
+                cv2.putText(
+                    output_image,
+                    cls_name,
+                    (x1, label_y),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.9,
+                    (0, 255, 0),
+                    2
+                )
+
+                logger.info(f"Найден объект: {cls_name} [{x1},{y1},{x2},{y2}]")
+
+        # 5) Сохраняем изображение с рамками
+        pred_dir = os.path.join(STATIC_FILES_PATH, "predict")
+        os.makedirs(pred_dir, exist_ok=True)
+
+        timestamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+        filename = f"predict_{timestamp}.jpg"
+        pred_path = os.path.join(pred_dir, filename)
+
+        ok = cv2.imwrite(pred_path, output_image)
+        if not ok:
+            raise RuntimeError("Не удалось сохранить изображение с предиктом")
+
+        logger.info(f"Сохранено изображение с рамками: {pred_path}")
+
+        # 6) Возвращаем итог
+        return {
+            "total_list": total_list,
+            "image_url": f"/static/predict/{filename}",
+        }
 
 
     async def create_one_dish_obj(
