@@ -58,6 +58,59 @@ class Redis:
         except Exception as _ex:
             logger.error(f"Не удалось удалить данные из КЭШа по ключу: {key}")
 
+    def set_single_data_in_cache(
+            self,
+            key: str,
+            value: Union[int, str, bool],
+            live_time: int = 3500,
+    ) -> None:
+        """
+        Метод сохраняет единичные данные (не массивы) в redis
+        Args:
+            key: (str) — Ключ по которому заносится объект
+            value: (int, str, bool) — Значение которое будет спрятано под ключом
+            live_time: (str) — Время в секундах сколько хранится значение в КЭШе
+        Return:
+            None
+        """
+        try:
+            logger.debug(
+                f"Сохраняю одиночное значение в КЭШ:"
+                f"  По ключу: <{key}>\n"
+                f"  На {live_time} секунд"
+            )
+
+            self.redis.set(key, value, ex=live_time)
+        except Exception as _ex:
+            logger.critical(
+                f"Ошибка внесения одиночных данных в redis {_ex}"
+            )
+
+    def get_single_data_from_cache(self, key: str) -> Union[int, str, bool, None]:
+        """
+        Метод извлекает из КЭШа json и преобразует его в pydantic объект согласно той схеме которую в него передали
+        Args:
+            key: (str) — Ключ по которому необходимо искать объект
+        Return:
+            Значение (int or str or bool) либо None
+        """
+        try:
+            logger.debug(
+                f"Извлекаю данные из КЭШа по ключу: {key}"
+            )
+            data = self.redis.get(key)
+            if data:
+                return data.decode('utf-8')  # декодируем (приходят байты)
+            logger.info(
+                f"Данные в КЭШе по ключу: {key} не найдены"
+            )
+        except ConnectionError as _ex:
+            logger.error(
+                f"Ошибка извлечения данных из redis:"
+                f"  По ключу: <{key}>\n"
+                f"  Ошибка: <{_ex}>"
+            )
+            return None
 
 if __name__ == '__main__':
     obj = Redis()

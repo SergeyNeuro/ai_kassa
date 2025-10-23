@@ -32,3 +32,23 @@ class BaseCache(ABC):
             True or False в зависимости удалось сохранить данные или нет
         """
         pass
+
+    @abstractmethod
+    def set_single_data_in_cache(
+            self,
+            key: str,
+            value: Union[int, str, bool],
+            live_time: int = 3500,
+    ) -> None:
+        pass
+
+    @abstractmethod
+    def get_single_data_from_cache(self, key: str) -> Union[int, str, bool, None]:
+        """
+        Метод извлекает из КЭШа json и преобразует его в pydantic объект согласно той схеме которую в него передали
+        Args:
+            key: (str) — Ключ по которому необходимо искать объект
+        Return:
+            Значение (int or str or bool) либо None
+        """
+        pass

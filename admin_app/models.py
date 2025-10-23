@@ -6,6 +6,7 @@ from datetime import datetime
 
 from sqlalchemy import String, ForeignKey, text, Column, JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from starlette.requests import Request
 import logging
 
 from db_core import Base
@@ -31,6 +32,13 @@ class CustomersTable(Base):
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
     discount_type: Mapped[int] = mapped_column(nullable=True)
 
+    token = relationship("AuthTokenTable", back_populates="customer", cascade="all, delete-orphan")
+    menu = relationship("MenuTable", back_populates="customer", cascade="all, delete-orphan")
+    food_point = relationship("FoodPointTable", back_populates="customer", cascade="all, delete-orphan")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.id}. {self.name}"
+
 
 class AuthTokenTable(Base):
     """Таблица в которой содержатся данные о токенах доступа для API
@@ -51,10 +59,13 @@ class AuthTokenTable(Base):
     role: Mapped[int] = mapped_column(nullable=False)
     details: Mapped[str] = mapped_column(nullable=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=True)
-    customer = relationship("CustomersTable")
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
 
+    customer = relationship(CustomersTable, back_populates="token", lazy="joined")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.id}. {self.name}"
 
 class MenuTable(Base):
     """Таблица с данными о меню
@@ -73,8 +84,13 @@ class MenuTable(Base):
     details: Mapped[str] = mapped_column(nullable=True)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
     system_name: Mapped[str] = mapped_column(nullable=False)
-    customer = relationship("CustomersTable")
 
+    customer = relationship(CustomersTable, back_populates="menu", lazy="joined")
+    iiko = relationship("IikoCredentialsTable", back_populates="menu", cascade="all, delete-orphan")
+    dish = relationship("DishTable", back_populates="menu", cascade="all, delete-orphan")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.id}. {self.name}"
 
 class ChangingDishTable(Base):
     """Таблица с данными о меню
@@ -109,8 +125,13 @@ class DishTable(Base):
     price: Mapped[int] = mapped_column(nullable=False)
     changing_dish_id: Mapped[int] = mapped_column(ForeignKey("changing_dish_table.id", ondelete="SET NULL"), nullable=True)
     barcode: Mapped[str] = mapped_column(nullable=True)
-    menu = relationship("MenuTable")
-    changing_dish = relationship("ChangingDishTable")
+
+    menu = relationship(MenuTable, back_populates="dish", lazy="joined")
+    changing_dish = relationship(ChangingDishTable)
+    iiko = relationship("IikoDishesTable", back_populates="dish", cascade="all, delete-orphan")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.id}. <{self.name}> <{self.code_name}>"
 
 
 class FoodPointTable(Base):
@@ -132,7 +153,12 @@ class FoodPointTable(Base):
     city: Mapped[str] = mapped_column(nullable=False)
     address: Mapped[str] = mapped_column(nullable=False)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
-    customer = relationship("CustomersTable")
+
+    customer = relationship(CustomersTable, back_populates="food_point", lazy="joined")
+    kassa = relationship("KassaTable", back_populates="food_point", cascade="all, delete-orphan")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.id}. {self.name}"
 
 
 class WeekDayDishTable(Base):
@@ -246,8 +272,9 @@ class KassaTable(Base):
     password: Mapped[str] = mapped_column(nullable=True)
     address: Mapped[str] = mapped_column(nullable=False)
     food_point_id: Mapped[int] = mapped_column(ForeignKey("food_point_table.id", ondelete="SET NULL"), nullable=False)
-    food_point = relationship("FoodPointTable")
 
+    food_point = relationship(FoodPointTable, back_populates="kassa", lazy="joined")
+    iiko = relationship("IikoTerminalsTable", back_populates="kassa", cascade="all, delete-orphan")
 
 class HistoryTable(Base):
     """Таблица с данными истории покупок через кассу
@@ -286,3 +313,69 @@ class DiscountTransactionTable(Base):
     history_id: Mapped[int] = mapped_column(ForeignKey("history_table.id", ondelete="SET NULL"), nullable=True)
     created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
     kassa = relationship("HistoryTable")
+
+
+class IikoCredentialsTable(Base):
+    """Таблица с авторизационными данными в системе IIKO
+    Attr:
+        id: идентификатор записи
+        name: наименование записи
+        menu_id: идентификатор меню
+        api_key: ключ по которому проходит авторизация
+        created_at: дата создания
+        update_at: дата изменения
+    """
+
+    __tablename__ = "iiko_credentials_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=False, unique=True)
+    aki_key: Mapped[str] = mapped_column(nullable=False)
+    organization_id: Mapped[str] = mapped_column(nullable=True)
+    iiko_menu_id: Mapped[str] = mapped_column(nullable=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+
+    menu = relationship(MenuTable, back_populates="iiko", lazy="joined")
+
+
+class IikoTerminalsTable(Base):
+    """Таблица с данными терминалов системе IIKO
+    Attr:
+        id: идентификатор записи
+        terminal_id: идентификатор терминала в системе IIko
+        kassa_id: идентификатор кассы рядом с которой установлен терминал
+        created_at: дата создания
+        update_at: дата изменения
+    """
+
+    __tablename__ = "iiko_terminals_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    terminal_id: Mapped[str] = mapped_column(unique=True)
+    kassa_id: Mapped[int] = mapped_column(ForeignKey("kassa_table.id", ondelete="CASCADE"), nullable=False, unique=True)
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+
+    kassa = relationship(KassaTable, back_populates="iiko", lazy="joined")
+
+
+class IikoDishesTable(Base):
+    """Таблица с данным блюд из системы iiko
+    Attr:
+        id: идентификатор записи
+        dish_id: идентификатор блюда из нашей системы
+        created_at: дата создания
+        update_at: дата изменения
+    """
+
+    __tablename__ = "iiko_dishes_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    dish_id: Mapped[int] = mapped_column(ForeignKey("dish_table.id", ondelete="CASCADE"), unique=True)
+    iiko_id: Mapped[str]
+    created_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"))
+    update_at: Mapped[datetime] = mapped_column(server_default=text("TIMEZONE('utc', now())"), onupdate=datetime.utcnow)
+
+    dish = relationship(DishTable, back_populates="iiko", lazy="joined")

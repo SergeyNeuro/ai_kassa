@@ -10,3 +10,4 @@ from .discount_account_interface import BaseDiscountAccount
 from .kassa_interface import BaseKassa
 from .history_interface import BaseHistory
 from .discount_transaction_interface import BaseDiscountTransaction
+from .iiko_interface import BaseIikoCredentials, BaseIikoTerminals, BaseIikoDishes

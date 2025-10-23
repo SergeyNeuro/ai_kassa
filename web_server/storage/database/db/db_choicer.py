@@ -84,3 +84,33 @@ class DbChoicer:
             "postgres_alchemy": postgres_alchemy.RKeeperDishDAL
         }
         return data_dict[self.db_name]()
+
+    def choice_iiko_credentials_obj(self) -> database.BaseIikoCredentials:
+        """
+        Метод выбирает объект для взаимодействия с блюдами из iiko
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.IikoCredentialsDAL
+        }
+        return data_dict[self.db_name]()
+
+    def choice_iiko_terminals_obj(self) -> database.BaseIikoTerminals:
+        """
+        Метод выбирает объект для взаимодействия с блюдами из iiko
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.IikoTerminalsDAL
+        }
+        return data_dict[self.db_name]()
+
+    def choice_iiko_dishes_obj(self) -> database.BaseIikoDishes:
+        """
+        Метод выбирает объект для взаимодействия с блюдами из iiko
+        (на основе глобальных настроек).
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.IikoDishesDAL
+        }
+        return data_dict[self.db_name]()

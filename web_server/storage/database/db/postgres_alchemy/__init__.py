@@ -9,3 +9,6 @@ from .discount_account import DiscountAccountDAL
 from .kassa import KassaDAL
 from .history import HistoryDAL
 from .discount_transaction import DiscountTransactionDAL
+from .iiko_credentials import IikoCredentialsDAL
+from .iiko_terminals import IikoTerminalsDAL
+from .iiko_dishes import IikoDishesDAL

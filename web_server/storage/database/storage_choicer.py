@@ -82,3 +82,30 @@ class StorageTypeChoicer:
             "cache_db": cache_db.RKeeperDishDbCache
         }
         return data_dict[self.storage_type]()
+
+    def iiko_credentials_obj(self) -> database.BaseIikoCredentials:
+        """
+        IIKO credentials
+        """
+        data_dict = {
+            "cache_db": cache_db.IikoCredentialsDbCache
+        }
+        return data_dict[self.storage_type]()
+
+    def iiko_terminals_obj(self) -> database.BaseIikoTerminals:
+        """
+        IIKO terminal
+        """
+        data_dict = {
+            "cache_db": cache_db.IikoTerminalsDbCache
+        }
+        return data_dict[self.storage_type]()
+
+    def iiko_dishes_obj(self) -> database.BaseIikoDishes:
+        """
+        IIKO dishes
+        """
+        data_dict = {
+            "cache_db": cache_db.IikoDishesDbCache
+        }
+        return data_dict[self.storage_type]()

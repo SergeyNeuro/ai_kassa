@@ -4,7 +4,8 @@ from starlette_admin.fields import EnumField
 from models import (
     CustomersTable, AuthTokenTable, MenuTable, ChangingDishTable, DishTable,
     FoodPointTable, WeekDayDishTable, RKeeperCredentialsTable, RKeeperDishTable,
-    DiscountAccountTable, KassaTable, HistoryTable, DiscountTransactionTable
+    DiscountAccountTable, KassaTable, HistoryTable, DiscountTransactionTable,
+    IikoCredentialsTable
 )
 
 
@@ -17,7 +18,11 @@ class CustomerModelView(ModelView):
         EnumField("discount_type", choices=[
             (1, "Без скидок"),
             (2, "Столовая 67")
-        ])
+        ]),
+
+        CustomersTable.token,
+        CustomersTable.menu,
+        CustomersTable.food_point
     ]
 
 
@@ -30,7 +35,7 @@ class AuthTokenModelView(ModelView):
         AuthTokenTable.role,
         AuthTokenTable.details,
         AuthTokenTable.created_at,
-        AuthTokenTable.update_at
+        AuthTokenTable.update_at,
     ]
 
     exclude_fields_from_create = [AuthTokenTable.created_at, AuthTokenTable.update_at]
@@ -44,7 +49,12 @@ class MenuModelView(ModelView):
         MenuTable.customer,
         MenuTable.ai_model_name,
         MenuTable.details,
-        EnumField("system_name", choices=[("r-keeper", "r-keeper")])
+        EnumField("system_name", choices=[
+            ("r-keeper", "r-keeper"),
+            ("iiko", "iiko")
+        ]),
+        MenuTable.iiko,
+        MenuTable.dish
     ]
 
 
@@ -62,7 +72,6 @@ class DishModelView(ModelView):
         DishTable.id,
         DishTable.name,
         DishTable.code_name,
-        # DishTable.type,
         EnumField(
             "type",
             choices=[
@@ -80,7 +89,6 @@ class DishModelView(ModelView):
             ],
             coerce=int
         ),
-        # DishTable.count_type,
         EnumField(
             "count_type",
             choices=[
@@ -99,7 +107,8 @@ class DishModelView(ModelView):
         DishTable.price,
         DishTable.menu,
         DishTable.changing_dish,
-        DishTable.barcode
+        DishTable.barcode,
+
     ]
 
 
@@ -111,7 +120,8 @@ class FoodPointModelView(ModelView):
         FoodPointTable.district,
         FoodPointTable.city,
         FoodPointTable.address,
-        FoodPointTable.customer
+        FoodPointTable.customer,
+        FoodPointTable.kassa
     ]
 
 
@@ -147,6 +157,17 @@ class RKeeperDishModelView(ModelView):
         RKeeperDishTable.dish,
         RKeeperDishTable.menu
     ]
+
+class IikoCredentialsView(ModelView):
+    pass
+
+
+class IikoTerminalView(ModelView):
+    pass
+
+
+class IikoDishView(ModelView):
+    pass
 
 
 class DiscountAccountView(ModelView):

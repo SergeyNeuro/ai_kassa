@@ -5,3 +5,4 @@ from .dish import DishDbCache
 from .week_day_dish import WeekDayDishDbCache
 from .r_keeper_credentials import RKeeperCredentialsDbCache
 from .r_keeper_dish import RKeeperDishDbCache
+from .iiko import IikoCredentialsDbCache, IikoTerminalsDbCache, IikoDishesDbCache
