@@ -11,6 +11,9 @@ from storage.storage_core import StorageCommon
 from config import STATIC_FILES_PATH
 from schemas import logic_schemas, db_schemas
 
+# ✅ добавлено: фильтрация контейнеров вынесена в отдельный модуль
+from servises.filters import BBox, RawDet, EmptyBoxFilter, IGNORE_TAG
+
 logger = logging.getLogger(f"app.{__name__}")
 
 
@@ -45,21 +48,49 @@ class AiKassaService(StorageCommon):
 
         results = model(image)
 
-        total_list = []
-
+        # -------------------- НОВОЕ: сбор детекций и фильтрация контейнеров --------------------
+        raw_dets: list[RawDet] = []
         for result in results:
-            if result.boxes:
-                for index, value in enumerate(result.boxes.xyxy):
-                    one_dish = await self.create_one_dish_obj(
-                        menu_id=menu_id,
-                        code_name=result.names[int(result.boxes.cls[index])],
-                        x1=int(value[0]),
-                        y1=int(value[1]),
-                        x2=int(value[2]),
-                        y2=int(value[3]),
+            if not getattr(result, "boxes", None):
+                continue
+            xyxy = result.boxes.xyxy
+            cls = result.boxes.cls
+            conf = getattr(result.boxes, "conf", None)
+
+            for index, value in enumerate(xyxy):
+                class_id = int(cls[index])
+                class_name = result.names[class_id]
+                confidence = float(conf[index]) if conf is not None else 1.0
+
+                raw_dets.append(
+                    RawDet(
+                        class_name=class_name,
+                        conf=confidence,
+                        bbox=BBox(
+                            x1=int(value[0]),
+                            y1=int(value[1]),
+                            x2=int(value[2]),
+                            y2=int(value[3]),
+                        )
                     )
-                    if one_dish:
-                        total_list.append(one_dish)
+                )
+
+        # применяем фильтр: убираем контейнеры (empty_bbox) и всё, что внутри них
+        filtered = EmptyBoxFilter(ignore_tag=IGNORE_TAG).filter(raw_dets)
+        logger.info(f"Фильтрация контейнеров: осталось {len(filtered)} из {len(raw_dets)} детекций")
+        # ------------------------------------------------------------------------------------------------
+
+        total_list = []
+        for det in filtered:
+            one_dish = await self.create_one_dish_obj(
+                menu_id=menu_id,
+                code_name=det.class_name,             
+                x1=det.bbox.x1, y1=det.bbox.y1,
+                x2=det.bbox.x2, y2=det.bbox.y2,
+            )
+            if one_dish:
+                total_list.append(one_dish)
+
         return total_list
 
 
