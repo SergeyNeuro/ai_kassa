@@ -73,7 +73,6 @@ class AiKassaService(StorageCommon):
             live_time=30
         )
 
-
         return {"total_list": total_list, "image_url": file_path}
 
     @staticmethod
@@ -118,7 +117,7 @@ class AiKassaService(StorageCommon):
             label_y = max(dish["y1"] - 10, 20)
             cv2.putText(
                 image,
-                str(dish["dish_data"]["id"]),
+                str(index),
                 ((dish["x2"] - dish["x1"]) // 2 + dish["x1"] - 10, label_y),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.9,
