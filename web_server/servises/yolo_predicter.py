@@ -117,7 +117,7 @@ class AiKassaService(StorageCommon):
             label_y = max(dish["y1"] - 10, 20)
             cv2.putText(
                 image,
-                str(index),
+                str(index + 1),
                 ((dish["x2"] - dish["x1"]) // 2 + dish["x1"] - 10, label_y),
                 cv2.FONT_HERSHEY_SIMPLEX,
                 0.9,
