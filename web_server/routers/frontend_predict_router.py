@@ -1,46 +1,38 @@
 # web_server/routers/frontend_predict_router.py
 import os
 import logging
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 
-from fastapi import APIRouter, Request, UploadFile, File, Form, HTTPException, status
+from fastapi import APIRouter, Request, UploadFile, File, Form, HTTPException, status, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
-# from fastapi.responses import FileResponse # импортирован и используется только для временной раздачи изображения
+from fastapi.responses import FileResponse # импортирован и используется только для временной раздачи изображения
 
-from config import STATIC_FILES_PATH
-from servises.yolo_predicter import AiKassaService  
+from config import STATIC_FILES_PATH, COOKIE_NAME
+from servises.yolo_predicter import AiKassaService
+from servises.dish_service import DishService
+from schemas import logic_schemas
+from utils import decode_token
 
 logger = logging.getLogger("app.frontend_predict")
 router = APIRouter()
-
-COOKIE_NAME = os.getenv("COOKIE_NAME", "ai_kassa_auth")
-
-def _is_authenticated(request: Request) -> bool:
-    return bool(request.cookies.get(COOKIE_NAME))
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# @router.get("/predict/image/{fname}")                      # отдаёт файл из /var/ai_kassa/predict
-# async def serve_predict_image(fname: str):
-#     # отдаём файл из /var/ai_kassa/predict
-#     path = os.path.join(STATIC_FILES_PATH, "predict", fname)
-#     if not os.path.isfile(path):
-#         raise HTTPException(status_code=404, detail="Изображение не найдено")
-#     return FileResponse(path, media_type="image/jpeg")
 
 # === POST: обработка фото и показ результата ===
 @router.post("/predict/upload", response_class=HTMLResponse)
 async def handle_upload(
     request: Request,
     file: UploadFile = File(...),
-    customer_id: int = Form(1),
-    menu_id: int = Form(1),
+    service = Depends(AiKassaService)
 ):
-    if not _is_authenticated(request):
+    cookie_token = request.cookies.get(COOKIE_NAME)
+    user_data = decode_token(string=cookie_token)
+    if not user_data:
         return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
 
     data = await file.read()
@@ -54,31 +46,14 @@ async def handle_upload(
     with open(save_path, "wb") as f:
         f.write(data)
 
-    service = AiKassaService()
     try:
-        result = await service.get_prediction_data(
-            customer_id=customer_id,
-            menu_id=menu_id,
+        result = await service.get_prediction_data_for_test(
+            menu_id=user_data.get("menu_id"),
             file_data=data,
+            token=cookie_token
         )
-
-        # поддержка нового формата
-        # if isinstance(result, dict):
-        #     predictions = result.get("total_list", [])
-        #     img_field = result.get("image_url")
-        #     fname = os.path.basename(img_field) if img_field else os.path.basename(safe_name)
-        # else:
-        #     predictions = result
-        #     # fallback: покажем загруженный оригинал, если нужно
-        #     fname = os.path.basename(safe_name)
-
-        # image_url = f"/predict/image/{fname}"
-        if isinstance(result, dict):
-            predictions = result.get("total_list", [])
-            image_url = result.get("image_url", f"/static/uploads/{safe_name}")
-        else:
-            predictions = result
-            image_url = f"/static/uploads/{safe_name}"
+        predictions = result.get("total_list")
+        image_url = result.get("image_url")
     except Exception as e:
         logger.exception("Ошибка инференса")
         return templates.TemplateResponse(
@@ -99,7 +74,7 @@ async def handle_upload(
         row = {
             "idx": idx,
             "name_ru": dish_data.get("name_ru", dish_data.get("name", "Неизвестно")),
-            "category_ru": dish_data.get("category_ru", "—"),
+            "category_ru": dish_data.get("category", "—"),
             "unit": dish_data.get("unit", "шт"),
             "amount": dish_data.get("amount", 1),
             "price_rub": float(dish_data.get("price_rub", dish_data.get("price", 0.0))),
@@ -118,3 +93,50 @@ async def handle_upload(
             "subtotal": subtotal,
         },
     )
+
+@router.get("/predict/photo/{file_name}")
+async def get_predict_photo(
+        request: Request,
+        file_name: str
+):
+    cookie_token = request.cookies.get(COOKIE_NAME)
+    user_data = decode_token(string=cookie_token)
+    if not user_data:
+        return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
+    file_path = os.path.join("/var/ai_kassa/predict", file_name)
+    """Выгружаем содержимое загруженного фото которое получилось после успешного предсказания"""
+    return FileResponse(
+        file_path,
+        media_type="image/jpeg",
+        filename=file_path
+    )
+
+@router.post("/predict/confirm")
+async def confirm_order(
+    request: Request,
+    service: DishService = Depends(DishService)
+):
+    """Переходим к этапу оплаты, (тестовый метод)"""
+    try:
+        cookie_token = request.cookies.get(COOKIE_NAME)
+        user_data = decode_token(string=cookie_token)
+        if not user_data:
+            return RedirectResponse(url="/login", status_code=status.HTTP_302_FOUND)
+
+        data: logic_schemas.ai_kassa_predict.TestConfirmSchem = service.cache.get_data_from_cache(
+            key=cookie_token,
+            data_class=logic_schemas.ai_kassa_predict.TestConfirmSchem
+        )
+        res = await service.confirm_pay(
+            menu_id=user_data.get("menu_id"),
+            kassa_id=user_data.get("kassa_id"),
+            dishes_data=data.data
+        )
+
+        return {"success": res}
+
+    except Exception as _ex:
+        logger.error(f"Ошибка при подтверждении заказа -> {_ex}")
+        return {"success": False}
+

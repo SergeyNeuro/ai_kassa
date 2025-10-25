@@ -35,6 +35,7 @@ from storage.database.db.postgres_alchemy.discount_transaction import DiscountTr
 from storage.database.db.postgres_alchemy.iiko_credentials import IikoCredentialsTable
 from storage.database.db.postgres_alchemy.iiko_terminals import IikoTerminalsTable
 from storage.database.db.postgres_alchemy.iiko_dishes import IikoDishesTable
+from storage.database.db.postgres_alchemy.categories import CategoriesTable
 
 # импортируем глобальные переменные
 from config import DB_HOST, DB_NAME, DB_PORT, DB_PASS, DB_USER

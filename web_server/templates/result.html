@@ -100,6 +100,27 @@
       filter:brightness(0.95);
     }
 
+    .btn:disabled {
+      opacity:0.6;
+      cursor:not-allowed;
+    }
+
+    .loading {
+      display:inline-block;
+      width:16px;
+      height:16px;
+      border:2px solid #ffffff;
+      border-radius:50%;
+      border-top-color:transparent;
+      animation:spin 1s ease-in-out infinite;
+      margin-right:8px;
+      vertical-align:middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
     @media (max-width: 900px) {
       .grid { grid-template-columns: 1fr; gap:18px; }
     }
@@ -156,12 +177,58 @@
 
       <div class="btns">
         <a class="btn secondary" href="/predict/upload" style="text-decoration:none;display:inline-block;">Назад</a>
-        <button class="btn" onclick="alert('Заглушка: оплата');">Оплатить</button>
+        <button class="btn" id="payButton" onclick="processPayment()">
+          Оплатить
+        </button>
       </div>
 
     </div>
   </div>
 </div>
+
+<script>
+  async function processPayment() {
+    const payButton = document.getElementById('payButton');
+
+    // Сохраняем оригинальный текст кнопки
+    const originalText = payButton.textContent;
+
+    // Блокируем кнопку и показываем индикатор загрузки
+    payButton.disabled = true;
+    payButton.innerHTML = '<span class="loading"></span>Обработка...';
+
+    try {
+      // Отправляем POST запрос на /predict/confirm
+      const response = await fetch('/predict/confirm', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        }
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        // Если успешно - редирект на страницу загрузки
+        window.location.href = '/predict/upload';
+      } else {
+        // Если не успешно - показываем сообщение об ошибке
+        alert('Ошибка оплаты. Пожалуйста, попробуйте снова.');
+        // Восстанавливаем кнопку
+        payButton.disabled = false;
+        payButton.textContent = originalText;
+      }
+
+    } catch (error) {
+      // Обработка ошибок сети
+      console.error('Ошибка:', error);
+      alert('Произошла ошибка при соединении. Пожалуйста, попробуйте снова.');
+      // Восстанавливаем кнопку
+      payButton.disabled = false;
+      payButton.textContent = originalText;
+    }
+  }
+</script>
 </body>
 </html>
 

@@ -1,18 +1,14 @@
 version: '3.8'
 services:
     ai_kassa_db:
-        image: postgres:16-alpine
+        image: postgres:latest
         container_name: ai_kassa_db
-        environment:
-          POSTGRES_DB: ai_kassa_db
-          POSTGRES_USER: dev
-          POSTGRES_PASSWORD: 1414
-        ports:
-          - "5430:5432"
         volumes:
-          - /var/lib/postgresql/data2:/var/lib/postgresql/data
-        networks:
-          - default
+            - /var/lib/postgresql/data2:/var/lib/postgresql/data
+        env_file:
+            - .env
+        ports:
+            - '${POSTGRES_PORT}:5432'
 
     ai_kassa_redis:
         image: redis:7-alpine

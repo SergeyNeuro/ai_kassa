@@ -3,7 +3,7 @@
 """
 
 import datetime
-from typing import Union, Optional
+from typing import List, Optional
 
 from pydantic import BaseModel
 
@@ -34,3 +34,7 @@ class ConfirmSchem(BaseModel):
     y1: Optional[int] = None
     x2: Optional[int] = None
     y2: Optional[int] = None
+
+
+class TestConfirmSchem(BaseModel):
+    data: List[ConfirmSchem]

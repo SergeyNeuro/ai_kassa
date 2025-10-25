@@ -1,10 +1,17 @@
 # web_server/routers/frontend_router.py
 import os
-from datetime import timedelta, datetime, timezone
+import datetime
+import logging
 
-from fastapi import APIRouter, Request, status
+from fastapi import APIRouter, Request, status, Depends
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+
+from servises.auth_service import AuthObj
+from utils import generate_jwt_token
+from config import COOKIE_NAME, JWT_EXPIRES_MIN
+
+logger = logging.getLogger(f"app.{__name__}")
 
 router = APIRouter()
 
@@ -13,21 +20,22 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))  # web_se
 TEMPLATES_DIR = os.path.join(BASE_DIR, "templates")
 templates = Jinja2Templates(directory=TEMPLATES_DIR)
 
-# Настройки из .env
-DEMO_LOGIN = os.getenv("DEMO_LOGIN", "demo")
-DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "demo123")
-COOKIE_NAME = os.getenv("COOKIE_NAME", "ai_kassa_auth")
-JWT_EXPIRES_MIN = int(os.getenv("JWT_EXPIRES_MIN", "120"))  # срок жизни куки
 
-def _set_auth_cookie(response: RedirectResponse, value: str) -> None:
-    expires = datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRES_MIN)
+def _set_auth_cookie(
+        response: RedirectResponse,
+        menu_id: int,
+        kassa_id: int
+) -> None:
+    expire = datetime.datetime.now() + datetime.timedelta(minutes=JWT_EXPIRES_MIN)
+    token = generate_jwt_token(menu_id=menu_id, kassa_id=kassa_id, expire=expire)
+
     response.set_cookie(
         key=COOKIE_NAME,
-        value=value,
+        value=token,
         httponly=True,
         secure=False,          # поставь True при HTTPS
         samesite="lax",
-        expires=expires.strftime("%a, %d %b %Y %H:%M:%S GMT"),
+        expires=expire.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         max_age=JWT_EXPIRES_MIN * 60,
         path="/",
     )
@@ -50,21 +58,40 @@ async def login_page(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "error": None})
 
 @router.post("/login")
-async def login_submit(request: Request):
-    form = await request.form()
-    username = (form.get("username") or "").strip()
-    password = (form.get("password") or "").strip()
+async def login_submit(
+        request: Request,
+        auth_obj: AuthObj = Depends(AuthObj)
+):
+    try:
+        form = await request.form()
 
-    if username == DEMO_LOGIN and password == DEMO_PASSWORD:
+        username = (form.get("username") or "").strip()
+        password = (form.get("password") or "").strip()
+        menu_id = int((form.get("menu_id") or "").strip())
+        kassa_id = int((form.get("kassa_id") or "").strip())
+
+        logger.info(f"Пришел запрос на аутентификации username: {username}, password: {password}, "
+                    f"menu_id: {menu_id}, kassa_id: {kassa_id}")
+
+        # проверяем аутентификацию
+        check_auth = await auth_obj.for_test_auth(
+            login=username, password=password, menu_id=int(menu_id), kassa_id=int(kassa_id)
+        )
+        logger.info(f"Результат аутентификации: {check_auth}")
+        if not check_auth:
+            raise
+
         resp = RedirectResponse(url="/predict/upload", status_code=status.HTTP_302_FOUND)
-        _set_auth_cookie(resp, value="demo-session")
+        _set_auth_cookie(resp, menu_id, kassa_id)
         return resp
 
-    return templates.TemplateResponse(
-        "login.html",
-        {"request": request, "error": "Неверный логин или пароль"},
-        status_code=status.HTTP_401_UNAUTHORIZED,
-    )
+    except Exception as _ex:
+        logger.error(f"Ошибка при аутентификации: {_ex}")
+        return templates.TemplateResponse(
+            "login.html",
+            {"request": request, "error": "Неверный логин или пароль"},
+            status_code=status.HTTP_401_UNAUTHORIZED,
+        )
 
 # ====== СТРАНИЦЫ ПРОДУКТА (фронт) ======
 @router.get("/predict/upload", response_class=HTMLResponse)
