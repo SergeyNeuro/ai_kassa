@@ -96,13 +96,20 @@ class IikoAPI(StorageCommon):
         """Запрашиваем меню организации"""
         if menu_id:
             # извлекаем данные по одному конкретному меню
+
+            # проверяем есть ли price_category у меню
+            body = {
+                "organizationIds": [organization_id],
+                "externalMenuId": menu_id
+            }
+
+            price_category = await self.get_menu(organization_id=organization_id)
+            if price_category.get("priceCategories"):
+               body["priceCategoryId"] = price_category.get("priceCategories")[0]
+
             return await self.base_request(
                 api_url="menu/by_id",
-                body={
-                    "organizationIds": [organization_id],
-                    "externalMenuId": menu_id,
-                    "priceCategoryId": "00000000-0000-0000-0000-000000000000"
-                },
+                body=body,
                 version=2
             )
         # извлекаем список всех возможных меню относящихся к организации
@@ -200,10 +207,13 @@ class IikoAPI(StorageCommon):
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(name)s %(funcName)s %(levelname)s %(message)s")
     async def main():
-        obj = IikoAPI(menu_id=2)
+        obj = IikoAPI(menu_id=3)
         # res = await obj.get_menu_data(organization_id="c5dabafd-750c-4e36-ba91-5f0373e57361", menu_id="61447")
-        res = await obj.get_command_status(organization_id="c5dabafd-750c-4e36-ba91-5f0373e57361",
-                                      correlation_id="2893c940-e5f4-4487-8ff7-4ae4165a1534")
+        # res = await obj.get_command_status(organization_id="c5dabafd-750c-4e36-ba91-5f0373e57361",
+        #                               correlation_id="2893c940-e5f4-4487-8ff7-4ae4165a1534")
+        # res = await obj.get_organizations()
+        organization_id = "1643dab1-302f-430b-9162-87f7c68814c7"
+        res = await obj.get_menu(organization_id=organization_id, menu_id="56239")
         print(res)
     asyncio.run(main())
 
