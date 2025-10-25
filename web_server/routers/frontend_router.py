@@ -33,7 +33,7 @@ def _set_auth_cookie(
         key=COOKIE_NAME,
         value=token,
         httponly=True,
-        secure=False,          # поставь True при HTTPS
+        secure=True,          # поставь True при HTTPS
         samesite="lax",
         expires=expire.strftime("%a, %d %b %Y %H:%M:%S GMT"),
         max_age=JWT_EXPIRES_MIN * 60,
