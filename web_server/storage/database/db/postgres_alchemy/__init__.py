@@ -12,3 +12,6 @@ from .discount_transaction import DiscountTransactionDAL
 from .iiko_credentials import IikoCredentialsDAL
 from .iiko_terminals import IikoTerminalsDAL
 from .iiko_dishes import IikoDishesDAL
+from .customers import CustomersDAL
+from .kassa import KassaDAL
+from .food_point import FoodPointDAL

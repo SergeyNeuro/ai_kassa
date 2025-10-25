@@ -130,6 +130,8 @@ class DishService(StorageCommon):
             attempt: int = 1
     ) -> bool:
         """Создаем заказ в IIKO за несколько попыток и проверяем успешно ли он был создан"""
+        logger.info(f"Пробрасываю заказ в IIKO. menu_id: {menu_id}, organization_id: {organization_id}, items: {items}, items: {items}")
+
         obj = IikoAPI(menu_id=menu_id)
         # создаем заказ
         create = await obj.create_order(

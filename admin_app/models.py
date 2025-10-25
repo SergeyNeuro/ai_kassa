@@ -30,6 +30,7 @@ class CustomersTable(Base):
     name: Mapped[str] = mapped_column(String(40))
     phone: Mapped[str] = mapped_column(String(12), nullable=True)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=True)
+    password: Mapped[str] = mapped_column(String(20), nullable=True)
     discount_type: Mapped[int] = mapped_column(nullable=True)
 
     token = relationship("AuthTokenTable", back_populates="customer", cascade="all, delete-orphan")
@@ -88,6 +89,7 @@ class MenuTable(Base):
     customer = relationship(CustomersTable, back_populates="menu", lazy="joined")
     iiko = relationship("IikoCredentialsTable", back_populates="menu", cascade="all, delete-orphan")
     dish = relationship("DishTable", back_populates="menu", cascade="all, delete-orphan")
+    categories = relationship("CategoriesTable", back_populates="menu", cascade="all, delete-orphan")
 
     async def __admin_repr__(self, request: Request):
         return f"{self.id}. {self.name}"
@@ -109,6 +111,22 @@ class ChangingDishTable(Base):
     menu = relationship("MenuTable")
 
 
+class CategoriesTable(Base):
+    """Таблица с данными категорий блюд"""
+
+    __tablename__ = "categories_table"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    name: Mapped[str] = mapped_column(nullable=False)
+    menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="CASCADE"), nullable=False)
+
+    menu = relationship(MenuTable, back_populates="categories", lazy="joined")
+    dishes = relationship("DishTable", back_populates="category", cascade="all, delete-orphan")
+
+    async def __admin_repr__(self, request: Request):
+        return f"{self.menu_id}. <{self.name}>"
+
+
 class DishTable(Base):
     """Таблица с данными о блюдах
     """
@@ -118,6 +136,7 @@ class DishTable(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(nullable=False)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
+    category_id: Mapped[int] = mapped_column(ForeignKey("categories_table.id", ondelete="SET NULL"), nullable=True)
     code_name: Mapped[str] = mapped_column(nullable=False)
     type: Mapped[int] = mapped_column(nullable=False)
     count_type: Mapped[int] = mapped_column(default=1)
@@ -127,6 +146,7 @@ class DishTable(Base):
     barcode: Mapped[str] = mapped_column(nullable=True)
 
     menu = relationship(MenuTable, back_populates="dish", lazy="joined")
+    category = relationship(CategoriesTable, back_populates="dishes", lazy="joined")
     changing_dish = relationship(ChangingDishTable)
     iiko = relationship("IikoDishesTable", back_populates="dish", cascade="all, delete-orphan")
 

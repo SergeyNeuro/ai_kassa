@@ -10,8 +10,9 @@ class DishSchem(BaseModel):
     id: int
     name: str
     menu_id: int
+    category: Optional[str] = None
     code_name: str
-    type: int
+    type: Optional[int] = None
     count_type: int
     count: Optional[int]
     price: int

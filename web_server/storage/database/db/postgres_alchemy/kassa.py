@@ -1,6 +1,5 @@
 """storage/database/postgres_alchemy/kassa"""
-from datetime import datetime
-from typing import Union
+from typing import Optional
 import logging
 
 from sqlalchemy import text, select, ForeignKey
@@ -37,4 +36,15 @@ class KassaTable(Base):
 
 
 class KassaDAL(database.BaseKassa):
-    pass
+    async def get_data_by_id(self, node_id: int) -> Optional[db_schemas.kassa.KassaSchem]:
+        """Извлекаем данные по ID"""
+        try:
+            async with async_session_maker() as session:
+                async with session.begin():
+                    query = select(KassaTable).where(KassaTable.id == node_id)
+                    res = await session.execute(query)
+                    data = res.fetchone()
+                    if data is not None:
+                        return db_schemas.kassa.KassaSchem.model_validate(data[0], from_attributes=True)
+        except Exception as _ex:
+            logger.error(f"Ошибка при извлечении по kassa_id: {node_id} -> {_ex}")

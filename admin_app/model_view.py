@@ -15,6 +15,7 @@ class CustomerModelView(ModelView):
         CustomersTable.name,
         CustomersTable.phone,
         CustomersTable.email,
+        CustomersTable.password,
         EnumField("discount_type", choices=[
             (1, "Без скидок"),
             (2, "Столовая 67")
@@ -67,10 +68,15 @@ class ChangingDishModelView(ModelView):
     ]
 
 
+class CategoriesView(ModelView):
+    pass
+
+
 class DishModelView(ModelView):
     fields = [
         DishTable.id,
         DishTable.name,
+        DishTable.category,
         DishTable.code_name,
         EnumField(
             "type",

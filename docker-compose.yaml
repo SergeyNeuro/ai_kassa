@@ -4,11 +4,11 @@ services:
         image: postgres:latest
         container_name: ai_kassa_db
         volumes:
-          - /var/lib/postgresql/data2:/var/lib/postgresql/data
+            - /var/lib/postgresql/data2:/var/lib/postgresql/data
         env_file:
-          - .env
+            - .env
         ports:
-          - '${POSTGRES_PORT}:5432'
+            - '${POSTGRES_PORT}:5432'
 
     ai_kassa_redis:
         image: redis:7-alpine
@@ -34,6 +34,8 @@ services:
           - ai_kassa_redis
         volumes:
           - "${STATIC_FILES_PATH}:${STATIC_FILES_PATH}"
+          - ./web_server/static:/ai_kassa_web_app/web_server/static
+          - ./web_server/templates:/ai_kassa_web_app/web_server/templates
 
     ai_kassa_admin:
         container_name: ai_kassa_admin

@@ -7,6 +7,7 @@ from sqlalchemy import text, select, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column
 
 from .alchemy_core import Base, async_session_maker
+from .categories import CategoriesTable
 from storage.base_interface import database
 
 from schemas import db_schemas
@@ -24,6 +25,7 @@ class DishTable(Base):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(nullable=False)
     menu_id: Mapped[int] = mapped_column(ForeignKey("menu_table.id", ondelete="SET NULL"), nullable=False)
+    category_id: Mapped[int]= mapped_column(ForeignKey("categories_table.id", ondelete="SET NULL"), nullable=True)
     code_name: Mapped[str] = mapped_column(nullable=False)
     type: Mapped[int] = mapped_column(nullable=False)
     count_type: Mapped[int] = mapped_column(default=1)
@@ -50,14 +52,38 @@ class DishDAL(database.BaseDish):
         try:
             async with async_session_maker() as session:
                 async with session.begin():
-                    query = select(DishTable).where(DishTable.menu_id == menu_id).where(DishTable.code_name.in_(code_names))
+                    # query = select(DishTable).where(DishTable.menu_id == menu_id).where(DishTable.code_name.in_(code_names))
+                    query = select(
+                        DishTable,
+                        CategoriesTable.name.label("category")
+                    ).select_from(
+                        DishTable
+                    ).join(
+                        CategoriesTable,
+                        DishTable.category_id == CategoriesTable.id,
+                        isouter=True  # LEFT JOIN
+                    ).where(
+                        DishTable.menu_id == menu_id
+                    ).where(
+                        DishTable.code_name.in_(code_names)
+                    ).order_by(DishTable.category_id.asc())
+
                     res = await session.execute(query)
                     data = res.all()
                     if data is not None:
                         list_of_dish = [
-                            db_schemas.dish.DishSchem.model_validate(
-                                from_attributes=True,
-                                obj=data_queue_data[0]
+                            db_schemas.dish.DishSchem(
+                                id=data_queue_data[0].id,
+                                name=data_queue_data[0].name,
+                                menu_id=data_queue_data[0].menu_id,
+                                category=data_queue_data[1],
+                                code_name=data_queue_data[0].code_name,
+                                type=data_queue_data[0].type,
+                                count_type=data_queue_data[0].count_type,
+                                count=data_queue_data[0].count,
+                                price=data_queue_data[0].price,
+                                changing_dish_id=data_queue_data[0].changing_dish_id,
+                                barcode=data_queue_data[0].barcode,
                             ) for data_queue_data in data
                         ]
 
@@ -175,17 +201,34 @@ class DishDAL(database.BaseDish):
         try:
             async with async_session_maker() as session:
                 async with session.begin():
-                    query = select(DishTable).where(
-                        (DishTable.menu_id == menu_id) &
-                        (DishTable.code_name == code_name)
+                    query = (
+                        select(
+                            DishTable,
+                            CategoriesTable.name.label("category")
+                        )
+                        .select_from(DishTable)
+                        .join(
+                            CategoriesTable,
+                            DishTable.category_id == CategoriesTable.id,
+                            isouter=True  # LEFT JOIN
+                        )
+                        .where(
+                            (DishTable.menu_id == menu_id) &
+                            (DishTable.code_name == code_name)
+                        )
                     )
+
                     res = await session.execute(query)
                     data = res.fetchone()
                     if data is not None:
-                        return db_schemas.dish.DishSchem.model_validate(
+                        category = data[1]
+                        validate = db_schemas.dish.DishSchem.model_validate(
                             from_attributes=True,
                             obj=data[0],
                         )
+                        validate.category = category
+                        validate.type = data[0].category_id
+                        return validate
         except Exception as _ex:
             logger.error(f'Ошибка при извлечении одного блюда. Меню: {menu_id}. {code_name} -> {_ex}')
 

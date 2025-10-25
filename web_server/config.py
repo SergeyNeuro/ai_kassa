@@ -20,4 +20,8 @@ REDIS_PORT = os.getenv("REDIS_PORT")
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD")
 REDIS_EX = os.getenv("REDIS_EX")
 
+JWT_SECRET = os.getenv("JWT_SECRET", "secret")
+JWT_EXPIRES_MIN = int(os.getenv("JWT_EXPIRES_MIN", 120))
+COOKIE_NAME = os.getenv("COOKIE_NAME", "ai_kassa_auth")
+
 STATIC_FILES_PATH = os.getenv("STATIC_FILES_PATH")

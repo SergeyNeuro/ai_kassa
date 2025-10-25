@@ -114,3 +114,30 @@ class DbChoicer:
             "postgres_alchemy": postgres_alchemy.IikoDishesDAL
         }
         return data_dict[self.db_name]()
+
+    def choice_customers_obj(self) -> database.BaseCustomer:
+        """
+        Взаимодействия с данными customer
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.CustomersDAL
+        }
+        return data_dict[self.db_name]()
+
+    def choice_kassa_obj(self) -> database.BaseKassa:
+        """
+        Взаимодействия с данными kassa
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.KassaDAL
+        }
+        return data_dict[self.db_name]()
+
+    def choice_food_point_obj(self) -> database.BaseFoodPoint:
+        """
+        Взаимодействия с данными food point
+        """
+        data_dict = {
+            "postgres_alchemy": postgres_alchemy.FoodPointDAL
+        }
+        return data_dict[self.db_name]()

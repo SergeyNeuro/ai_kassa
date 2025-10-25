@@ -11,3 +11,5 @@ from .kassa_interface import BaseKassa
 from .history_interface import BaseHistory
 from .discount_transaction_interface import BaseDiscountTransaction
 from .iiko_interface import BaseIikoCredentials, BaseIikoTerminals, BaseIikoDishes
+from .customer_interface import BaseCustomer
+from .food_point_interface import BaseFoodPoint

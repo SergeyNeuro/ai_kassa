@@ -1,6 +1,5 @@
 """storage/database/postgres_alchemy/food_point"""
-from datetime import datetime
-from typing import Union
+from typing import Optional
 import logging
 
 from sqlalchemy import text, select, ForeignKey
@@ -34,3 +33,18 @@ class FoodPointTable(Base):
     city: Mapped[str] = mapped_column(nullable=False)
     address: Mapped[str] = mapped_column(nullable=False)
     customer_id: Mapped[int] = mapped_column(ForeignKey("customers_table.id", ondelete="SET NULL"), nullable=False)
+
+
+class FoodPointDAL(database.BaseFoodPoint):
+    async def get_data_by_id(self, node_id: int) -> Optional[db_schemas.food_point.FoodPointSchem]:
+        """Извлекаем данные по ID"""
+        try:
+            async with async_session_maker() as session:
+                async with session.begin():
+                    query = select(FoodPointTable).where(FoodPointTable.id == node_id)
+                    res = await session.execute(query)
+                    data = res.fetchone()
+                    if data is not None:
+                        return db_schemas.food_point.FoodPointSchem.model_validate(data[0], from_attributes=True)
+        except Exception as _ex:
+            logger.error(f"Ошибка при извлечении по food_point_id: {node_id} -> {_ex}")

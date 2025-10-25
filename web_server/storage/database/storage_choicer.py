@@ -109,3 +109,30 @@ class StorageTypeChoicer:
             "cache_db": cache_db.IikoDishesDbCache
         }
         return data_dict[self.storage_type]()
+
+    def customers_obj(self) -> database.BaseCustomer:
+        """
+        customers
+        """
+        data_dict = {
+            "cache_db": cache_db.CustomersDbCache
+        }
+        return data_dict[self.storage_type]()
+
+    def kassa_obj(self) -> database.BaseKassa:
+        """
+        customers
+        """
+        data_dict = {
+            "cache_db": cache_db.KassaDbCache
+        }
+        return data_dict[self.storage_type]()
+
+    def food_point_obj(self) -> database.BaseFoodPoint:
+        """
+        customers
+        """
+        data_dict = {
+            "cache_db": cache_db.FoodPointDbCache
+        }
+        return data_dict[self.storage_type]()
