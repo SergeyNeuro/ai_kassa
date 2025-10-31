@@ -71,12 +71,19 @@ async def handle_upload(
         if not dish_data:
             continue
 
+
+        # === корректная обработка весовых данных ===
+        # Все блюда теперь имеют массу в граммах
+        portion_gramm = dish_data.get("portion_gramm", 0)
+
         row = {
             "idx": idx,
             "name_ru": dish_data.get("name_ru", dish_data.get("name", "Неизвестно")),
             "category_ru": dish_data.get("category", "—"),
-            "unit": dish_data.get("unit", "шт"),
-            "amount": dish_data.get("amount", 1),
+            "unit": "г",                           # единица измерения — граммы
+            "amount": portion_gramm,               # фактический вес блюда
+            # "unit": dish_data.get("unit", "шт"),
+            # "amount": dish_data.get("amount", 1),
             "price_rub": float(dish_data.get("price_rub", dish_data.get("price", 0.0))),
             "yolo_name": dish_data.get("code_name", ""),
         }

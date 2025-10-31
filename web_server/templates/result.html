@@ -160,13 +160,15 @@
             <td>{{ r.idx }}</td>
             <td title="{{ r.yolo_name }}">{{ r.name_ru }}</td>
             <td>{{ r.category_ru }}</td>
-            <td>
+            <td>{{ r.amount }} {{ r.unit }}</td>
+            <!-- <td>
+              <p>Этот абзац временно отключён.</p>
               {% if r.amount and r.amount > 1 %}
                 {{ r.amount }} × {{ r.unit }}
               {% else %}
                 {{ r.unit }}
               {% endif %}
-            </td>
+            </td> -->
             <td>{{ '%.2f'|format(r.price_rub) }}</td>
           </tr>
           {% endfor %}
