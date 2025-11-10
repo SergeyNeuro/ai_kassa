@@ -177,6 +177,7 @@ class DishDAL(database.BaseDish):
                         count_type=count_type,
                         count=count,
                         price=price,
+                        category_id=type,
                         changing_dish_id=changing_dish_id
                     )
                     session.add(new_dish)
